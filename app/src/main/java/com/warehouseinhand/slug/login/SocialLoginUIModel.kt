@@ -23,6 +23,14 @@ enum class SocialLoginUIModel(
     val textColor: Color,
     val type: SocialLoginType,
 ) {
+    GOOGLE(
+        loginSNSText = R.string.login_social_google_name,
+        backgroundColor = GoogleWhite,
+        iconId = R.drawable.googleicon,
+        textColor = Gray700,
+        borderColor = Gray150,
+        type = SocialLoginType.GOOGLE
+    ),
     KAKAO(
         loginSNSText = R.string.login_social_kakao_name,
         backgroundColor = KakaoYellow,
@@ -45,14 +53,6 @@ enum class SocialLoginUIModel(
         textColor = Gray10,
         iconId = R.drawable.appleicon,
         borderColor = Color.Transparent,
-        type = SocialLoginType.GOOGLE
-    ),
-    GOOGLE(
-        loginSNSText = R.string.login_social_google_name,
-        backgroundColor = GoogleWhite,
-        iconId = R.drawable.googleicon,
-        textColor = Gray700,
-        borderColor = Gray150,
         type = SocialLoginType.GOOGLE
     ),
     ;
