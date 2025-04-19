@@ -5,9 +5,9 @@
 
     <string name="login_sub_title" translatable="false">남다른 부동산 투자 플랫폼</string>
 
-    <string name="login_social_google_name" translatable="false">구글</string>
-    <string name="login_social_apple_name" translatable="false">애플</string>
-    <string name="login_social_naver_name" translatable="false">네이버</string>
-    <string name="login_social_kakao_name" translatable="false">카카오</string>
+    <string name="login_social_google_name" translatable="false">구글로 로그인</string>
+    <string name="login_social_apple_name" translatable="false">Apple로 로그인</string>
+    <string name="login_social_naver_name" translatable="false">네이버로 로그인</string>
+    <string name="login_social_kakao_name" translatable="false">카카오로 로그인</string>
     <string name="title_activity_main">MainActivity</string>
 </resources>

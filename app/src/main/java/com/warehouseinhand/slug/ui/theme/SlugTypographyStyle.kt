@@ -8,12 +8,14 @@ import androidx.compose.ui.unit.sp
 object SlugTypographyStyle {
 
     /**
-     *         fontSize = 14.sp,
+     *         fontSize = 16.sp,
+     *         lineHeight = 22.sp,
      *         fontWeight = FontWeight.Normal,
      *         fontFamily = pretendardFontFamily
      *         */
-    val SocialLoginButton: TextStyle = TextStyle(
-        fontSize = 14.sp,
+    val BodyMediumMedium: TextStyle = TextStyle(
+        fontSize = 16.sp,
+        lineHeight = 22.sp,
         fontWeight = FontWeight.Normal,
         fontFamily = pretendardFontFamily
     )
