@@ -9,11 +9,15 @@ lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.10.1"
 composeBom = "2024.04.01"
 
+kotlinx-serialization = "1.7.1"
 
 googleServices =  "4.4.2"
 #firebase
 firebaseBom = "33.11.0"
 firebaseCrashlyticsGradle = "3.0.2"
+
+#accompanist
+accompanist-webview = "0.33.2-alpha"
 
 #SNS
 naverLogin = "5.9.1"
@@ -23,6 +27,12 @@ googleIdentity = "1.1.1"
 
 #DI - Hilt
 hilt = "2.51.1"
+
+
+#Network
+retrofit = "2.9.0"
+okhttp = "4.9.2"
+
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -58,6 +68,15 @@ firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics
 firebase-cloud-messaging = { group = "com.google.firebase", name = "firebase-messaging-ktx" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx" }
 firebase-performance = { group = "com.google.firebase", name = "firebase-perf-ktx" }
+
+#Network
+retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
+retrofit-converter-scalars = { group = "com.squareup.retrofit2", name = "converter-scalars", version.ref = "retrofit" }
+okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
+
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+
 
 
 [plugins]

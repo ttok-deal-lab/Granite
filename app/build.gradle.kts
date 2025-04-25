@@ -91,6 +91,16 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    //accompanist
+    implementation(libs.accompanist.webview)
+
+    //Network
+    // Retrofit2
+    implementation(libs.retrofit.core)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.retrofit.converter.scalars)
+    implementation(libs.okhttp.logging)
+
     //firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.cloud.messaging)
