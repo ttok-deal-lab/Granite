@@ -26,14 +26,14 @@ class KakaoLoginModule(
     fun startLogin(requireActivity: Activity) {
         loadingDialogShowingCallback(true)
         if (UserApiClient.instance.isKakaoTalkLoginAvailable(requireActivity)) {
-            Log.d("TESTTEST", "startLogin: kakaoTalk Exist!")
+//            Log.d("TESTTEST", "startLogin: kakaoTalk Exist!")
 
             UserApiClient.instance.loginWithKakaoTalk(
                 requireActivity,
                 callback = loginKakaoCallback
             )
         } else {
-            Log.d("TESTTEST", "startLogin: kakaoTalk Not Exist!")
+//            Log.d("TESTTEST", "startLogin: kakaoTalk Not Exist!")
 
             UserApiClient.instance.loginWithKakaoAccount(
                 requireActivity,
@@ -43,14 +43,15 @@ class KakaoLoginModule(
     }
 
     private val loginKakaoCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
+//        Log.i("TESTTEST", "로그인 콜백")
         if (error != null) {
             loadingDialogShowingCallback(false)
             kaKaoLoginResultCallback.onFailure(error, currentType)
-            Log.e("TESTTEST", "로그인 실패", error)
+//            Log.e("TESTTEST", "로그인 실패", error)
         } else if (token != null) {
             // 카카오 서버를 통해 로그인 성공
             getKakaoEmail(token.accessToken)
-            Log.i("TESTTEST", "로그인 성공 ${token.accessToken}")
+//            Log.i("TESTTEST", "로그인 성공 ${token.accessToken}")
 
             kaKaoLoginResultCallback.onSuccess(
                 token = token.accessToken,

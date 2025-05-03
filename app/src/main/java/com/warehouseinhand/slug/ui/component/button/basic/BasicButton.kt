@@ -90,7 +90,7 @@ internal fun BasicButton(
 }
 
 @Composable
-@Preview(heightDp = 1200)
+@Preview(heightDp = 1250)
 fun PreviewBasicPrimaryButton() {
     val context = LocalContext.current
     val toastIt: (String) -> Unit = {

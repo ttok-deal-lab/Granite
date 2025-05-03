@@ -24,10 +24,12 @@ android {
         versionName = "0.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "BASE_URL", "\"https://REDACTED_BASE_URL/\"")
     }
 
     buildTypes {
         debug {
+            resValue("string", "app_name", "민달팽이_DEV")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -36,6 +38,7 @@ android {
             sharedAppKeys()
         }
         release {
+            resValue("string", "app_name", "민달팽이")//TODO : 나중에 수정
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -67,15 +70,18 @@ fun VariantDimension.addBuildConfigField(name: String, propertyKey: String = nam
 }
 
 fun VariantDimension.sharedAppKeys() {
-    val kakaoAppKey = getApiKey("KAKAO_APP_KEY")
-    manifestPlaceholders["KAKAO_APP_KEY"] = kakaoAppKey
+    manifestPlaceholders["KAKAO_APP_KEY"] = getApiKey("KAKAO_APP_KEY_MANIFEST")
     addBuildConfigField("KAKAO_APP_KEY", "KAKAO_APP_KEY")
+    addBuildConfigField("APPLE_CLIENT_ID", "APPLE_CLIENT_ID")
     addBuildConfigField("GOOGLE_APP_KEY", "GOOGLE_APP_KEY")
+    addBuildConfigField("NAVER_CLIENT_ID", "NAVER_CLIENT_ID")
+    addBuildConfigField("NAVER_CLIENT_SECRET", "NAVER_CLIENT_SECRET")
 }
 
 dependencies {
 
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
@@ -93,6 +99,9 @@ dependencies {
 
     //accompanist
     implementation(libs.accompanist.webview)
+    //image
+    implementation(libs.glide.compose)
+
 
     //Network
     // Retrofit2
@@ -101,6 +110,11 @@ dependencies {
     implementation(libs.retrofit.converter.scalars)
     implementation(libs.okhttp.logging)
 
+    //Local
+    //Data
+    implementation(libs.datastore.preferences)
+    implementation(libs.kotlinx.serialization.json)
+
     //firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.cloud.messaging)
@@ -108,6 +122,7 @@ dependencies {
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.performance)
 
+    implementation(libs.firebase.auth)//SNS FOR APPLE
 
     //SNS
     implementation(libs.naver.login)

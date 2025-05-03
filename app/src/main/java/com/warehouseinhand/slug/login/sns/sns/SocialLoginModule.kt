@@ -3,6 +3,7 @@ package com.warehouseinhand.slug.login.sns.sns
 import android.content.Context
 import androidx.activity.ComponentActivity
 import com.warehouseinhand.slug.login.sns.SocialLoginType
+import com.warehouseinhand.slug.login.sns.apple.AppleLoginModule
 import com.warehouseinhand.slug.login.sns.google.GoogleLoginModule
 import com.warehouseinhand.slug.login.sns.kakao.KakaoLoginModule
 import com.warehouseinhand.slug.login.sns.naver.NaverLoginModule
@@ -13,6 +14,7 @@ class SocialLoginModule(
 ) {
     private val googleLoginModule: GoogleLoginModule = GoogleLoginModule()
     private val naverLoginModule: NaverLoginModule = NaverLoginModule()
+    private val appleLoginModule: AppleLoginModule = AppleLoginModule()
     private val kakaoLoginModule: KakaoLoginModule = KakaoLoginModule(loadingDialogShowingCallback)
     private val TAG = this.javaClass.simpleName
 
@@ -21,12 +23,13 @@ class SocialLoginModule(
             SocialLoginType.NAVER -> naverLoginModule.startLogin(activity)
             SocialLoginType.KAKAO -> kakaoLoginModule.startLogin(activity)
             SocialLoginType.GOOGLE -> googleLoginModule.startLogin(activity)
-            SocialLoginType.APPLE -> TODO()
+            SocialLoginType.APPLE -> appleLoginModule.startLogin(activity)
         }
     }
 
     fun initSocialLoginModules(
-        socialLoginResultCallback: SocialLoginResultCallback
+        socialLoginResultCallback: SocialLoginResultCallback,
+        whenNaverLoginInitFailed: (Throwable) -> Unit
     ) {
         googleLoginModule.initLoginModuleWithActivity(
             activity = activity,
@@ -35,6 +38,15 @@ class SocialLoginModule(
         kakaoLoginModule.initLoginModuleWithActivity(
             activity = activity,
             socialLoginResultCallback = socialLoginResultCallback
+        )
+        appleLoginModule.initLoginModuleWithActivity(
+            activity = activity,
+            socialLoginResultCallback = socialLoginResultCallback,
+        )
+        naverLoginModule.initNaverLogin(
+            activity = activity,
+            socialLoginResultCallback = socialLoginResultCallback,
+            whenNaverLoginInitFailed = whenNaverLoginInitFailed
         )
     }
 

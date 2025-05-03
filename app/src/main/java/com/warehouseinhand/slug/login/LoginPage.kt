@@ -1,31 +1,27 @@
 package com.warehouseinhand.slug.login
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.requiredWidthIn
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.warehouseinhand.slug.R
+import com.warehouseinhand.slug.login.sns.SocialLoginType
+import com.warehouseinhand.slug.ui.component.image.ImageProcessor
+import com.warehouseinhand.slug.ui.component.image.ImageResource
 import com.warehouseinhand.slug.ui.component.login.SocialLoginButton
-import com.warehouseinhand.slug.ui.theme.PrimaryBlack
 
 
 @Composable
-fun LoginPage() {
+fun LoginPage(onSocialLoginSelected: (SocialLoginType) -> Unit) {
     Surface {
         Column {
             Column(
@@ -35,43 +31,42 @@ fun LoginPage() {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                Box(
+                Spacer(Modifier.weight(2f))
+                ImageProcessor(
                     modifier = Modifier
-                        .size(80.dp)
-                        .clip(shape = CircleShape)
-                        .border(1.dp, color = PrimaryBlack, shape = CircleShape),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("(서비스 로고)")
-                }
-                Spacer(Modifier.height(16.dp))
-                Text(
-                    stringResource(R.string.login_sub_title)
+                        .fillMaxWidth(0.3f)
+                        .aspectRatio(0.6f)
+                        .requiredWidthIn(max = 150.dp)
+                    ,
+                    imageResource = ImageResource.Id(R.drawable.logo_color_meta_typo_sub)
                 )
-
+                Spacer(Modifier.weight(1f))
             }
-            SocialLoginButtons()
+            SocialLoginButtons(onSocialLoginSelected = onSocialLoginSelected)
         }
 
     }
 }
 
 @Composable
-private fun SocialLoginButtons() {
+private fun SocialLoginButtons(onSocialLoginSelected: (SocialLoginType) -> Unit) {
     Column(
         modifier = Modifier
             .padding(horizontal = 16.dp)
             .padding(bottom = 40.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        SocialLoginUIModel.entries.forEach {
-            SocialLoginButton(it) { }
+        SocialLoginUIModel.entries.forEach { uiModel ->
+            SocialLoginButton(
+                uiModel = uiModel,
+                onSocialLoginSelected = onSocialLoginSelected
+            )
         }
     }
 }
 
 @Composable
-@Preview
+@Preview()
 fun PreviewLoginPage() {
-    LoginPage()
+    LoginPage({})
 }

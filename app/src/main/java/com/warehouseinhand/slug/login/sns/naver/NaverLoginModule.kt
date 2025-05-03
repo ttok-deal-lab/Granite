@@ -9,6 +9,8 @@ import com.navercorp.nid.oauth.NidOAuthLogin
 import com.navercorp.nid.oauth.OAuthLoginCallback
 import com.navercorp.nid.profile.NidProfileCallback
 import com.navercorp.nid.profile.data.NidProfileResponse
+import com.warehouseinhand.slug.BuildConfig
+import com.warehouseinhand.slug.R
 import com.warehouseinhand.slug.login.sns.SocialLoginType
 import com.warehouseinhand.slug.util.SharedPreferenceManager
 import kotlinx.coroutines.launch
@@ -123,12 +125,12 @@ class NaverLoginModule {
     companion object {
         private val currentType = SocialLoginType.NAVER
         internal fun initializeNaverLoginModule(context: Context) {
-//            NaverIdLoginSDK.initialize( TODO : 필수!
-//                context,
-//                BuildConfig.NAVER_CLIENT_ID,
-//                BuildConfig.NAVER_CLIENT_SECRET,
-//                context.getString(R.string.login_social_naver)
-//            )
+            NaverIdLoginSDK.initialize(
+                context,
+                BuildConfig.NAVER_CLIENT_ID,
+                BuildConfig.NAVER_CLIENT_SECRET,
+                context.getString(R.string.login_social_naver_name)
+            )
         }
 
         internal fun withDraw(context: Context) {

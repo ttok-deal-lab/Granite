@@ -53,7 +53,7 @@ enum class SocialLoginUIModel(
         textColor = Gray10,
         iconId = R.drawable.appleicon,
         borderColor = Color.Transparent,
-        type = SocialLoginType.GOOGLE
+        type = SocialLoginType.APPLE
     ),
     ;
 }
