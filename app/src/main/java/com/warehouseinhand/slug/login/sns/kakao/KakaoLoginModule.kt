@@ -49,6 +49,7 @@ class KakaoLoginModule(
             kaKaoLoginResultCallback.onFailure(error, currentType)
 //            Log.e("TESTTEST", "로그인 실패", error)
         } else if (token != null) {
+            Log.d("TESTTEST", token.toString())
             // 카카오 서버를 통해 로그인 성공
             getKakaoEmail(token.accessToken)
 //            Log.i("TESTTEST", "로그인 성공 ${token.accessToken}")

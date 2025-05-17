@@ -3,11 +3,18 @@
     <string name="title_activity_log_in">LogInActivity</string>
 
 
-    <string name="login_sub_title" translatable="false">남다른 부동산 투자 플랫폼</string>
-
+    <!--  SNS  -->
     <string name="login_social_google_name" translatable="false">구글로 로그인</string>
     <string name="login_social_apple_name" translatable="false">Apple로 로그인</string>
     <string name="login_social_naver_name" translatable="false">네이버로 로그인</string>
     <string name="login_social_kakao_name" translatable="false">카카오로 로그인</string>
-    <string name="title_activity_main">MainActivity</string>
+
+    <!--  permission  -->
+    <string name="permission_notification_name" translatable="false">알림</string>
+    <string name="permission_notification" translatable="false">알림 및 메시지 전송</string>
+    <string name="permission_location_name" translatable="false">위치</string>
+    <string name="permission_location" translatable="false">내 위치 및 부동산 찾기</string>
+    <string name="permission_confirm" translatable="false">확인</string>
+    <string name="permission_request" translatable="false">권한 요청하기</string>
+    <string name="permission_close_app" translatable="false">종료하기</string>
 </resources>

@@ -113,7 +113,7 @@ class SlugFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     companion object {
-        const val TAG= "VFFirebaseMessagingService"
+        const val TAG= "SLUGFirebaseMessagingService"
         const val CHANNEL_ID = "SLUG_GRINITE"
     }
 }
