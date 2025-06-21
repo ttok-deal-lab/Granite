@@ -33,8 +33,8 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import com.warehouseinhand.slug.MainActivity
 import com.warehouseinhand.slug.R
+import com.warehouseinhand.slug.home.HomeActivity
 import com.warehouseinhand.slug.permission.PermissionDataModel.Companion.REQUEST_MAX_LIMIT
 import com.warehouseinhand.slug.ui.component.button.basic.BasicButton
 import com.warehouseinhand.slug.ui.theme.Gray400
@@ -75,7 +75,7 @@ class PermissionRequestActivity : ComponentActivity() {
             permissionAllowedToExit.emit(PermissionChecker.isAllOfEssentialAllowed(this@PermissionRequestActivity))
         }
     }
-
+    //TODO : i18n 준비
     @Composable
     fun PermissionRequestPage(
         essential: List<PermissionDataModel>,
@@ -160,7 +160,7 @@ class PermissionRequestActivity : ComponentActivity() {
     private fun onBottomButtonClicked(permissionAllowed: Boolean, permissionRequestCount: Int) {
         when {
             permissionAllowed -> {
-                val intent = Intent(this, MainActivity::class.java)
+                val intent = Intent(this, HomeActivity::class.java)
                 startActivity(intent)
                 this@PermissionRequestActivity.finish()
             }
