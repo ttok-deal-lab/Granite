@@ -1,7 +1,7 @@
 package com.warehouseinhand.slug.login
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -21,6 +21,7 @@ import com.warehouseinhand.slug.login.sns.SocialLoginType
 import com.warehouseinhand.slug.login.sns.google.DisabledSignInPromptsException
 import com.warehouseinhand.slug.login.sns.sns.SocialLoginModule
 import com.warehouseinhand.slug.login.sns.sns.SocialLoginResultCallback
+import com.warehouseinhand.slug.permission.PermissionRequestActivity
 import com.warehouseinhand.slug.ui.theme.SlugTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -48,7 +49,14 @@ class LogInActivity : ComponentActivity() {
         socialLoginModule.socialLoginByType(type)
     }
 
+    private fun moveToPermissionCheck() {
+        val intent = Intent(this, PermissionRequestActivity::class.java)
+        startActivity(intent)
+    }
+
     private fun initSocialLoginModule() {
+        //네이버 로그인 이슈발생시 활성화 해야하는 부분.
+
 //        val whenNaverLoginInitFailed: (Throwable) -> Unit =
 //            { throwable: Throwable ->
 ////                Log.d(TAG, "Naver data remove fail")
@@ -87,14 +95,7 @@ class LogInActivity : ComponentActivity() {
             } else {
 //                Logger.fe(Throwable(type.name + " email is Empty"))//TODO : Logger 구현
             }
-
-
-            loginViewModel.requestUserAuth(
-                snsAccessToken = token, type = type,
-                doAfterSuccess = {
-//                    Log.d("TESTTEST", "requestUserAuth onSuccess:!! ")
-                    //                        moveToMainActivity()
-                })
+            requestUserAuth(snsAccessToken = token, type = type)
         }
 
         override fun onFailure(exception: Throwable, type: SocialLoginType) {
@@ -112,11 +113,20 @@ class LogInActivity : ComponentActivity() {
                     showToast("로그인을 재시도 해주세요.")
                 }
             }
-
 //            val customException = Exception("${type.name} : ${exception.localizedMessage}")
 //            Log.d("TESTTEST", "onFailure ${exception.message}")
 //            Logger.fe(customException)//TODO : log 처리
         }
+    }
+
+    private fun requestUserAuth(snsAccessToken: String, type: SocialLoginType) {
+        //AfterRequest
+        loginViewModel.requestUserAuth(
+            snsAccessToken = snsAccessToken, type = type,
+            doAfterSuccess = {
+//                    Log.d("TESTTEST", "requestUserAuth onSuccess:!! ")
+                moveToPermissionCheck()
+            })
     }
 
     private fun showToast(text: String) {
@@ -125,7 +135,7 @@ class LogInActivity : ComponentActivity() {
 
     @Preview
     @Composable
-   private fun Preview(){
+    private fun Preview() {
         LoginPage(onSocialLoginSelected = {})
     }
 

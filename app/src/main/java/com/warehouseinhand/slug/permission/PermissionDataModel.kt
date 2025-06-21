@@ -33,24 +33,7 @@ enum class PermissionDataModel(
         permissionDescriptionId = R.string.permission_location,
         requiresApi = Build.VERSION_CODES.TIRAMISU,
     ),
-    Location2(
-        isEssential = true,
-        permissionString = Manifest.permission.ACCESS_COARSE_LOCATION,
-        requiresApi = Build.VERSION_CODES.BASE,
-        iconId = R.drawable.ic_color_location,
-        permissionNameId = R.string.permission_notification_name,
-        permissionDescriptionId = R.string.permission_location,
-        ),
-
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    NOTIFICATION2(
-        isEssential = true,
-        permissionString = Manifest.permission.POST_NOTIFICATIONS,
-        iconId = R.drawable.ic_color_notification,
-        permissionNameId = R.string.permission_notification_name,
-        permissionDescriptionId = R.string.permission_location,
-        requiresApi = Build.VERSION_CODES.TIRAMISU,
-    );
+    ;
 
     companion object {
 
