@@ -2,17 +2,18 @@ package com.warehouseinhand.slug.ui.component.button.basic
 
 import androidx.compose.ui.graphics.Color
 import com.warehouseinhand.slug.ui.component.button.ButtonState
-import com.warehouseinhand.slug.ui.theme.Gray10
-import com.warehouseinhand.slug.ui.theme.Gray100
-import com.warehouseinhand.slug.ui.theme.Gray200
-import com.warehouseinhand.slug.ui.theme.Gray300
-import com.warehouseinhand.slug.ui.theme.Gray400
-import com.warehouseinhand.slug.ui.theme.Gray50
-import com.warehouseinhand.slug.ui.theme.Gray700
-import com.warehouseinhand.slug.ui.theme.Gray800
-import com.warehouseinhand.slug.ui.theme.Primary150
-import com.warehouseinhand.slug.ui.theme.Primary200
-import com.warehouseinhand.slug.ui.theme.Primary400
+import com.warehouseinhand.slug.ui.theme.NeutralSubtler
+import com.warehouseinhand.slug.ui.theme.Neutral
+import com.warehouseinhand.slug.ui.theme.NeutralContrast
+import com.warehouseinhand.slug.ui.theme.NeutralInverted
+import com.warehouseinhand.slug.ui.theme.NeutralLight
+import com.warehouseinhand.slug.ui.theme.NeutralMuted
+import com.warehouseinhand.slug.ui.theme.NeutralSubtle
+import com.warehouseinhand.slug.ui.theme.NeutralWeak
+import com.warehouseinhand.slug.ui.theme.NeutralWhite
+import com.warehouseinhand.slug.ui.theme.PrimaryMuted
+import com.warehouseinhand.slug.ui.theme.Primary
+import com.warehouseinhand.slug.ui.theme.PrimaryContrast
 
 
 sealed class ButtonColor {
@@ -48,51 +49,51 @@ sealed class BasicButtonColors {
         }
 
     sealed class Fill : BasicButtonColors() {
-        data object Primary : Fill() {
+        data object PrimaryColor : Fill() {
             override val default =
-                ButtonColor.FillButtonColor(text = Gray10, backGround = Primary200)
+                ButtonColor.FillButtonColor(text = NeutralWhite, backGround = Primary)
             override val pressed =
-                ButtonColor.FillButtonColor(text = Gray10, backGround = Primary400)
+                ButtonColor.FillButtonColor(text = NeutralWhite, backGround = PrimaryContrast)
             override val disabled =
-                ButtonColor.FillButtonColor(text = Gray10, backGround = Primary150)
+                ButtonColor.FillButtonColor(text = NeutralWhite, backGround = PrimaryMuted)
         }
 
-        data object Secondary : Fill() {
+        data object SecondaryColor : Fill() {
             override val default =
-                ButtonColor.FillButtonColor(text = Gray700, backGround = Gray100)
+                ButtonColor.FillButtonColor(text = Neutral, backGround = NeutralWeak)
             override val pressed =
-                ButtonColor.FillButtonColor(text = Gray700, backGround = Gray200)
+                ButtonColor.FillButtonColor(text = Neutral, backGround = NeutralMuted)
             override val disabled =
-                ButtonColor.FillButtonColor(text = Gray300, backGround = Gray100)
+                ButtonColor.FillButtonColor(text = NeutralSubtle, backGround = NeutralWeak)
         }
 
-        data object Tertiary : Fill() {
+        data object TertiaryColor : Fill() {
             override val default =
-                ButtonColor.FillButtonColor(text = Gray50, backGround = Gray700)
+                ButtonColor.FillButtonColor(text = NeutralLight, backGround = Neutral)
             override val pressed =
-                ButtonColor.FillButtonColor(text = Gray50, backGround = Gray800)
+                ButtonColor.FillButtonColor(text = NeutralLight, backGround = NeutralContrast)
             override val disabled =
-                ButtonColor.FillButtonColor(text = Gray10, backGround = Gray200)
+                ButtonColor.FillButtonColor(text = NeutralInverted, backGround = NeutralMuted)
         }
     }
 
     sealed class Ghost : BasicButtonColors() {
-        data object Primary : Ghost() {
+        data object PrimaryColor : Ghost() {
             override val default =
-                ButtonColor.GhostButtonColor(text = Primary200, border = Primary200)
+                ButtonColor.GhostButtonColor(text = Primary, border = Primary)
             override val pressed =
-                ButtonColor.GhostButtonColor(text = Primary400, border = Primary400)
+                ButtonColor.GhostButtonColor(text = PrimaryContrast, border = PrimaryContrast)
             override val disabled =
-                ButtonColor.GhostButtonColor(text = Primary150, border = Primary150)
+                ButtonColor.GhostButtonColor(text = PrimaryMuted, border = PrimaryMuted)
         }
 
-        data object Secondary : Ghost() {
+        data object SecondaryColor : Ghost() {
             override val default =
-                ButtonColor.GhostButtonColor(text = Gray700, border = Gray200)
+                ButtonColor.GhostButtonColor(text = Neutral, border = NeutralMuted)
             override val pressed =
-                ButtonColor.GhostButtonColor(text = Gray700, border = Gray400)
+                ButtonColor.GhostButtonColor(text = Neutral, border = NeutralSubtler)
             override val disabled =
-                ButtonColor.GhostButtonColor(text = Gray300, border = Gray300)
+                ButtonColor.GhostButtonColor(text = NeutralSubtle, border = NeutralSubtler)
         }
     }
 }

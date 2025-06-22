@@ -7,13 +7,12 @@ import com.warehouseinhand.slug.R
 import com.warehouseinhand.slug.login.sns.SocialLoginType
 import com.warehouseinhand.slug.ui.theme.AppleBlack
 import com.warehouseinhand.slug.ui.theme.GoogleWhite
-import com.warehouseinhand.slug.ui.theme.Gray10
-import com.warehouseinhand.slug.ui.theme.Gray150
-import com.warehouseinhand.slug.ui.theme.Gray700
-import com.warehouseinhand.slug.ui.theme.Gray900
+import com.warehouseinhand.slug.ui.theme.Neutral
 import com.warehouseinhand.slug.ui.theme.KakaoYellow
 import com.warehouseinhand.slug.ui.theme.NaverGreen
-import com.warehouseinhand.slug.ui.theme.PrimaryWhite
+import com.warehouseinhand.slug.ui.theme.NeutralContrast
+import com.warehouseinhand.slug.ui.theme.NeutralWeak
+import com.warehouseinhand.slug.ui.theme.NeutralWhite
 
 enum class SocialLoginUIModel(
     @StringRes val loginSNSText: Int,
@@ -27,14 +26,14 @@ enum class SocialLoginUIModel(
         loginSNSText = R.string.login_social_google_name,
         backgroundColor = GoogleWhite,
         iconId = R.drawable.googleicon,
-        textColor = Gray700,
-        borderColor = Gray150,
+        textColor = Neutral,
+        borderColor = NeutralWeak,
         type = SocialLoginType.GOOGLE
     ),
     KAKAO(
         loginSNSText = R.string.login_social_kakao_name,
         backgroundColor = KakaoYellow,
-        textColor = Gray900,
+        textColor = NeutralContrast,
         iconId = R.drawable.kakaoicon,
         borderColor = Color.Transparent,
         type = SocialLoginType.KAKAO
@@ -42,7 +41,7 @@ enum class SocialLoginUIModel(
     NAVER(
         loginSNSText = R.string.login_social_naver_name,
         backgroundColor = NaverGreen,
-        textColor = Gray10,
+        textColor = NeutralWhite,
         iconId = R.drawable.navericon,
         borderColor = Color.Transparent,
         type = SocialLoginType.NAVER
@@ -50,7 +49,7 @@ enum class SocialLoginUIModel(
     APPLE(
         loginSNSText = R.string.login_social_apple_name,
         backgroundColor = AppleBlack,
-        textColor = Gray10,
+        textColor = NeutralWhite,
         iconId = R.drawable.appleicon,
         borderColor = Color.Transparent,
         type = SocialLoginType.APPLE

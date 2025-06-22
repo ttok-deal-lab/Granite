@@ -37,10 +37,9 @@ import com.warehouseinhand.slug.R
 import com.warehouseinhand.slug.main.MainActivity
 import com.warehouseinhand.slug.permission.PermissionDataModel.Companion.REQUEST_MAX_LIMIT
 import com.warehouseinhand.slug.ui.component.button.basic.BasicButton
-import com.warehouseinhand.slug.ui.theme.Gray400
-import com.warehouseinhand.slug.ui.theme.Gray400TextSubtext
-import com.warehouseinhand.slug.ui.theme.Gray50
-import com.warehouseinhand.slug.ui.theme.Gray700
+import com.warehouseinhand.slug.ui.theme.NeutralSubtler
+import com.warehouseinhand.slug.ui.theme.Neutral
+import com.warehouseinhand.slug.ui.theme.NeutralLight
 import com.warehouseinhand.slug.ui.theme.SlugTheme
 import com.warehouseinhand.slug.ui.theme.SlugTypographyStyle
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -94,7 +93,7 @@ class PermissionRequestActivity : ComponentActivity() {
                     Text(
                         "앱 사용을 위해\n접근 권한을 허용해주세요.",
                         style = SlugTypographyStyle.HeadingSmallBold,
-                        color = Gray700
+                        color = Neutral
                     )
                     Spacer(Modifier.height(40.dp))
                     PermissionList("필수 권한", essential)
@@ -106,7 +105,7 @@ class PermissionRequestActivity : ComponentActivity() {
                 }
                 Column(
                     modifier = Modifier
-                        .background(color = Gray50)
+                        .background(color = NeutralLight)
                         .weight(1f)
                         .padding(all = 20.dp)
                 )
@@ -146,13 +145,13 @@ class PermissionRequestActivity : ComponentActivity() {
             Text(
                 text = name,
                 style = SlugTypographyStyle.BodyMiniMedium,
-                color = Gray700
+                color = Neutral
             )
             Spacer(Modifier.height(8.dp))
             Text(
                 text = description,
                 style = SlugTypographyStyle.BodyMiniRegular,
-                color = Gray400
+                color = NeutralSubtler
             )
         }
     }
@@ -211,14 +210,14 @@ class PermissionRequestActivity : ComponentActivity() {
                 Text(
                     text = stringResource(id = permissionData.permissionNameId),
                     style = SlugTypographyStyle.TitleMediumMedium,
-                    color = Gray700
+                    color = Neutral
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     modifier = Modifier.weight(1f),
                     text = stringResource(id = permissionData.permissionDescriptionId),
                     style = SlugTypographyStyle.BodySmallRegular,
-                    color = Gray400TextSubtext
+                    color = NeutralSubtler
                 )
             }
 

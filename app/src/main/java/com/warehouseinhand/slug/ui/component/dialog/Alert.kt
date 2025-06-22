@@ -23,8 +23,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.warehouseinhand.slug.ui.component.button.basic.BasicButton
 import com.warehouseinhand.slug.ui.component.button.basic.BasicButtonStyle
-import com.warehouseinhand.slug.ui.theme.Gray10
-import com.warehouseinhand.slug.ui.theme.Gray400
+import com.warehouseinhand.slug.ui.theme.NeutralInverted
+import com.warehouseinhand.slug.ui.theme.NeutralSubtler
 import com.warehouseinhand.slug.ui.theme.SlugTypographyStyle.BodyMediumMedium
 import com.warehouseinhand.slug.ui.theme.SlugTypographyStyle.TitleLargeBold
 
@@ -37,14 +37,14 @@ private fun BasicAlertDialog(
 ) {
     Column(
         modifier = Modifier
-            .background(color = Gray10, shape = RoundedCornerShape(16.dp))
+            .background(color = NeutralInverted, shape = RoundedCornerShape(16.dp))
             .padding(all = 24.dp)
             .width(335.dp),
         horizontalAlignment = Alignment.Start
     ) {
         Text(style = TitleLargeBold, text = title)
         Spacer(Modifier.height(8.dp))
-        Text(style = BodyMediumMedium, color = Gray400, text = description)
+        Text(style = BodyMediumMedium, color = NeutralSubtler, text = description)
         Spacer(Modifier.height(24.dp))
         buttonSpace()
     }
