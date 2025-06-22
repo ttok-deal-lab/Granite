@@ -13,7 +13,7 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.warehouseinhand.slug.home.HomeActivity
+import com.warehouseinhand.slug.main.MainActivity
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -46,7 +46,7 @@ class SlugFirebaseMessagingService : FirebaseMessagingService() {
         val id = System.currentTimeMillis().toInt()
 
         // notification 클릭 시 이동하는 액티비티
-        val notiIntent = Intent(this, HomeActivity::class.java)
+        val notiIntent = Intent(this, MainActivity::class.java)
         notiIntent.putExtra("ExtraFragment", "Notification")
 
         notiIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
