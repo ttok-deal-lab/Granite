@@ -17,4 +17,14 @@
     <string name="permission_confirm" translatable="false">확인</string>
     <string name="permission_request" translatable="false">권한 요청하기</string>
     <string name="permission_close_app" translatable="false">종료하기</string>
+    <!--  home bottom nav  -->
+    <string name="home_bottom_nav_home_title" translatable="false">홈</string>
+    <string name="home_bottom_nav_favorites_title" translatable="false">관심</string>
+    <string name="home_bottom_nav_crew_title" translatable="false">임장크루</string>
+    <string name="home_bottom_nav_mypage_title" translatable="false">마이페이지</string>
+    <string name="home_bottom_nav_home_description" translatable="false">홈화면으로 이동합니다.</string>
+    <string name="home_bottom_nav_favorites_description" translatable="false">관심화면으로 이동합니다.</string>
+    <string name="home_bottom_nav_crew_description" translatable="false">임장크루화면으로 이동합니다.</string>
+    <string name="home_bottom_nav_mypage_description" translatable="false">마이페이지화면으로 이동합니다.</string>
+
 </resources>
