@@ -65,7 +65,7 @@ private fun RowScope.MainBottomBarItem(
     val size = 28.dp
     val selectedColor: Color = Primary
     val unSelectedColor: Color = NeutralMuted
-    val color = remember { Animatable(unSelectedColor) }
+    val color = remember { Animatable(if (isSelected) selectedColor else unSelectedColor) }
     LaunchedEffect(isSelected) {
         color.animateTo(
             if (isSelected) selectedColor else unSelectedColor,
@@ -117,16 +117,16 @@ enum class BottomBarItemUiModel(
         tintAbleResource = R.drawable.ic_heart,
         iconDescription = R.string.home_bottom_nav_favorites_description
     ),
-    CREW(
-        title = R.string.home_bottom_nav_crew_title,
-        tintAbleResource = R.drawable.ic_note_crew_front,
-        backgroundResource = R.drawable.ic_note_crew_background,
-        iconDescription = R.string.home_bottom_nav_crew_description
-    ),
-    MYPAGE(
-        title = R.string.home_bottom_nav_mypage_title,
+//    CREW(
+//        title = R.string.home_bottom_nav_crew_title,
+//        tintAbleResource = R.drawable.ic_note_crew_front,
+//        backgroundResource = R.drawable.ic_note_crew_background,
+//        iconDescription = R.string.home_bottom_nav_crew_description
+//    ),
+    MY_PAGE(
+        title = R.string.home_bottom_nav_my_page_title,
         tintAbleResource = R.drawable.ic_person,
-        iconDescription = R.string.home_bottom_nav_mypage_description
+        iconDescription = R.string.home_bottom_nav_my_page_description
     ),
     ;
 }
