@@ -25,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -197,7 +198,7 @@ class PermissionRequestActivity : ComponentActivity() {
 
     @Composable
     fun PermissionElement(permissionData: PermissionDataModel) {
-        Row {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Image(
                 modifier = Modifier
                     .padding(end = 6.dp)
@@ -206,7 +207,7 @@ class PermissionRequestActivity : ComponentActivity() {
                 contentDescription = null
             )
             Spacer(modifier = Modifier.width(12.dp))
-            Row {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = stringResource(id = permissionData.permissionNameId),
                     style = SlugTypographyStyle.TitleMediumMedium,
