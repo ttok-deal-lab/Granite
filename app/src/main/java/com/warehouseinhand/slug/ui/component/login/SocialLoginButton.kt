@@ -29,7 +29,7 @@ import com.warehouseinhand.slug.ui.theme.SlugTypographyStyle
 
 
 @Composable
-fun SocialLoginButton(
+fun SocialLoginButton( //TODO : Login쪽으로 이동시킬것!
     uiModel: SocialLoginUIModel,
     onSocialLoginSelected: (SocialLoginType) -> Unit
 ) {
