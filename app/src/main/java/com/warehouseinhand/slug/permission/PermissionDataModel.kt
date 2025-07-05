@@ -30,7 +30,7 @@ enum class PermissionDataModel(
         permissionString = Manifest.permission.POST_NOTIFICATIONS,
         iconId = R.drawable.ic_color_notification,
         permissionNameId = R.string.permission_notification_name,
-        permissionDescriptionId = R.string.permission_location,
+        permissionDescriptionId = R.string.permission_notification,
         requiresApi = Build.VERSION_CODES.TIRAMISU,
     ),
     ;
