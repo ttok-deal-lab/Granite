@@ -8,6 +8,7 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import com.warehouseinhand.slug.util.RemoveOverScroll
 
 //TODO : 차후 Dark theme 제공
 //private val DarkColorScheme = darkColorScheme(
@@ -48,10 +49,12 @@ fun SlugTheme(
 //        darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
+    RemoveOverScroll{
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = Typography,
+            content = content
+        )
+    }
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
-        content = content
-    )
 }
