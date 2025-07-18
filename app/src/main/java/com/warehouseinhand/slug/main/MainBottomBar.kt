@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.Icon
@@ -34,6 +35,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.warehouseinhand.slug.R
+import com.warehouseinhand.slug.favorite.RouteFavorite
+import com.warehouseinhand.slug.home.navigation.RouteHome
+import com.warehouseinhand.slug.mypage.RouteMyPageHome
 import com.warehouseinhand.slug.ui.theme.NeutralMuted
 import com.warehouseinhand.slug.ui.theme.Primary
 import com.warehouseinhand.slug.ui.theme.SlugTypographyStyle
@@ -43,7 +47,11 @@ fun MainBottomBar(
     selectedItem: BottomBarItemUiModel,
     onClick: (BottomBarItemUiModel) -> Unit
 ) {
-    Row(modifier = Modifier.height(64.dp)) {
+    Row(
+        modifier = Modifier
+            .navigationBarsPadding()
+            .height(64.dp)
+    ) {
         BottomBarItemUiModel.entries
             .forEach {
                 MainBottomBarItem(
@@ -106,18 +114,22 @@ enum class BottomBarItemUiModel(
     @DrawableRes val tintAbleResource: Int,
     @DrawableRes val backgroundResource: Int = tintAbleResource,
     @StringRes val iconDescription: Int,
+    val route: Route,
 ) {
     HOME(
         title = R.string.home_bottom_nav_home_title,
         tintAbleResource = R.drawable.ic_home,
-        iconDescription = R.string.home_bottom_nav_home_description
+        iconDescription = R.string.home_bottom_nav_home_description,
+        route = RouteHome,
     ),
     FAVORITES(
         title = R.string.home_bottom_nav_favorites_title,
         tintAbleResource = R.drawable.ic_heart,
-        iconDescription = R.string.home_bottom_nav_favorites_description
-    ),
-//    CREW(
+        iconDescription = R.string.home_bottom_nav_favorites_description,
+        route = RouteFavorite,
+        ),
+
+    //    CREW(
 //        title = R.string.home_bottom_nav_crew_title,
 //        tintAbleResource = R.drawable.ic_note_crew_front,
 //        backgroundResource = R.drawable.ic_note_crew_background,
@@ -126,7 +138,8 @@ enum class BottomBarItemUiModel(
     MY_PAGE(
         title = R.string.home_bottom_nav_my_page_title,
         tintAbleResource = R.drawable.ic_person,
-        iconDescription = R.string.home_bottom_nav_my_page_description
+        iconDescription = R.string.home_bottom_nav_my_page_description,
+        route = RouteMyPageHome,
     ),
     ;
 }
