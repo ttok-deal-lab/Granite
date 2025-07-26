@@ -37,6 +37,7 @@ import com.warehouseinhand.slug.util.blockingClickable
 
 @Composable
 internal fun BasicButton(
+    modifier: Modifier = Modifier,
     buttonText: String,
     onButtonClick: () -> Unit,
     isDisabled: Boolean = false,
@@ -60,7 +61,7 @@ internal fun BasicButton(
     val currentSize = sizeType.getSizes()
     val backgroundShape = RoundedCornerShape(currentSize.radius)
     Box(
-        modifier = Modifier
+        modifier = modifier
             .clip(shape = backgroundShape)
             .background(color = currentColor.backGround)
             .border(width = 1.dp, color = currentColor.border, shape = backgroundShape)
