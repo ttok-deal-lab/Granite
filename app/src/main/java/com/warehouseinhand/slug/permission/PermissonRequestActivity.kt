@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -75,6 +77,7 @@ class PermissionRequestActivity : ComponentActivity() {
             permissionAllowedToExit.emit(PermissionChecker.isAllOfEssentialAllowed(this@PermissionRequestActivity))
         }
     }
+
     //TODO : i18n 준비
     @Composable
     fun PermissionRequestPage(
@@ -82,60 +85,65 @@ class PermissionRequestActivity : ComponentActivity() {
         optional: List<PermissionDataModel>
     ) {
         val permissionAllowed by permissionAllowedToExit.collectAsStateWithLifecycle()
+        var permissionRequestCount by remember { mutableIntStateOf(0) }
         Scaffold { innerPadding ->
             Column(
                 modifier = Modifier
                     .padding(innerPadding)
                     .fillMaxSize()
             ) {
-                var permissionRequestCount by remember { mutableIntStateOf(0) }
-                Column(modifier = Modifier.padding(horizontal = 20.dp)) {
-                    Spacer(Modifier.height(60.dp))// 고정된 크기?
-                    Text(
-                        "앱 사용을 위해\n접근 권한을 허용해주세요.",
-                        style = SlugTypographyStyle.HeadingSmallBold,
-                        color = Neutral
-                    )
-                    Spacer(Modifier.height(40.dp))
-                    PermissionList("필수 권한", essential)
-                    if (optional.isNotEmpty() && essential.isNotEmpty()) {
-                        Spacer(Modifier.height(32.dp))
-                    }
-                    PermissionList("선택 권한", optional)
-                    Spacer(Modifier.height(40.dp))
-                }
                 Column(
                     modifier = Modifier
-                        .background(color = NeutralLight)
                         .weight(1f)
-                        .padding(all = 20.dp)
-                )
-                {
-                    PermissionNotice(
-                        name = "접근권한 안내",
-                        description = "접근권한은 서비스 사용 중 필요한 시점에 동의를 받고 있습니다. 허용하지 않을 경우에도 해당 기능 외 서비스는 이용 할 수 있습니다."
-                    )
-                    Spacer(Modifier.height(24.dp))
-                    PermissionNotice(
-                        name = "접근 권한 변경안내",
-                        description = "휴대폰 설정 > 앱 > 민달팽이"
-                    )
-                    Spacer(Modifier.weight(1f))
-                    BasicButton(
-                        buttonText = stringResource(
-                            id = when {
-                                permissionAllowed -> R.string.permission_confirm
-                                permissionRequestCount > REQUEST_MAX_LIMIT -> R.string.permission_close_app
-                                else -> R.string.permission_request
-                            },
-                        ),
-                        onButtonClick = {
-                            onBottomButtonClicked(permissionAllowed, permissionRequestCount)
-                            permissionRequestCount++
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    Column(modifier = Modifier.padding(horizontal = 20.dp)) {
+                        Spacer(Modifier.height(60.dp))// 고정된 크기?
+                        Text(
+                            "앱 사용을 위해\n접근 권한을 허용해주세요.",
+                            style = SlugTypographyStyle.HeadingSmallBold,
+                            color = Neutral
+                        )
+                        Spacer(Modifier.height(40.dp))
+                        PermissionList("필수 권한", essential)
+                        if (optional.isNotEmpty() && essential.isNotEmpty()) {
+                            Spacer(Modifier.height(32.dp))
                         }
+                        PermissionList("선택 권한", optional)
+                        Spacer(Modifier.height(40.dp))
+                    }
+                    Column(
+                        modifier = Modifier
+                            .background(color = NeutralLight)
+                            .padding(all = 20.dp),
                     )
+                    {
+                        PermissionNotice(
+                            name = "접근권한 안내",
+                            description = "접근권한은 서비스 사용 중 필요한 시점에 동의를 받고 있습니다. 허용하지 않을 경우에도 해당 기능 외 서비스는 이용 할 수 있습니다."
+                        )
+                        Spacer(Modifier.height(24.dp))
+                        PermissionNotice(
+                            name = "접근 권한 변경안내",
+                            description = "휴대폰 설정 > 앱 > 민달팽이"
+                        )
+                    }
                 }
 
+                BasicButton(
+                    modifier = Modifier.padding(20.dp),
+                    buttonText = stringResource(
+                        id = when {
+                            permissionAllowed -> R.string.permission_confirm
+                            permissionRequestCount > REQUEST_MAX_LIMIT -> R.string.permission_close_app
+                            else -> R.string.permission_request
+                        },
+                    ),
+                    onButtonClick = {
+                        onBottomButtonClicked(permissionAllowed, permissionRequestCount)
+                        permissionRequestCount++
+                    }
+                )
             }
         }
     }
@@ -221,7 +229,6 @@ class PermissionRequestActivity : ComponentActivity() {
                     color = NeutralSubtler
                 )
             }
-
         }
     }
 
@@ -233,7 +240,11 @@ class PermissionRequestActivity : ComponentActivity() {
         }
     }
 
-    @Preview(showBackground = true, backgroundColor = 0x00000000)
+    @Preview(
+        showBackground = true,
+        backgroundColor = 0x00000000,
+//        fontScale = 1.5f
+    )
     @Composable
     fun PermissionRequestDialogPreview() {
         val essential: List<PermissionDataModel> = PermissionDataModel.essentialPermissions

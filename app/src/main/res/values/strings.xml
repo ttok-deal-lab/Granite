@@ -27,4 +27,26 @@
     <string name="home_bottom_nav_crew_description" translatable="false">임장크루화면으로 이동합니다.</string>
     <string name="home_bottom_nav_my_page_description" translatable="false">마이페이지화면으로 이동합니다.</string>
 
+    <!-- sorting -->
+    <string name="sorting_head" translatable="false">정렬</string>
+    <string name="sorting_type_newest" translatable="false">최신 등록 순</string>
+    <string name="sorting_type_most_favorite" translatable="false">관심 많은 순</string>
+    <string name="sorting_type_least_day_left" translatable="false">기일 임박 순</string>
+    <string name="sorting_type_least_failed" translatable="false">유찰 적은 순</string>
+    <string name="sorting_type_price_descending" translatable="false">가격 높은 순</string>
+    <string name="sorting_type_price_ascending" translatable="false">가격 낮은 순</string>
+
+    <!-- filter -->
+    <string name="filter_location_select" translatable="false">지역 선택</string>
+    <string name="filter_building" translatable="false">건물용도</string>
+    <string name="filter_auction_status" translatable="false">경매상태</string>
+    <string name="filter_price" translatable="false">가격</string>
+
+
+    <!--        NEWEST,-->
+<!--    MOST_FAVORITE,-->
+<!--    LEAST_DAY_LEFT,-->
+<!--    MOST_FAILED,-->
+<!--    PRICE_DESCENDING,-->
+<!--    PRICE_ASCENDING,-->
 </resources>
