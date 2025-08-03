@@ -3,6 +3,7 @@ package com.warehouseinhand.slug.main
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.animation.Animatable
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -38,6 +39,8 @@ import com.warehouseinhand.slug.R
 import com.warehouseinhand.slug.favorite.RouteFavorite
 import com.warehouseinhand.slug.home.navigation.RouteHome
 import com.warehouseinhand.slug.mypage.RouteMyPageHome
+import com.warehouseinhand.slug.ui.theme.Neutral
+import com.warehouseinhand.slug.ui.theme.NeutralInverted
 import com.warehouseinhand.slug.ui.theme.NeutralMuted
 import com.warehouseinhand.slug.ui.theme.Primary
 import com.warehouseinhand.slug.ui.theme.SlugTypographyStyle
@@ -73,13 +76,11 @@ private fun RowScope.MainBottomBarItem(
     val size = 28.dp
     val selectedColor: Color = Primary
     val unSelectedColor: Color = NeutralMuted
-    val color = remember { Animatable(if (isSelected) selectedColor else unSelectedColor) }
-    LaunchedEffect(isSelected) {
-        color.animateTo(
-            if (isSelected) selectedColor else unSelectedColor,
-            animationSpec = spring()
-        )
-    }
+    val color by animateColorAsState(
+        if (isSelected) selectedColor else unSelectedColor,
+        label = "color"
+    )
+
 
     Column(
         modifier = Modifier
@@ -96,14 +97,14 @@ private fun RowScope.MainBottomBarItem(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         BottomIcon(
-            size = size, color = color.value,
+            size = size, color = color,
             bottomBarItemUiModel = bottomBarItemUiModel
         )
         Spacer(Modifier.height(2.dp))
         Text(
             text = stringResource(bottomBarItemUiModel.title),
             style = SlugTypographyStyle.BodyMicroMedium,
-            color = color.value
+            color = color
         )
     }
 }
@@ -127,7 +128,7 @@ enum class BottomBarItemUiModel(
         tintAbleResource = R.drawable.ic_heart,
         iconDescription = R.string.home_bottom_nav_favorites_description,
         route = RouteFavorite,
-        ),
+    ),
 
     //    CREW(
 //        title = R.string.home_bottom_nav_crew_title,
