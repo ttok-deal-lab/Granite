@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -29,12 +30,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import com.warehouseinhand.slug.ui.theme.Black200
 import com.warehouseinhand.slug.ui.theme.NeutralWeak
 import com.warehouseinhand.slug.ui.theme.Primary
 import com.warehouseinhand.slug.ui.theme.PrimaryLight
@@ -98,17 +103,20 @@ fun SlugRangeSlider(
             startOffsetX.value = endOffsetX.value
         }
     }
+
     //snap단위 이동 적용.
     fun snapToSegments(state: MutableState<Dp>) {
         if (segments < 0) // segment<0 일시 snap 미동작
             return
         state.value = snapValue(state.value)
     }
+
     // 드래그 멈춤시 snap 적용
     fun onDragStopped() {
         snapToSegments(startOffsetX)
         snapToSegments(endOffsetX)
     }
+
     // thumb 위치 변경 처리.
     fun onDeltaChanged(state: MutableState<Dp>, delta: Float) {
         val newValue = state.value + with(localDensity) { delta.toDp() }
@@ -181,6 +189,14 @@ private fun Thumb(
                 },
                 state = rememberDraggableState(onDeltaChanged)
             )
+            .dropShadow(
+                shape = CircleShape,
+                shadow = Shadow(
+                    radius = 4.dp,
+                    color = Black200.copy(alpha = 0.15f),
+                    offset = DpOffset(x = 0.dp, y = 4.dp)
+                )
+            )
             .size(thumbSize)
             .clip(CircleShape)
             .background(color = innerColor)
@@ -222,15 +238,18 @@ private fun InActiveTrack(
 @Composable
 @Preview
 fun PreviewSlugRangeSlider() {
-    Column(
-        modifier = Modifier
-            .padding(top = 40.dp)
-    ) {
-        var text by remember { mutableStateOf("0..1") }
-        SlugRangeSlider(modifier = Modifier.fillMaxWidth()) {
-            text = it.toString()
-            Log.d("value", "PreviewSlugRangeSlider: $it")
+    Surface {
+        Column(
+            modifier = Modifier
+                .padding(top = 40.dp)
+        ) {
+            var text by remember { mutableStateOf("0..1") }
+            SlugRangeSlider(modifier = Modifier.fillMaxWidth()) {
+                text = it.toString()
+                Log.d("value", "PreviewSlugRangeSlider: $it")
+            }
+            Text(text = text)
         }
-        Text(text = text)
     }
+
 }
