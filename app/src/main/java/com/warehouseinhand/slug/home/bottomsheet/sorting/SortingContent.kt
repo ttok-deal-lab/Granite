@@ -20,7 +20,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.warehouseinhand.slug.R
+import com.warehouseinhand.slug.home.HomeViewModel
 import com.warehouseinhand.slug.home.bottomsheet.BottomSheetHead
 import com.warehouseinhand.slug.ui.theme.Neutral
 import com.warehouseinhand.slug.ui.theme.NeutralInverted
@@ -28,6 +31,43 @@ import com.warehouseinhand.slug.ui.theme.NeutralLight
 import com.warehouseinhand.slug.ui.theme.Primary
 import com.warehouseinhand.slug.ui.theme.SlugTypographyStyle
 import com.warehouseinhand.slug.util.blockingClickable
+
+
+@Composable
+fun SortBottomSheetContent(
+    requestHideBottomSheet: () -> Unit
+) {
+    val homeViewModel: HomeViewModel = hiltViewModel()
+    val lastSelected by homeViewModel.selectedSortingType.collectAsStateWithLifecycle()
+    SortingTypeItemList(
+        lastSelected = lastSelected,
+        onClick = { type ->
+            homeViewModel.requestChangeSortingType(type)
+            requestHideBottomSheet()
+        }
+    )
+}
+
+@Composable
+fun SortingTypeItemList(
+    lastSelected: SortingType,
+    onClick: (SortingType) -> Unit
+) {
+    val itemList = SortingType.entries
+    Column {
+        BottomSheetHead(
+            modifier = Modifier.padding(horizontal = 20.dp),
+            string = stringResource(R.string.sorting_head)
+        )
+        itemList.forEach { type ->
+            SortingTypeItem(
+                type = type,
+                lastSelectedType = lastSelected,
+                onClick = onClick
+            )
+        }
+    }
+}
 
 @Composable
 fun SortingTypeItem(
@@ -66,25 +106,6 @@ fun SortingTypeItem(
 }
 
 @Composable
-
-fun SortBottomSheetContent(
-    lastSelected: SortingType,
-    onClick: (SortingType) -> Unit
-) {
-    val itemList = SortingType.entries
-    Column {
-        BottomSheetHead(stringResource(R.string.sorting_head))
-        itemList.forEach { type ->
-            SortingTypeItem(
-                type = type,
-                lastSelectedType = lastSelected,
-                onClick = onClick
-            )
-        }
-    }
-}
-
-@Composable
 @Preview
 fun PreviewSortTypeItem() {
     val type: SortingType = SortingType.NEWEST
@@ -98,12 +119,12 @@ fun PreviewSortTypeItem() {
 
 @Composable
 @Preview
-fun PreviewSortBottomSheet() {
+fun PreviewSortingTypeItemList() {
     var lastSelected: SortingType by remember { mutableStateOf(SortingType.NEWEST) }
     val onClick: (SortingType) -> Unit = {
         lastSelected = it
     }
-    SortBottomSheetContent(
+    SortingTypeItemList(
         lastSelected = lastSelected,
         onClick = onClick
     )

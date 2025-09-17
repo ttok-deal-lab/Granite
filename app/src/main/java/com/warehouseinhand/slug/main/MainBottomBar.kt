@@ -2,9 +2,7 @@ package com.warehouseinhand.slug.main
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.animation.Animatable
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,13 +13,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,8 +35,6 @@ import com.warehouseinhand.slug.R
 import com.warehouseinhand.slug.favorite.RouteFavorite
 import com.warehouseinhand.slug.home.navigation.RouteHome
 import com.warehouseinhand.slug.mypage.RouteMyPageHome
-import com.warehouseinhand.slug.ui.theme.Neutral
-import com.warehouseinhand.slug.ui.theme.NeutralInverted
 import com.warehouseinhand.slug.ui.theme.NeutralMuted
 import com.warehouseinhand.slug.ui.theme.Primary
 import com.warehouseinhand.slug.ui.theme.SlugTypographyStyle
@@ -52,7 +46,7 @@ fun MainBottomBar(
 ) {
     Row(
         modifier = Modifier
-            .navigationBarsPadding()
+//            .navigationBarsPadding()
             .height(64.dp)
     ) {
         BottomBarItemUiModel.entries

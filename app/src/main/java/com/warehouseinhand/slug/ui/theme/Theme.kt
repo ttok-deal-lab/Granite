@@ -20,7 +20,8 @@ import com.warehouseinhand.slug.util.RemoveOverScroll
 private val LightColorScheme = lightColorScheme(
     primary = Primary,
     secondary = Secondary,
-    tertiary = Secondary
+    tertiary = Secondary,
+    surface = NeutralInverted
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),

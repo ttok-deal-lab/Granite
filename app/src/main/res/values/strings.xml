@@ -36,11 +36,38 @@
     <string name="sorting_type_price_descending" translatable="false">가격 높은 순</string>
     <string name="sorting_type_price_ascending" translatable="false">가격 낮은 순</string>
 
-    <!-- filter -->
-    <string name="filter_location_select" translatable="false">지역 선택</string>
+    <!-- filter header-->
+    <string name="filter_header_location_select" translatable="false">지역 선택</string>
+    <string name="filter_header_building" translatable="false">건물용도</string>
+    <string name="filter_header_auction_status" translatable="false">경매상태</string>
+    <string name="filter_header_price" translatable="false">가격</string>
+
+    <!-- filter localized-->
+    <string name="filter_verified" translatable="false">인증매물</string>
+    <string name="filter_finished" translatable="false">낙찰</string>
+
     <string name="filter_building" translatable="false">건물용도</string>
+
+    <string name="filter_building_apartment" translatable="false">아파트</string>
+    <string name="filter_building_villa" translatable="false">빌라(다세대,연립)</string>
+    <string name="filter_building_officetel" translatable="false">오피스텔</string>
+    <string name="filter_building_commercial_house" translatable="false">상가주택</string>
+    <string name="filter_building_house" translatable="false">주택</string>
+    <string name="filter_building_other" translatable="false">기타</string>
+
     <string name="filter_auction_status" translatable="false">경매상태</string>
+    <string name="filter_auction_status_new" translatable="false">신건</string>
+    <string name="filter_auction_status_date_changing" translatable="false">기일변경중</string>
+    <string name="filter_auction_status_failed1" translatable="false">유찰 1회</string>
+    <string name="filter_auction_status_failed2" translatable="false">유찰 2회</string>
+    <string name="filter_auction_status_failed_above3" translatable="false">유찰 3회 이상</string>
+
     <string name="filter_price" translatable="false">가격</string>
+    <string name="filter_price_below" translatable="false">이하</string>
+    <string name="filter_price_above" translatable="false">이상</string>
+
+    <string name="filter_price_all" translatable="false">전체</string>
+
 
 
     <!--        NEWEST,-->

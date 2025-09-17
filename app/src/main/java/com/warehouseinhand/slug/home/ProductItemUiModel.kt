@@ -1,0 +1,112 @@
+package com.warehouseinhand.slug.home
+
+import com.warehouseinhand.slug.R
+import com.warehouseinhand.slug.home.component.BuildingInfoChips
+import com.warehouseinhand.slug.ui.component.image.ImageResource
+
+data class ProductItemUiModel(
+    val priceOfProduct: Long,
+    val nameOfProduct: String,
+    val location: String,
+    val daysLeft: Int,
+    val buildingImage: ImageResource,
+    val isFavorite: Boolean,
+    val favoritePersons: Int,
+    val infoChipList: List<Pair<BuildingInfoChips, String>>
+) {
+    companion object {
+        val testList = listOf(
+            ProductItemUiModel(
+                priceOfProduct = 132100000L,
+                nameOfProduct = "시가정 센트럴 아이파크",
+                location = "서울특별시 서초구 방배동",
+                daysLeft = 3,
+                buildingImage = ImageResource.Id(R.drawable.logo_metaopo),
+                isFavorite = true,
+                favoritePersons = 100,
+                infoChipList = listOf(
+                    (BuildingInfoChips.Apartment to "아파트"),
+                    BuildingInfoChips.State to "유찰 2회"
+                )
+            ),
+            ProductItemUiModel(
+                priceOfProduct = 85000000L,
+                nameOfProduct = "롯데캐슬 골드파크",
+                location = "경기도 성남시 분당구",
+                daysLeft = 7,
+                buildingImage = ImageResource.Id(R.drawable.logo_metaopo),
+                isFavorite = false,
+                favoritePersons = 0,
+                infoChipList = listOf(
+                    (BuildingInfoChips.Apartment to "아파트"),
+                    BuildingInfoChips.State to "유찰 2회"
+                )
+            ),
+            ProductItemUiModel(
+                priceOfProduct = 245000000L,
+                nameOfProduct = "한강 리버파크 오피스텔",
+                location = "서울특별시 용산구 이촌동",
+                daysLeft = 1,
+                buildingImage = ImageResource.Id(R.drawable.logo_metaopo),
+                isFavorite = true,
+                favoritePersons = 234,
+                infoChipList = listOf(
+                    (BuildingInfoChips.Apartment to "아파트"),
+                    BuildingInfoChips.State to "유찰 2회"
+                )
+            ),
+            ProductItemUiModel(
+                priceOfProduct = 67500000L,
+                nameOfProduct = "대우 푸르지오 단지",
+                location = "인천광역시 남동구 구월동",
+                daysLeft = 12,
+                buildingImage = ImageResource.Id(R.drawable.logo_metaopo),
+                isFavorite = false,
+                favoritePersons = 78,
+                infoChipList = listOf(
+                    (BuildingInfoChips.Apartment to "아파트"),
+                    BuildingInfoChips.State to "유찰 2회"
+                )
+            ),
+            ProductItemUiModel(
+                priceOfProduct = 189000000L,
+                nameOfProduct = "삼성 래미안 타워",
+                location = "서울특별시 강남구 청담동",
+                daysLeft = 5,
+                buildingImage = ImageResource.Id(R.drawable.logo_metaopo),
+                isFavorite = true,
+                favoritePersons = 156,
+                infoChipList = listOf(
+                    (BuildingInfoChips.Apartment to "아파트"),
+                    BuildingInfoChips.State to "유찰 2회"
+                )
+            ),
+            ProductItemUiModel(
+                priceOfProduct = 189000000L,
+                nameOfProduct = "삼성 래미안 타워",
+                location = "서울특별시 강남구 청담동",
+                daysLeft = 5,
+                buildingImage = ImageResource.Id(R.drawable.logo_metaopo),
+                isFavorite = true,
+                favoritePersons = 156,
+                infoChipList = listOf(
+                    (BuildingInfoChips.Apartment to "아파트"),
+                    BuildingInfoChips.State to "유찰 2회"
+                )
+            ),
+            ProductItemUiModel(
+                priceOfProduct = 189000000L,
+                nameOfProduct = "삼성 래미안 타워",
+                location = "서울특별시 강남구 청담동",
+                daysLeft = 5,
+                buildingImage = ImageResource.Id(R.drawable.logo_metaopo),
+                isFavorite = true,
+                favoritePersons = 156,
+                infoChipList = listOf(
+                    (BuildingInfoChips.Apartment to "아파트"),
+                    BuildingInfoChips.State to "유찰 2회"
+                )
+            )
+        )
+    }
+}

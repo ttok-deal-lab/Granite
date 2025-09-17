@@ -3,6 +3,7 @@ package com.warehouseinhand.slug.ui.theme
 import androidx.compose.ui.graphics.Color
 
 val PrimaryBlack = Color(0xFF000000)
+val Black200 = Color(0xFF0C0D0D)
 val PrimaryWhite = Color(0xFFFFFFFF)
 
 // Gray color palette

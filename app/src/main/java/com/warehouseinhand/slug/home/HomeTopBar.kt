@@ -25,7 +25,7 @@ import com.warehouseinhand.slug.util.blockingClickable
 @Composable
 fun HomeTopBar(//TODO : 각 리소스 별 Description 처리 할것.
     sectionName: String,
-    onSectionSelectClick: () -> Unit,
+    onLocationSelectClick: () -> Unit,
     onSearchClick: () -> Unit,
     onNotificationClick: () -> Unit
 ) {
@@ -37,7 +37,7 @@ fun HomeTopBar(//TODO : 각 리소스 별 Description 처리 할것.
         Row(
             modifier = Modifier
                 .fillMaxHeight()
-                .blockingClickable(onClick = onSectionSelectClick)
+                .blockingClickable(onClick = onLocationSelectClick)
                 .padding(horizontal = 20.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -96,7 +96,7 @@ fun PreviewHomeTopBar() {
     val onNotificationClick: () -> Unit = {}
     HomeTopBar(
         sectionName = sectionName,
-        onSectionSelectClick = onSectionSelectClick,
+        onLocationSelectClick = onSectionSelectClick,
         onSearchClick = onSearchClick,
         onNotificationClick = onNotificationClick,
     )

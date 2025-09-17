@@ -1,32 +1,112 @@
 package com.warehouseinhand.slug.main
 
+import android.util.Log
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.warehouseinhand.slug.favorite.favoriteNavGraph
+import com.warehouseinhand.slug.home.bottomsheet.HomeBottomSheetContent
+import com.warehouseinhand.slug.home.navigation.RouteHome
+import com.warehouseinhand.slug.home.navigation.homeNavGraph
+import com.warehouseinhand.slug.mypage.myPageNavGraph
+import kotlinx.coroutines.launch
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(modifier: Modifier) {
+fun MainScreen(
+    modifier: Modifier = Modifier,
+    mainViewModel: MainViewModel = hiltViewModel(viewModelStoreOwner = LocalContext.current as ViewModelStoreOwner)
+) {
+
+    val navController = rememberNavController()
     var selectedItem: BottomBarItemUiModel by remember { mutableStateOf(BottomBarItemUiModel.HOME) }
-    val onClick: (BottomBarItemUiModel) -> Unit = { selectedItem = it }
+    val onClick: (BottomBarItemUiModel) -> Unit = {
+        selectedItem = it
+        navController.navigate(it.route)
+    }
+    val bottomSheetType by mainViewModel.isNeedToShowBottomSheet.collectAsStateWithLifecycle(
+        MainBottomSheetType.EMPTY
+    )
+
+    var isBottomSheetShowing: Boolean by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    LaunchedEffect(bottomSheetType) {
+        isBottomSheetShowing = bottomSheetType != MainBottomSheetType.EMPTY
+    }
+    val coroutineScope = rememberCoroutineScope()
+    val requestHideBottomSheet: () -> Unit = {
+        coroutineScope.launch {
+            sheetState.hide()
+            mainViewModel.requestToShowBottomSheet(MainBottomSheetType.EMPTY)
+        }
+    }
 
     Scaffold(
-        content = { padding ->
-            val navController = rememberNavController()
-            val startRoute = "MAIN TEST"
+        modifier = modifier.navigationBarsPadding(),
+        content = { paddingValues ->
             //MainNavHost
-            NavHost(
+            MainNavHost(
+                padding = paddingValues,
                 navController = navController,
-                startDestination = startRoute
-            ) {
+                startDestination = RouteHome,
+            )
+            if (isBottomSheetShowing)
+                ModalBottomSheet(
+                    onDismissRequest = {
+                        isBottomSheetShowing = false
+                        mainViewModel.requestToShowBottomSheet(MainBottomSheetType.EMPTY)
+                    },
+                    sheetState = sheetState,
+                    dragHandle = {
+                        Box(
+                            modifier = Modifier
+                                .height(32.dp)
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
+                        )
+                    },
+                    content = {
+                        when (val sheetType = bottomSheetType) {
+                            is MainBottomSheetType.HomeBottomSheetType -> {
+                                HomeBottomSheetContent(
+                                    bottomSheetType = sheetType,
+                                    requestHideBottomSheet = requestHideBottomSheet
+                                )
+                            }
 
-            }
+                            MainBottomSheetType.EMPTY -> {
+
+                            }
+
+                        }
+                    }
+                )
         },
         bottomBar = {
             MainBottomBar(
@@ -37,3 +117,27 @@ fun MainScreen(modifier: Modifier) {
     )
 }
 
+@Composable
+fun MainNavHost(
+//    navigator: MainNavigator,
+    padding: PaddingValues,
+    navController: NavHostController,
+    startDestination: Route,
+    modifier: Modifier = Modifier,
+) {
+
+    Box(
+        modifier = modifier.fillMaxSize()
+    ) {
+        NavHost(
+            navController = navController,
+            startDestination = startDestination,
+        ) {
+            homeNavGraph(padding = padding)
+
+            favoriteNavGraph(padding = padding)
+
+            myPageNavGraph(padding = padding)
+        }
+    }
+}
