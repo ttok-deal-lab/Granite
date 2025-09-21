@@ -12,8 +12,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import com.warehouseinhand.slug.firebase.SlugFirebaseMessagingService
@@ -34,11 +36,16 @@ class LogInActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         initSocialLoginModule()
+        loginViewModel.requestLastLoginType()
         setContent {
+            val lastLoginType by loginViewModel.lastLoginType.collectAsStateWithLifecycle()
             SlugTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Box(modifier = Modifier.padding(innerPadding)) {
-                        LoginPage(onSocialLoginSelected = ::onSocialLoginSelected)
+                        LoginPage(
+                            onSocialLoginSelected = ::onSocialLoginSelected,
+                            lastLoginType
+                        )
                     }
                 }
             }
@@ -136,7 +143,10 @@ class LogInActivity : ComponentActivity() {
     @Preview
     @Composable
     private fun Preview() {
-        LoginPage(onSocialLoginSelected = {})
+        LoginPage(
+            onSocialLoginSelected = {},
+            lastUsedLoginType = SocialLoginType.GOOGLE
+        )
     }
 
 }

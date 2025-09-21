@@ -21,7 +21,10 @@ import com.warehouseinhand.slug.ui.component.login.SocialLoginButton
 
 
 @Composable
-fun LoginPage(onSocialLoginSelected: (SocialLoginType) -> Unit) {
+fun LoginPage(
+    onSocialLoginSelected: (SocialLoginType) -> Unit,
+    lastUsedLoginType: SocialLoginType,
+) {
     Surface {
         Column {
             Column(
@@ -36,20 +39,25 @@ fun LoginPage(onSocialLoginSelected: (SocialLoginType) -> Unit) {
                     modifier = Modifier
                         .fillMaxWidth(0.3f)
                         .aspectRatio(0.6f)
-                        .requiredWidthIn(max = 150.dp)
-                    ,
+                        .requiredWidthIn(max = 150.dp),
                     imageResource = ImageResource.Id(R.drawable.logo_color_meta_typo_sub)
                 )
                 Spacer(Modifier.weight(1f))
             }
-            SocialLoginButtons(onSocialLoginSelected = onSocialLoginSelected)
+            SocialLoginButtons(
+                onSocialLoginSelected = onSocialLoginSelected,
+                lastUsedLoginType = lastUsedLoginType
+            )
         }
 
     }
 }
 
 @Composable
-private fun SocialLoginButtons(onSocialLoginSelected: (SocialLoginType) -> Unit) {
+private fun SocialLoginButtons(
+    onSocialLoginSelected: (SocialLoginType) -> Unit,
+    lastUsedLoginType: SocialLoginType
+) {
     Column(
         modifier = Modifier
             .padding(horizontal = 16.dp)
@@ -59,7 +67,8 @@ private fun SocialLoginButtons(onSocialLoginSelected: (SocialLoginType) -> Unit)
         SocialLoginUIModel.entries.forEach { uiModel ->
             SocialLoginButton(
                 uiModel = uiModel,
-                onSocialLoginSelected = onSocialLoginSelected
+                onSocialLoginSelected = onSocialLoginSelected,
+                isLastLoginType = uiModel.type == lastUsedLoginType
             )
         }
     }
@@ -68,5 +77,8 @@ private fun SocialLoginButtons(onSocialLoginSelected: (SocialLoginType) -> Unit)
 @Composable
 @Preview()
 fun PreviewLoginPage() {
-    LoginPage({})
+    LoginPage(
+        onSocialLoginSelected = {},
+        lastUsedLoginType = SocialLoginType.NAVER
+    )
 }

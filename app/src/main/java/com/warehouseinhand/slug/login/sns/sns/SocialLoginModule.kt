@@ -24,6 +24,7 @@ class SocialLoginModule(
             SocialLoginType.KAKAO -> kakaoLoginModule.startLogin(activity)
             SocialLoginType.GOOGLE -> googleLoginModule.startLogin(activity)
             SocialLoginType.APPLE -> appleLoginModule.startLogin(activity)
+            SocialLoginType.NEVER_LOGIN -> {/* DO NOTING*/}
         }
     }
 
