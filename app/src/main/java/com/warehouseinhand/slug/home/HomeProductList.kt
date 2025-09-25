@@ -42,13 +42,16 @@ import com.warehouseinhand.slug.ui.theme.SlugTypographyStyle
 import com.warehouseinhand.slug.util.blockingClickable
 import com.warehouseinhand.slug.util.numberToCurrency
 
+//TODO : 공통컴포넌트화 고려
 @Composable
 fun HomeProductList(
     uiModelList: List<ProductItemUiModel>,
     onItemClicked: (ProductItemUiModel) -> Unit
 ) {
     LazyColumn {
-        items(uiModelList) { model ->
+        items(uiModelList,
+//            key = { it.nameOfProduct + it.priceOfProduct }//TODO : 서버에서 내려오는 고유값으로 설정 할것!
+        ) { model ->
             ProductItem(
                 uiModel = model,
                 onItemClicked = onItemClicked

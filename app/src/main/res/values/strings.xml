@@ -17,6 +17,11 @@
     <string name="permission_confirm" translatable="false">확인</string>
     <string name="permission_request" translatable="false">권한 요청하기</string>
     <string name="permission_close_app" translatable="false">종료하기</string>
+    <!--  home favorite  -->
+    <string name="home_favorite_top_title" translatable="false">관심</string>
+    <string name="home_favorite_empty_title" translatable="false">관심 내역이 없어요.</string>
+
+
     <!--  home bottom nav  -->
     <string name="home_bottom_nav_home_title" translatable="false">홈</string>
     <string name="home_bottom_nav_favorites_title" translatable="false">관심</string>
@@ -69,11 +74,10 @@
     <string name="filter_price_all" translatable="false">전체</string>
 
 
-
     <!--        NEWEST,-->
-<!--    MOST_FAVORITE,-->
-<!--    LEAST_DAY_LEFT,-->
-<!--    MOST_FAILED,-->
-<!--    PRICE_DESCENDING,-->
-<!--    PRICE_ASCENDING,-->
+    <!--    MOST_FAVORITE,-->
+    <!--    LEAST_DAY_LEFT,-->
+    <!--    MOST_FAILED,-->
+    <!--    PRICE_DESCENDING,-->
+    <!--    PRICE_ASCENDING,-->
 </resources>
