@@ -2,6 +2,7 @@ package com.warehouseinhand.slug.favorite
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
@@ -21,7 +22,7 @@ internal fun FavoriteRoute(
     val onItemClicked: (ProductItemUiModel) -> Unit = {}
     val onNotificationClick: () -> Unit = {}
     //TODO : 아래 영역에서 favorite 버튼 눌러도 사라지지 않게 만들고, 상세화면에서만 해제 가능하게 할것!
-    SideEffect {
+    LaunchedEffect(Unit) {
         viewModel.requestFavoriteList()
     }
     FavoriteScreen(
