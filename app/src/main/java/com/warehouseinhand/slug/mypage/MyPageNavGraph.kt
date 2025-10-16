@@ -3,7 +3,6 @@ package com.warehouseinhand.slug.mypage
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.warehouseinhand.slug.home.navigation.HomeRoute
 import com.warehouseinhand.slug.main.Route
 import kotlinx.serialization.Serializable
 
