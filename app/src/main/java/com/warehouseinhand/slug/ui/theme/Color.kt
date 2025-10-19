@@ -112,6 +112,10 @@ val CriticalLight = Red10
 val GradientUpper = Secondary
 val GradientLower = Primary
 
+// Gradient
+val VerifiedGradientUpper = Green400
+val VerifiedGradientLower = Blue200
+
 
 //그림자
 val DefaultShadow = Color(0xFF353C3F)

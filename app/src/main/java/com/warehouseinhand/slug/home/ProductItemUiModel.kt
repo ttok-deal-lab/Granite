@@ -1,8 +1,8 @@
 package com.warehouseinhand.slug.home
 
 import com.warehouseinhand.slug.R
-import com.warehouseinhand.slug.home.component.BuildingInfoChips
 import com.warehouseinhand.slug.ui.component.image.ImageResource
+import com.warehouseinhand.slug.ui.component.label.SlugLabelStyle
 
 data class ProductItemUiModel(
     val priceOfProduct: Long,
@@ -12,7 +12,7 @@ data class ProductItemUiModel(
     val buildingImage: ImageResource,
     val isFavorite: Boolean,
     val favoritePersons: Int,
-    val infoChipList: List<Pair<BuildingInfoChips, String>>
+    val infoChipList: List<Pair<SlugLabelStyle, String>>
 ) {
     companion object {
         val testList = listOf(
@@ -25,8 +25,8 @@ data class ProductItemUiModel(
                 isFavorite = true,
                 favoritePersons = 100,
                 infoChipList = listOf(
-                    (BuildingInfoChips.Apartment to "아파트"),
-                    BuildingInfoChips.State to "유찰 2회"
+                    (SlugLabelStyle.BuildingInfo.Apartment to "아파트"),
+                    SlugLabelStyle.BuildingInfo.State to "유찰 2회"
                 )
             ),
             ProductItemUiModel(
@@ -38,8 +38,8 @@ data class ProductItemUiModel(
                 isFavorite = false,
                 favoritePersons = 0,
                 infoChipList = listOf(
-                    (BuildingInfoChips.Apartment to "아파트"),
-                    BuildingInfoChips.State to "유찰 2회"
+                    (SlugLabelStyle.BuildingInfo.Apartment to "아파트"),
+                    SlugLabelStyle.BuildingInfo.State to "유찰 2회"
                 )
             ),
             ProductItemUiModel(
@@ -51,8 +51,8 @@ data class ProductItemUiModel(
                 isFavorite = true,
                 favoritePersons = 234,
                 infoChipList = listOf(
-                    (BuildingInfoChips.Apartment to "아파트"),
-                    BuildingInfoChips.State to "유찰 2회"
+                    (SlugLabelStyle.BuildingInfo.Apartment to "아파트"),
+                    SlugLabelStyle.BuildingInfo.State to "유찰 2회"
                 )
             ),
             ProductItemUiModel(
@@ -64,8 +64,8 @@ data class ProductItemUiModel(
                 isFavorite = false,
                 favoritePersons = 78,
                 infoChipList = listOf(
-                    (BuildingInfoChips.Apartment to "아파트"),
-                    BuildingInfoChips.State to "유찰 2회"
+                    (SlugLabelStyle.BuildingInfo.Apartment to "아파트"),
+                    SlugLabelStyle.BuildingInfo.State to "유찰 3회"
                 )
             ),
             ProductItemUiModel(
@@ -77,8 +77,8 @@ data class ProductItemUiModel(
                 isFavorite = true,
                 favoritePersons = 156,
                 infoChipList = listOf(
-                    (BuildingInfoChips.Apartment to "아파트"),
-                    BuildingInfoChips.State to "유찰 2회"
+                    (SlugLabelStyle.BuildingInfo.Apartment to "아파트"),
+                    SlugLabelStyle.BuildingInfo.State to "유찰 2회"
                 )
             ),
             ProductItemUiModel(
@@ -90,8 +90,8 @@ data class ProductItemUiModel(
                 isFavorite = true,
                 favoritePersons = 156,
                 infoChipList = listOf(
-                    (BuildingInfoChips.Apartment to "아파트"),
-                    BuildingInfoChips.State to "유찰 2회"
+                    (SlugLabelStyle.BuildingInfo.Apartment to "아파트"),
+                    SlugLabelStyle.BuildingInfo.State to "유찰 3회"
                 )
             ),
             ProductItemUiModel(
@@ -103,8 +103,8 @@ data class ProductItemUiModel(
                 isFavorite = true,
                 favoritePersons = 156,
                 infoChipList = listOf(
-                    (BuildingInfoChips.Apartment to "아파트"),
-                    BuildingInfoChips.State to "유찰 2회"
+                    (SlugLabelStyle.BuildingInfo.Apartment to "아파트"),
+                    SlugLabelStyle.BuildingInfo.State to "유찰 2회"
                 )
             )
         )

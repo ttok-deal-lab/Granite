@@ -28,9 +28,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.warehouseinhand.slug.R
-import com.warehouseinhand.slug.home.component.BuildingInfoChip
 import com.warehouseinhand.slug.home.component.DDayChip
 import com.warehouseinhand.slug.ui.component.image.ImageProcessor
+import com.warehouseinhand.slug.ui.component.label.SlugLabelLarge
 import com.warehouseinhand.slug.ui.theme.Critical
 import com.warehouseinhand.slug.ui.theme.Neutral
 import com.warehouseinhand.slug.ui.theme.NeutralMuted
@@ -112,7 +112,7 @@ private fun ProductItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 uiModel.infoChipList.forEach { (type, text) ->
-                    BuildingInfoChip(type = type, text)
+                    SlugLabelLarge(labelStyle = type, text = text)
                 }
 
                 Spacer(Modifier.weight(1f))
