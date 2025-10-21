@@ -9,9 +9,14 @@ fun numberToCurrency(number: Long, dropUnder10000: Boolean = true): String {
         return "0원"
     }
     val formatter = NumberFormat.getNumberInstance(Locale.KOREA)
+    val isNegative = number < 0L
 
     val valueList = mutableListOf<String>()
-    var left = number
+    var left = if (isNegative) number * -1 else number
+
+
+    val prefix = if (isNegative) "-" else ""
+
 
     val underMan = left % 10_000
     left /= 10_000
@@ -32,6 +37,6 @@ fun numberToCurrency(number: Long, dropUnder10000: Boolean = true): String {
     if (underMan > 0 && !dropUnder10000) {
         valueList.add(formatter.format(underMan))
     }
-    return valueList.joinToString(separator = " ") + "원"
+    return prefix + valueList.joinToString(separator = " ") + "원"
 }
 
