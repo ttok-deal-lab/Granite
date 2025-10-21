@@ -2,16 +2,18 @@ package com.warehouseinhand.slug.ui.component.label
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
@@ -20,6 +22,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.warehouseinhand.slug.R
+import com.warehouseinhand.slug.ui.component.image.ImageProcessor
+import com.warehouseinhand.slug.ui.component.image.ImageResource
 import com.warehouseinhand.slug.ui.theme.NeutralLight
 import com.warehouseinhand.slug.ui.theme.NeutralSubtler
 import com.warehouseinhand.slug.ui.theme.NeutralWeak
@@ -32,23 +37,54 @@ import com.warehouseinhand.slug.ui.theme.VerifiedGradientUpper
 @Composable
 fun SlugLabelLarge(
     labelStyle: SlugLabelStyle,
-    text: String
+    text: String,
+    frontSlot: @Composable RowScope.() -> Unit = { },
+    backSlot: @Composable RowScope.() -> Unit = { },
 ) {
-    SlugLabel(labelStyle = labelStyle, text = text, textStyle = SlugTypographyStyle.BodyMicroMedium)
+    SlugLabel(
+        labelStyle = labelStyle,
+        text = text,
+        textStyle = SlugTypographyStyle.BodyMicroMedium,
+        frontSlot = frontSlot,
+        backSlot = backSlot,
+    )
+}
+@Composable
+fun VerifiedSlugLabelLarge(
+    labelStyle: SlugLabelStyle,
+    text: String,
+    frontSlot: @Composable RowScope.() -> Unit = {
+        ImageProcessor(
+            modifier = Modifier.size(16.dp),
+            imageResource = ImageResource.Id(R.drawable.verified_star_white_22_22)
+        )
+    },
+    backSlot: @Composable RowScope.() -> Unit = { },
+) {
+    SlugLabel(
+        labelStyle = labelStyle,
+        text = text,
+        textStyle = SlugTypographyStyle.BodyMicroMedium,
+        frontSlot = frontSlot,
+        backSlot = backSlot,
+    )
 }
 
 @Composable
 fun SlugLabelSmall(
     labelStyle: SlugLabelStyle,
-    text: String
+    text: String,
+    frontSlot: @Composable RowScope.() -> Unit = { },
+    backSlot: @Composable RowScope.() -> Unit = { },
 ) {
     SlugLabel(
         labelStyle = labelStyle,
         text = text,
-        textStyle = SlugTypographyStyle.CaptionLargeMedium
+        textStyle = SlugTypographyStyle.CaptionLargeMedium,
+        frontSlot = frontSlot,
+        backSlot = backSlot,
     )
 }
-
 
 
 @Composable
@@ -56,20 +92,26 @@ fun SlugLabelSmall(
 private fun SlugLabel(
     labelStyle: SlugLabelStyle,
     text: String,
-    textStyle: TextStyle
+    textStyle: TextStyle,
+    frontSlot: @Composable RowScope.() -> Unit = { },
+    backSlot: @Composable RowScope.() -> Unit = { },
 ) {
-    Box(
+    Row(
         modifier = Modifier
             .clip(RoundedCornerShape(4.dp))
             .labelBackground(slugBackground = labelStyle.background)
-            .padding(vertical = 3.dp, horizontal = 6.dp)
+            .padding(vertical = 3.dp, horizontal = 6.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
+        frontSlot()
         Text(text = text, color = labelStyle.textColor, style = textStyle)
+        backSlot()
     }
 }
 
 @Composable
-fun Modifier.labelBackground(slugBackground: SlugLabelBackground): Modifier {
+private fun Modifier.labelBackground(slugBackground: SlugLabelBackground): Modifier {
     return when (val background = slugBackground) {
         is SlugLabelBackground.Solid ->
             background(color = background.getBackground())
@@ -151,7 +193,7 @@ sealed class SlugLabelBackground() {
             Brush.linearGradient(
                 listOf(color1, color2),
                 start = Offset(0.0f, 0.0f),
-                end = Offset(75.0f, 75.0f)
+                end = Offset(80.0f, 80.0f)
             )
     }
 }
@@ -162,13 +204,40 @@ sealed class SlugLabelBackground() {
 fun PreviewSlugLabel() {
     val text: String = "아파트"
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        listOf(SlugLabelStyle.BuildingInfo.Apartment,
-            SlugLabelStyle.GradientBackground.Verified).forEach { it ->
+        listOf(
+            SlugLabelStyle.BuildingInfo.Apartment,
+            SlugLabelStyle.GradientBackground.Verified
+        ).forEach { it ->
             Column {
                 SlugLabelLarge(labelStyle = it, text = text)
                 Spacer(Modifier.height(8.dp))
                 SlugLabelSmall(labelStyle = it, text = text)
             }
         }
+
+        SlugLabelLarge(
+            labelStyle = SlugLabelStyle.GradientBackground.Verified, text = text,
+            frontSlot = {
+                ImageProcessor(
+                    modifier = Modifier.size(16.dp),
+                    imageResource = ImageResource.Id(R.drawable.verified_star_white_22_22)
+                )
+            },
+            backSlot = {
+                ImageProcessor(
+                    modifier = Modifier.size(16.dp),
+                    imageResource = ImageResource.Id(R.drawable.verified_star_white_22_22)
+                )
+            }
+        )
+        SlugLabelLarge(
+            labelStyle = SlugLabelStyle.GradientBackground.Verified, text = "인증매물",
+            frontSlot = {
+                ImageProcessor(
+                    modifier = Modifier.size(16.dp),
+                    imageResource = ImageResource.Id(R.drawable.verified_star_white_22_22)
+                )
+            }
+        )
     }
 }
