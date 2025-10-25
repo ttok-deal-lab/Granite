@@ -193,7 +193,7 @@ sealed class SlugLabelBackground() {
             Brush.linearGradient(
                 listOf(color1, color2),
                 start = Offset(0.0f, 0.0f),
-                end = Offset(80.0f, 80.0f)
+                end = Offset.Infinite
             )
     }
 }
