@@ -296,7 +296,7 @@ internal val PlainTooltipMaxWidth = 200.dp
 
 @Composable
 @Preview(widthDp = 100, heightDp = 100)
-fun PreviewSlugTooltip() {
+private fun PreviewSlugTooltip() {
     Box(
         modifier = Modifier
             .systemBarsPadding()
