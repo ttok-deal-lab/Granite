@@ -283,8 +283,8 @@ private fun CacheDrawScope.drawCaretWithPath(
     }
 }
 
-private val PlainTooltipVerticalPadding = 4.dp
-private val PlainTooltipHorizontalPadding = 8.dp
+private val PlainTooltipVerticalPadding = 8.dp
+private val PlainTooltipHorizontalPadding = 12.dp
 internal val PlainTooltipContentPadding =
     PaddingValues(PlainTooltipHorizontalPadding, PlainTooltipVerticalPadding)
 private val SpacingBetweenTooltipAndAnchor = 7.dp
