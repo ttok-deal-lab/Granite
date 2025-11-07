@@ -121,7 +121,6 @@ private fun Modifier.labelBackground(slugBackground: SlugLabelBackground): Modif
     }
 }
 
-//TODO : 미리 정의된 데이터 정리
 sealed class SlugLabelStyle(
 ) {
     abstract val background: SlugLabelBackground
@@ -187,8 +186,6 @@ sealed class SlugLabelBackground() {
     }
 
     data class Gradient(val color1: Color, val color2: Color) : SlugLabelBackground() {
-
-        //TODO :실제 ui의 width에 맞춘 gradient가 되어야함.
         fun getBackground(): Brush =
             Brush.linearGradient(
                 listOf(color1, color2),

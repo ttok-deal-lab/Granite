@@ -22,6 +22,7 @@ import com.warehouseinhand.slug.home.bottomsheet.location.Location
 import com.warehouseinhand.slug.home.component.FilterButtonState
 import com.warehouseinhand.slug.main.MainBottomSheetType.HomeBottomSheetType
 import com.warehouseinhand.slug.main.MainViewModel
+import com.warehouseinhand.slug.util.startDetailActivity
 
 
 @Composable
@@ -48,13 +49,17 @@ internal fun HomeRoute(
 
     val currentContext = LocalContext.current
     val onItemClicked: (ProductItemUiModel) -> Unit = { model ->
-        Toast.makeText(currentContext, model.nameOfProduct, Toast.LENGTH_SHORT).show()
+
+        //TODO :API연결 이후 재확인
+        startDetailActivity(currentContext)
+//        Toast.makeText(currentContext, model.nameOfProduct, Toast.LENGTH_SHORT).show()
     }
 
     val stateList: List<FilterButtonState> by homeViewModel.stateList.collectAsStateWithLifecycle()
 
     val productUiModelList: List<ProductItemUiModel> by homeViewModel.productUiModelList.collectAsStateWithLifecycle()
 
+    //TODO : viewmodel에서 처리하게 하는건?
     val onFilterClick: (FilterOption) -> Unit = { option ->
         when (option) {
             ToggleFilterType.FINISHED_PRODUCT -> {

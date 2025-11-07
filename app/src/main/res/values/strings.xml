@@ -72,6 +72,10 @@
     <string name="filter_price_above" translatable="false">이상</string>
 
     <string name="filter_price_all" translatable="false">전체</string>
+    <string name="title_activity_detail">DetailActivity</string>
+
+    <!-- Detailed BottomSheet-->
+    <string name="detailed_bottom_confirm" translatable="false">확인</string>
 
 
     <!--        NEWEST,-->

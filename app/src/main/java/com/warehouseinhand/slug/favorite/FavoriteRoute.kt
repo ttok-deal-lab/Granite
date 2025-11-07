@@ -10,6 +10,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.warehouseinhand.slug.home.ProductItemUiModel
+import com.warehouseinhand.slug.util.startDetailActivity
 
 
 @Composable
@@ -19,7 +20,10 @@ internal fun FavoriteRoute(
 ) {
 
     val favoriteList by viewModel.favoriteUiModelList.collectAsStateWithLifecycle()
-    val onItemClicked: (ProductItemUiModel) -> Unit = {}
+    val currentContext = LocalContext.current
+    val onItemClicked: (ProductItemUiModel) -> Unit = {
+        startDetailActivity(currentContext)
+    }
     val onNotificationClick: () -> Unit = {}
     //TODO : 아래 영역에서 favorite 버튼 눌러도 사라지지 않게 만들고, 상세화면에서만 해제 가능하게 할것!
     LaunchedEffect(Unit) {

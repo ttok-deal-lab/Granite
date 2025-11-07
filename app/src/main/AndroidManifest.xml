@@ -18,9 +18,24 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".main.MainActivity"
+            android:name=".detail.DetailActivity"
             android:exported="false"
-            android:theme="@style/Theme.Slug" />
+            android:label="@string/title_activity_detail"
+            android:theme="@style/Theme.Slug" >
+
+        </activity>
+        <activity
+            android:name=".main.MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Slug">
+
+            <!-- OnlyForTest -->
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <!-- OnlyForTest -->
+
+        </activity>
         <activity
             android:name=".login.LogInActivity"
             android:exported="true"

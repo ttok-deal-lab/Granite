@@ -1,0 +1,83 @@
+package com.warehouseinhand.slug.detail
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.absoluteOffset
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.warehouseinhand.slug.R
+import com.warehouseinhand.slug.ui.component.image.ImageProcessor
+import com.warehouseinhand.slug.ui.component.image.ImageResource
+import com.warehouseinhand.slug.ui.theme.Gray150
+import com.warehouseinhand.slug.ui.theme.PrimaryBlack
+import com.warehouseinhand.slug.ui.theme.PrimaryWhite
+import com.warehouseinhand.slug.ui.theme.SlugTheme
+import com.warehouseinhand.slug.ui.theme.SlugTypographyStyle
+
+@Composable
+fun DetailPageTopImagePager(imageList: List<ImageResource>) {
+    val pagerState = rememberPagerState(
+        pageCount = { imageList.size })
+    Column {
+        Box {
+            HorizontalPager(pagerState) { index ->
+                Box(
+                    Modifier
+                        .aspectRatio(1.7f)
+                        .background(color = Gray150),
+                    contentAlignment = Alignment.Center
+                ) {
+                    ImageProcessor(imageResource = imageList[index])
+                }
+            }
+            Row(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .absoluteOffset(x = (-12).dp, y = (-14).dp)
+                    .background(
+                        shape = RoundedCornerShape(14.dp),
+                        color = PrimaryBlack.copy(alpha = 0.4f)
+                    )
+                    .padding(
+                        vertical = 5.dp,
+                        horizontal = 10.dp
+                    )
+            ) {// TODO : 색상 추가 확인 필요
+                Text(
+                    text = (pagerState.currentPage + 1).toString(),
+                    style = SlugTypographyStyle.BodyTinyBold,
+                    color = PrimaryWhite
+                )
+                Text(
+                    text = " / ${pagerState.pageCount}",
+                    style = SlugTypographyStyle.BodyTinyBold,
+                    color = PrimaryWhite.copy(alpha = 0.6f)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+@Preview
+fun PreviewDetailPageTop() {
+    val imageList: List<ImageResource> = listOf(
+        ImageResource.Id(R.drawable.logo_metaopo),
+        ImageResource.Id(R.drawable.logo_metaopo),
+        ImageResource.Id(R.drawable.logo_metaopo),
+    )
+    SlugTheme {
+        DetailPageTopImagePager(imageList)
+    }
+}

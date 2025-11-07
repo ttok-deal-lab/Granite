@@ -31,6 +31,9 @@ kakaoLogin = "2.20.1"
 googleLogin = "1.3.0"
 googleIdentity = "1.1.1"
 
+#MAP
+kakaoMaps = "2.12.18"
+
 #DI - Hilt
 hilt = "2.51.1"
 hiltNavigationCompose = "1.2.0"
@@ -76,6 +79,10 @@ kakao-login = { group = "com.kakao.sdk", name = "v2-user", version.ref = "kakaoL
 google-credentials-play-services-auth = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "googleLogin" }
 google-credentials = { group = "androidx.credentials", name = "credentials", version.ref = "googleLogin" }
 google-googleid = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleIdentity" }
+
+#MAP
+kakao-maps = { group = "com.kakao.maps.open", name = "android", version.ref = "kakaoMaps" }
+
 
 #DI - hilt
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }

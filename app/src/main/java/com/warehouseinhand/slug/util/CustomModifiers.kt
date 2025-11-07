@@ -55,7 +55,7 @@ fun Modifier.blockingClickableWithRipple(
     enable: Boolean = true,
     interactionSource: MutableInteractionSource = MutableInteractionSource(),
     onClick: () -> Unit
-): Modifier = composed {
+): Modifier =   composed {
     blockingClickable(
         onClick = onClick,
         enable = enable,

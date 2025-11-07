@@ -134,6 +134,9 @@ dependencies {
     implementation(libs.google.credentials)
     implementation(libs.google.credentials.play.services.auth)
 
+    //Map sdk
+    implementation(libs.kakao.maps)
+
     //hilt
     implementation(libs.hilt.navigation.compose)
     implementation(libs.hilt.android)

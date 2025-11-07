@@ -34,6 +34,10 @@
 -keep class com.kakao.sdk.**.model.* { <fields>; }
 -keep class * extends com.google.gson.TypeAdapter
 
+#Kakao maps
+-keep class com.kakao.vectormap.** { *; }
+-keep interface com.kakao.vectormap.**
+
 -dontwarn org.bouncycastle.jsse.**
 -dontwarn org.conscrypt.*
 -dontwarn org.openjsse.**
