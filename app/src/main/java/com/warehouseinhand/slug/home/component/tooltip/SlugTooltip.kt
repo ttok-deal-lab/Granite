@@ -19,8 +19,10 @@
 package com.warehouseinhand.slug.home.component.tooltip
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
@@ -78,7 +80,7 @@ import kotlinx.coroutines.launch
  */
 
 
-//TODO : caret 어긋난 부분 수정 필요!
+//TODO : caret 어긋난 부분 수정 필요!, 수직으로 어긋나면 위아래 바꿔야함!
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AlertSlugTooltip(
@@ -134,7 +136,6 @@ private fun rememberSlugPlainTooltipPositionProvider(
                 popupContentSize: IntSize
             ): IntOffset {
                 val x = anchorBounds.left + (anchorBounds.width - popupContentSize.width) / 2
-                windowSize.height
 
                 var y = anchorBounds.bottom + tooltipAnchorSpacing
 
@@ -232,9 +233,7 @@ private fun CacheDrawScope.drawCaretWithPath(
         val tooltipWidth = this.size.width
         val tooltipHeight = this.size.height
 
-
-        val isCaretTop = anchorBounds.bottom + tooltipAnchorSpacing > caretHeightPx
-
+        val isCaretTop = anchorTop - tooltipHeight - tooltipAnchorSpacing < 0
 
         val caretY =
             if (isCaretTop) {
@@ -293,17 +292,26 @@ internal val TooltipMinWidth = 40.dp
 internal val PlainTooltipMaxWidth = 200.dp
 
 
-
 @Composable
-@Preview(widthDp = 100, heightDp = 100)
+@Preview
 private fun PreviewSlugTooltip() {
     Box(
         modifier = Modifier
             .systemBarsPadding()
+            .fillMaxSize()
             .padding(10.dp),
-        contentAlignment = Alignment.Center
-    ) {
+
+        ) {
         val tooltipText = "법원이 책정한 입찰을 시작할 수 있는 가장 낮은 가격이에요."
-        AlertSlugTooltip(tooltipText)
+        Box(
+            modifier = Modifier.align(Alignment.TopCenter)
+        ) {
+            AlertSlugTooltip(tooltipText)
+        }
+        Box(
+            modifier = Modifier.align(Alignment.BottomCenter)
+        ) {
+            AlertSlugTooltip(tooltipText)
+        }
     }
 }
