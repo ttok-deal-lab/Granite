@@ -43,8 +43,10 @@ private fun BasicAlertDialog(
         horizontalAlignment = Alignment.Start
     ) {
         Text(style = TitleLargeBold, text = title)
-        Spacer(Modifier.height(8.dp))
-        Text(style = BodyMediumMedium, color = NeutralSubtler, text = description)
+        if (description.isNotEmpty()) {
+            Spacer(Modifier.height(8.dp))
+            Text(style = BodyMediumMedium, color = NeutralSubtler, text = description)
+        }
         Spacer(Modifier.height(24.dp))
         buttonSpace()
     }

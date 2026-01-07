@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 import com.warehouseinhand.slug.login.sns.sns.SocialLoginResultCallback
 
 class GoogleLoginModule(private val runLegacyIfFail: Boolean = true) {
-//    private lateinit var legacyFailOverModule: LegacyGoogleSignInModule
+    //    private lateinit var legacyFailOverModule: LegacyGoogleSignInModule
     private lateinit var credentialManagerGoogleSignInModule: CredentialManagerGoogleSignInModule
     private lateinit var googleLoginResultCallback: SocialLoginResultCallback
 
@@ -29,7 +29,8 @@ class GoogleLoginModule(private val runLegacyIfFail: Boolean = true) {
 
     fun startLogin(activity: ComponentActivity) {
         credentialManagerGoogleSignInModule.startLogin(
-            activity = activity)
+            activity = activity
+        )
 
 //        oneTapLoginModule.startLogin(
 //            activity = activity,
@@ -39,13 +40,11 @@ class GoogleLoginModule(private val runLegacyIfFail: Boolean = true) {
 
     companion object {
 
-        internal fun signOut(context: Context): Job {
-          return CoroutineScope(Dispatchers.IO).launch {
-                CredentialManagerGoogleSignInModule.signOut(context)
-            }
+        internal suspend fun signOut(context: Context) {
+            CredentialManagerGoogleSignInModule.signOut(context)
         }
 
-        internal fun withDraw(context: Context) {
+        internal suspend fun withDraw(context: Context) {
             signOut(context)
         }
     }

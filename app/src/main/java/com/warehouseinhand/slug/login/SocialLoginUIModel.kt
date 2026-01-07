@@ -55,4 +55,9 @@ enum class SocialLoginUIModel(
         type = SocialLoginType.APPLE
     ),
     ;
+    companion object{
+        fun byType(type:SocialLoginType):SocialLoginUIModel{
+            return entries.find { it.type == type } ?: GOOGLE
+        }
+    }
 }

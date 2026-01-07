@@ -14,11 +14,9 @@ import com.warehouseinhand.slug.home.bottomsheet.sorting.SortingType
 import com.warehouseinhand.slug.home.component.FilterButtonState
 
 
-//TODO : 지역단위 선택 화면 만들기.
-
 @Composable
 fun HomeScreen(
-    padding: PaddingValues,
+    padding: PaddingValues, //TODO : 더 상위에서 처리할것
     lastSelectedSortType: SortingType,
     sectionName: String,
     productUiModelList: List<ProductItemUiModel>,

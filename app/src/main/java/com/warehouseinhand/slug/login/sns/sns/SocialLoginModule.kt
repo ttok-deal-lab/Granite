@@ -52,13 +52,13 @@ class SocialLoginModule(
     }
 
     companion object {
-        fun requestLogOut(context: Context) {
+       suspend fun requestLogOut(context: Context) {//TODO : 실패시에 로깅할 방법생각해야함.
             GoogleLoginModule.signOut(context)
             NaverLoginModule.signOut(context)
             KakaoLoginModule.signOut()
         }
 
-        fun requestWithDraw(context: Context) {
+       suspend fun requestWithDraw(context: Context) {
             GoogleLoginModule.withDraw(context)
             NaverLoginModule.withDraw(context)
             KakaoLoginModule.signOut()// KaKao는 로그아웃만으로 처리됨

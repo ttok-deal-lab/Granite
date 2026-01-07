@@ -35,7 +35,7 @@ import com.warehouseinhand.slug.ui.theme.SlugTypographyStyle
 
 
 @Composable
-fun SocialLoginButton(
+fun SocialLoginButton( //TODO : 해당 Feature로 옮기는 것 고민 할것!
     uiModel: SocialLoginUIModel,
     onSocialLoginSelected: (SocialLoginType) -> Unit,
     isLastLoginType: Boolean = false
@@ -69,7 +69,7 @@ fun SocialLoginButton(
                 )
             }
             Text(
-                text = stringResource(id = uiModel.loginSNSText),
+                text = stringResource(id = uiModel.loginSNSText) + "로 로그인",
                 style = SlugTypographyStyle.BodyMediumMedium
                     .copy(color = uiModel.textColor),
             )

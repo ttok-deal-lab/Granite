@@ -9,6 +9,8 @@ plugins {
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.google.services)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.google.oss.licenses)
+
     kotlin("kapt")
 }
 
@@ -141,5 +143,8 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
+
+    //Opensource
+    implementation(libs.google.play.services.oss.licenses)
 
 }

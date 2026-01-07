@@ -137,13 +137,12 @@ class CredentialManagerGoogleSignInModule(
     }
 
     companion object {
-        suspend fun signOut(context: Context) {
+        suspend fun signOut(context: Context) =
             kotlin.runCatching {
                 CredentialManager.create(context)
                     .clearCredentialState(ClearCredentialStateRequest())
             }
 //                .onFailure(Logger::fe)//TODO : 로깅추가
-        }
 
         private val currentType = SocialLoginType.GOOGLE
         private const val TAG = "CredentialManagerGoogleSignInModule"

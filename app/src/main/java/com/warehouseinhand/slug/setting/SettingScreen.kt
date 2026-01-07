@@ -1,0 +1,100 @@
+package com.warehouseinhand.slug.setting
+
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
+import com.warehouseinhand.slug.main.Route
+import com.warehouseinhand.slug.setting.terms.termsNavGraph
+import com.warehouseinhand.slug.setting.withdraw.withdrawNavGraph
+import com.warehouseinhand.slug.util.moveToLoginWithBackStackClear
+
+@Composable
+fun SettingScreen(
+    modifier: Modifier = Modifier,
+    settingViewModel: SettingViewModel = hiltViewModel(viewModelStoreOwner = LocalContext.current as ViewModelStoreOwner),
+    onBackClick: () -> Unit
+) {
+    val context = LocalContext.current
+    val dialogVisibility by settingViewModel.isNeedToShowLogOutDialog.collectAsStateWithLifecycle()
+    val onLogoutConfirmClicked: () -> Unit = {
+        settingViewModel.requestLogout(doAfterSuccess = { moveToLoginWithBackStackClear(context) })
+    }
+    val navController = rememberNavController()
+    val onLogoutDismissClicked: () -> Unit = {
+        settingViewModel.changeLogoutDialogVisibility(false)
+    }
+    val navTo: (Route) -> Unit = {
+        navController.navigate(it)
+    }
+
+    val onBackClick: () -> Unit = {
+        if (!navController.popBackStack())
+            onBackClick()
+    }
+
+
+
+    Scaffold(
+        modifier = modifier.navigationBarsPadding(),
+        content = { paddingValues ->
+            //MainNavHost
+            SettingNavHost(
+                padding = paddingValues,
+                navController = navController,
+                startDestination = RouteSettingMain,
+                onBackClick = onBackClick,
+                onNavigate = navTo
+            )
+
+            LogoutDialog(
+                dialogVisibility = dialogVisibility,
+                onLogOutConfirmClicked = onLogoutConfirmClicked,
+                onDismissRequest = onLogoutDismissClicked
+            )
+        }
+
+    )
+}
+
+
+@Composable
+fun SettingNavHost(
+//    navigator: MainNavigator,
+    padding: PaddingValues,
+    navController: NavHostController,
+    startDestination: Route,
+    modifier: Modifier = Modifier,
+    onBackClick: () -> Unit,
+    onNavigate: (Route) -> Unit,
+) {
+
+    Box(
+        modifier = modifier
+            .padding(padding)
+            .fillMaxSize()
+    ) {
+        NavHost(
+            navController = navController,
+            startDestination = startDestination,
+        ) {
+            settingMainNavGraph(onBackClick, onNavigate)
+
+            termsNavGraph(onBackClick)
+
+            withdrawNavGraph(onBackClick)
+        }
+    }
+}
