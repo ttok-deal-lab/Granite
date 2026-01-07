@@ -2,8 +2,6 @@ package com.warehouseinhand.slug.data.network.user
 
 import com.google.gson.annotations.SerializedName
 import retrofit2.http.Body
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
 import retrofit2.http.Path
 
@@ -18,6 +16,7 @@ interface UserPublicService {
         @SerializedName("idToken")
         val idToken: String
     )
+
     companion object {
         //TODO : API ROUTES로 CONTEXT 와 VERSION 분리
         private const val CONTEXT: String = "api/sherbet-auth"

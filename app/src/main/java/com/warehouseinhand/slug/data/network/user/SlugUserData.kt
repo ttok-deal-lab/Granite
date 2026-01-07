@@ -19,10 +19,10 @@ internal class SlugUserData {
     ): UserPublicService =
         retrofit.create(UserPublicService::class.java)
 
-//    @Provides
-//    @Singleton
-//    fun providePrivateUserService(
-//        @WithAccessToken retrofit: Retrofit
-//    ): UserPrivateService =
-//        retrofit.create(UserPrivateService::class.java)
+    @Provides
+    @Singleton
+    fun providePrivateUserService(
+        @WithAccessToken retrofit: Retrofit
+    ): UserPrivateService =
+        retrofit.create(UserPrivateService::class.java)
 }
