@@ -1,6 +1,5 @@
 package com.warehouseinhand.slug.ui.component.button.basic
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -22,7 +21,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -47,17 +45,15 @@ internal fun BasicButton(
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
-
-    val buttonState: ButtonState by remember {
-        derivedStateOf {
-            when {
-                isDisabled -> ButtonState.Disabled
-                isPressed -> ButtonState.Pressed
-                else -> ButtonState.Default
-            }
-        }
+    val buttonState: ButtonState = when {
+        isDisabled -> ButtonState.Disabled
+        isPressed -> ButtonState.Pressed
+        else -> ButtonState.Default
     }
+
     val currentColor = buttonStyle.getColors().byState(buttonState)
+
+
     val currentSize = sizeType.getSizes()
     val backgroundShape = RoundedCornerShape(currentSize.radius)
     Box(
@@ -73,8 +69,7 @@ internal fun BasicButton(
                 onClick = onButtonClick,
                 interactionSource = interactionSource,
                 enable = !isDisabled
-            )
-            .run {
+            ).run {
                 if (fillWide)
                     this.fillMaxWidth()
                 else
@@ -97,7 +92,7 @@ fun PreviewBasicPrimaryButton() {
     val toastIt: (String) -> Unit = {
         Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
     }
-    RemoveOverScroll{
+    RemoveOverScroll {
         Surface(modifier = Modifier.systemBarsPadding()) {
             Column(
                 modifier = Modifier
@@ -110,7 +105,8 @@ fun PreviewBasicPrimaryButton() {
                     BasicButtonSizeType.entries.forEach { size ->
                         Row {
                             Box(Modifier.weight(1f)) {
-                                BasicButton(buttonText = "Button",
+                                BasicButton(
+                                    buttonText = "Button",
                                     buttonStyle = it,
                                     sizeType = size,
                                     fillWide = false,
@@ -137,7 +133,8 @@ fun PreviewBasicPrimaryButton() {
                     BasicButtonSizeType.entries.forEach { size ->
                         Row {
                             Box(Modifier.weight(1f)) {
-                                BasicButton(buttonText = "Button",
+                                BasicButton(
+                                    buttonText = "Button",
                                     buttonStyle = it,
                                     fillWide = false,
                                     sizeType = size,
