@@ -12,7 +12,7 @@ data class TokenDTO(
 //    val refreshToken: String?,
 ) : MapperToDomain<SlugToken> {
     override fun toDomain(): SlugToken =
-        SlugToken(accessToken = accessToken ?: "",
+        SlugToken(accessToken = accessToken?.removePrefix("Bearer ") ?: "",
 //            refreshToken = refreshToken ?: ""
         )
 }
