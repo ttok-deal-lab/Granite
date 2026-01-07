@@ -23,6 +23,8 @@ import com.warehouseinhand.slug.login.sns.SocialLoginType
 import com.warehouseinhand.slug.login.sns.google.DisabledSignInPromptsException
 import com.warehouseinhand.slug.login.sns.sns.SocialLoginModule
 import com.warehouseinhand.slug.login.sns.sns.SocialLoginResultCallback
+import com.warehouseinhand.slug.main.MainActivity
+import com.warehouseinhand.slug.permission.PermissionChecker
 import com.warehouseinhand.slug.permission.PermissionRequestActivity
 import com.warehouseinhand.slug.ui.theme.SlugTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -132,8 +134,19 @@ class LogInActivity : ComponentActivity() {
             snsAccessToken = snsAccessToken, type = type,
             doAfterSuccess = {
 //                    Log.d("TESTTEST", "requestUserAuth onSuccess:!! ")
-                moveToPermissionCheck()
+                moveToNextActivity()
             })
+    }
+
+    private fun moveToNextActivity() {
+        val isisAllOfEssentialAllowed = PermissionChecker.isAllOfEssentialAllowed(this)
+        if (isisAllOfEssentialAllowed) {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        } else {
+            moveToPermissionCheck()
+        }
+        finish()
     }
 
     private fun showToast(text: String) {
