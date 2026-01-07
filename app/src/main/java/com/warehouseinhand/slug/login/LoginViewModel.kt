@@ -29,6 +29,10 @@ class LoginViewModel @Inject constructor(
     private val _lastLoginType = MutableStateFlow<SocialLoginType>(SocialLoginType.NEVER_LOGIN)
     val lastLoginType get() = _lastLoginType.asStateFlow()
 
+    private val _isReadyToRemoveSplash = MutableStateFlow(false)
+    val isReadyToRemoveSplash get() = _isReadyToRemoveSplash.asStateFlow()
+
+
     fun requestLastLoginType() {//TODO : Lazy한 방법 적용
         viewModelScope.launch {
             localDeviceSettingDataRepository.getLastLoginType().onSuccess {
@@ -58,6 +62,29 @@ class LoginViewModel @Inject constructor(
                 doAfterSuccess.invoke()
             }.onFailure {
                 Log.e("TESTTESST", "requestUserAuth: FAIL" + it.localizedMessage)
+            }
+        }
+    }
+
+    fun checkTokenValidate(doOnSuccess: () -> Unit) {
+        networkWithProgress {
+            withContext(Dispatchers.IO) {
+                val userId = localUserDataRepository.getUserId().getOrNull()
+                if (userId == null) {
+                    _isReadyToRemoveSplash.emit(true)
+                    return@withContext
+                    //TODO :실패 전달!!
+                }
+                val userProfile = remoteUserDataRepository.getUserInfo(userId).getOrNull()
+                if (userProfile == null || userProfile.status == "INACTIVE") {
+                    //TODO :실패 전달!!
+                    _isReadyToRemoveSplash.emit(true)
+                    return@withContext
+                }
+                localUserDataRepository.setUserProfile(userProfile)
+                _isReadyToRemoveSplash.emit(true)
+                doOnSuccess()
+                //TODO :성공 전달!!
             }
         }
     }
