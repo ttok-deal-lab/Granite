@@ -50,7 +50,7 @@ fun TermsPage(onBackClick: () -> Unit) {//TODO : i18n
                         .fillMaxSize()
                 ) {
                     SettingTopBar(text = "", onBackClick = { navController.navigateUp() })
-                    ServiceTermsPage(url = SERVICE_URL)
+                    TermsPage(url = SERVICE_URL)
                 }
 
             }
@@ -61,7 +61,7 @@ fun TermsPage(onBackClick: () -> Unit) {//TODO : i18n
                         .fillMaxSize()
                 ) {
                     SettingTopBar(text = "", onBackClick = { navController.navigateUp() })
-                    ServiceTermsPage(url = USER_URL)
+                    TermsPage(url = USER_URL)
                 }
             }
 
@@ -70,7 +70,7 @@ fun TermsPage(onBackClick: () -> Unit) {//TODO : i18n
 }
 
 @Composable
-fun ServiceTermsPage(url: String) {
+private fun TermsPage(url: String) {
     Box(modifier = Modifier.fillMaxSize()) {
         WebView(
             modifier = Modifier.fillMaxSize(),
