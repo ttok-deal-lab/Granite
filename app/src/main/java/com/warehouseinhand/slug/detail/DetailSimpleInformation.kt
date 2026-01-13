@@ -233,7 +233,6 @@ private fun RecentAuctionPrice() {
 }
 
 @Composable
-@Stable
 private fun LabelList(labelModels: List<Pair<SlugLabelStyle, String>>) {
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
         labelModels.forEach { (style, string) ->

@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
@@ -27,6 +26,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.warehouseinhand.slug.R
 import com.warehouseinhand.slug.home.component.DDayChip
 import com.warehouseinhand.slug.ui.component.image.ImageProcessor
@@ -41,19 +43,22 @@ import com.warehouseinhand.slug.ui.theme.Primary
 import com.warehouseinhand.slug.ui.theme.SlugTypographyStyle
 import com.warehouseinhand.slug.util.blockingClickable
 import com.warehouseinhand.slug.util.numberToCurrency
+import kotlinx.coroutines.flow.MutableStateFlow
 
 //TODO : 공통컴포넌트화 고려
 @Composable
 fun HomeProductList(
-    uiModelList: List<ProductItemUiModel>,
+    uiModelList: LazyPagingItems<ProductItemUiModel>,
     onItemClicked: (ProductItemUiModel) -> Unit
 ) {
     LazyColumn {
-        items(uiModelList,
-//            key = { it.nameOfProduct + it.priceOfProduct }//TODO : 서버에서 내려오는 고유값으로 설정 할것!
-        ) { model ->
+        items(
+            count = uiModelList.itemCount,
+            ) { index ->
+            val item = uiModelList.get(index)?:return@items
+            Text(text = index.toString())
             ProductItem(
-                uiModel = model,
+                uiModel = item,
                 onItemClicked = onItemClicked
             )
             Spacer(
@@ -163,7 +168,8 @@ fun PreviewHomeProductList() {
     val onItemClicked: (ProductItemUiModel) -> Unit = { model ->
         Toast.makeText(currentContext, model.nameOfProduct, Toast.LENGTH_SHORT).show()
     }
-    val uiModelList: List<ProductItemUiModel> = ProductItemUiModel.testList
+    val uiModelList = MutableStateFlow(PagingData.from(ProductItemUiModel.testList))
+        .collectAsLazyPagingItems()
     Surface {
         HomeProductList(uiModelList, onItemClicked)
     }

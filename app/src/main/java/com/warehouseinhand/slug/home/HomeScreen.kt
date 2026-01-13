@@ -10,6 +10,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices.PIXEL_7_PRO
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.paging.compose.LazyPagingItems
 import com.warehouseinhand.slug.home.bottomsheet.sorting.SortingType
 import com.warehouseinhand.slug.home.component.FilterButtonState
 
@@ -19,7 +20,7 @@ fun HomeScreen(
     padding: PaddingValues, //TODO : 더 상위에서 처리할것
     lastSelectedSortType: SortingType,
     sectionName: String,
-    productUiModelList: List<ProductItemUiModel>,
+    productUiModelList: LazyPagingItems<ProductItemUiModel>,
     stateList: List<FilterButtonState>,
     numberOfProduct: Long,
     verifiedProductExist: Boolean,
@@ -87,7 +88,7 @@ fun PreviewHomeScreen() {
             filterOption = ToggleFilterType.FINISHED_PRODUCT,
         ),
     )
-    val productUiModelList: List<ProductItemUiModel> = ProductItemUiModel.testList
+    val productUiModelList = ProductItemUiModel.pagingItems()
 
     HomeScreen(
         padding = PaddingValues(),

@@ -4,7 +4,7 @@ internal interface MapperToDomain<T> {
     fun toDomain(): T
 
     companion object {
-        fun <T : MapperToDomain<R>, R> List<T>.toDomain(): List<R> =
-            this.map(MapperToDomain<R>::toDomain)
+        internal fun <T> List<MapperToDomain<T>>.toDomain(): List<T> =
+            map { it.toDomain() }
     }
 }

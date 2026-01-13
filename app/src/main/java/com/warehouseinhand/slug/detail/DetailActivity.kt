@@ -27,7 +27,9 @@ class DetailActivity : ComponentActivity() {
         setContent {
             SlugTheme {
                 Scaffold(modifier = Modifier.systemBarsPadding(), topBar = {
-                    DetailTopBar({}, {}, topTitle)
+                    DetailTopBar({
+                        this.finish()
+                    }, {}, topTitle)
                 }) { paddingValues ->
                     Box(
                         modifier = Modifier.padding(paddingValues)

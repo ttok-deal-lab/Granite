@@ -5,9 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidthIn
@@ -20,15 +18,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices.PIXEL_7_PRO
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.paging.compose.LazyPagingItems
 import com.warehouseinhand.slug.R
-import com.warehouseinhand.slug.home.AuctionStatusFilterType
-import com.warehouseinhand.slug.home.BuildingFilterType
-import com.warehouseinhand.slug.home.FilterOption
 import com.warehouseinhand.slug.home.HomeProductList
-import com.warehouseinhand.slug.home.Price
 import com.warehouseinhand.slug.home.ProductItemUiModel
-import com.warehouseinhand.slug.home.ToggleFilterType
-import com.warehouseinhand.slug.home.component.FilterButtonState
 import com.warehouseinhand.slug.ui.component.image.ImageProcessor
 import com.warehouseinhand.slug.ui.component.image.ImageResource
 import com.warehouseinhand.slug.ui.theme.NeutralSubtler
@@ -40,7 +33,7 @@ import com.warehouseinhand.slug.ui.theme.SlugTypographyStyle
 @Composable
 fun FavoriteScreen(
     padding: PaddingValues,
-    productUiModelList: List<ProductItemUiModel>,
+    productUiModelList: LazyPagingItems<ProductItemUiModel>,
     onItemClicked: (ProductItemUiModel) -> Unit,
     onNotificationClick: () -> Unit,
 
@@ -49,7 +42,7 @@ fun FavoriteScreen(
         FavoriteTopBar(
             onNotificationClick = onNotificationClick,
         )
-        if (productUiModelList.isEmpty()) {
+        if (productUiModelList.itemCount==0) {
             EmptyFavoriteScreen()
         } else {
             HomeProductList(productUiModelList, onItemClicked)
@@ -89,7 +82,7 @@ fun PreviewHomeScreen() {
     val onItemClicked: (ProductItemUiModel) -> Unit = { model ->
         Toast.makeText(currentContext, model.nameOfProduct, Toast.LENGTH_SHORT).show()
     }
-    val productUiModelList: List<ProductItemUiModel> = ProductItemUiModel.Companion.testList
+    val productUiModelList = ProductItemUiModel.pagingItems()
 
     FavoriteScreen(
         padding = PaddingValues(),

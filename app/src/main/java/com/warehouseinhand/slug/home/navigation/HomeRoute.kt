@@ -1,6 +1,5 @@
 package com.warehouseinhand.slug.home.navigation
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -10,6 +9,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.warehouseinhand.slug.home.AuctionStatusFilterType
 import com.warehouseinhand.slug.home.BuildingFilterType
 import com.warehouseinhand.slug.home.FilterOption
@@ -38,6 +38,9 @@ internal fun HomeRoute(
     val mainLocation: Location.LocationMain by homeViewModel.selectedMainLocation.collectAsStateWithLifecycle()
     val subLocation: Location.LocationSub by homeViewModel.selectedSubLocation.collectAsStateWithLifecycle()
 
+    val productUiModelList = homeViewModel.productUiModelList.collectAsLazyPagingItems()
+    val stateList: List<FilterButtonState> by homeViewModel.stateList.collectAsStateWithLifecycle()
+
     val sectionName by
     remember { derivedStateOf { "${mainLocation.getShortLocationString()} ${subLocation.getLocationString()}" } }
     val onLocationSelectClick: () -> Unit = {
@@ -54,10 +57,6 @@ internal fun HomeRoute(
         startDetailActivity(currentContext)
 //        Toast.makeText(currentContext, model.nameOfProduct, Toast.LENGTH_SHORT).show()
     }
-
-    val stateList: List<FilterButtonState> by homeViewModel.stateList.collectAsStateWithLifecycle()
-
-    val productUiModelList: List<ProductItemUiModel> by homeViewModel.productUiModelList.collectAsStateWithLifecycle()
 
     //TODO : viewmodel에서 처리하게 하는건?
     val onFilterClick: (FilterOption) -> Unit = { option ->
@@ -79,8 +78,6 @@ internal fun HomeRoute(
     }
     val onSortingClick: () -> Unit =
         { mainViewModel.requestToShowBottomSheet(HomeBottomSheetType.ListSorting) }
-
-
     HomeScreen(
         padding = padding,
         lastSelectedSortType = lastSelectedSortType,

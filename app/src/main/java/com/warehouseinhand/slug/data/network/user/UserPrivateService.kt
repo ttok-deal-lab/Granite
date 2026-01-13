@@ -22,7 +22,6 @@ interface UserPrivateService {
     suspend fun logout(): String
 
     companion object {
-        //TODO : API ROUTES로 CONTEXT 와 VERSION 분리
         private const val CONTEXT: String = "api/sherbet-auth"
         private const val VERSION: String = "v1"
 

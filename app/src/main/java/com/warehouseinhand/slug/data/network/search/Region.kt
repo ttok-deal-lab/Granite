@@ -1,0 +1,32 @@
+package com.warehouseinhand.slug.data.network.search
+
+enum class Region {
+    ALL,
+    SEOUL, BUSAN, DAEGU, INCHEON, GWANGJU, DAEJEON, ULSAN, SEJONG,
+    GYEONGGI, GANGWON, CHUNGBUK, CHUNGNAM, JEONBUK, JEONNAM,
+    GYEONGBUK, GYEONGNAM, JEJU
+}
+
+enum class BuildType {
+    ALL,
+    APARTMENT, VILLA, OFFICETEL, HOUSE, COMMERCIAL, LAND
+}
+
+enum class AuctionFailCount {
+    ALL,
+    FIRST_AUCTION, SECOND_AUCTION, THIRD_AUCTION, MULTIPLE_AUCTION
+}
+
+enum class VerificationStatus {
+    ALL,
+    VERIFIED, NOT_VERIFIED
+}
+
+enum class Sort {
+    LATEST_REGISTERED,
+    MOST_INTERESTED,
+    DEADLINE_SOON,
+    LEAST_FAILED,
+    PRICE_HIGH,
+    PRICE_LOW
+}

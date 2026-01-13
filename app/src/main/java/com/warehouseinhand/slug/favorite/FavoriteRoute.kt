@@ -3,12 +3,9 @@ package com.warehouseinhand.slug.favorite
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.warehouseinhand.slug.home.ProductItemUiModel
 import com.warehouseinhand.slug.util.startDetailActivity
 
@@ -19,7 +16,9 @@ internal fun FavoriteRoute(
     viewModel: FavoriteViewModel = hiltViewModel(viewModelStoreOwner = LocalContext.current as ViewModelStoreOwner)
 ) {
 
-    val favoriteList by viewModel.favoriteUiModelList.collectAsStateWithLifecycle()
+//    val favoriteList by viewModel.favoriteUiModelList.collectAsStateWithLifecycle()
+    val favoriteList  = ProductItemUiModel.pagingItems()
+
     val currentContext = LocalContext.current
     val onItemClicked: (ProductItemUiModel) -> Unit = {
         startDetailActivity(currentContext)

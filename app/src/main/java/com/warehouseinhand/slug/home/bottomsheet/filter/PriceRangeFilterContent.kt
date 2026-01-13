@@ -41,7 +41,7 @@ fun PriceRangeFilterContent(
     requestHideBottomSheet: () -> Unit,
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
-    val valueOfItem by homeViewModel.numberOfProduct.collectAsStateWithLifecycle()
+    val valueOfItem by homeViewModel.tempProductSize.collectAsStateWithLifecycle()
     val minValue by homeViewModel.minPrice.collectAsStateWithLifecycle()
     val maxValue by homeViewModel.maxPrice.collectAsStateWithLifecycle()
     val lastPrice by homeViewModel.priceRange.collectAsStateWithLifecycle()

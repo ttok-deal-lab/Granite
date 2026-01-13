@@ -23,7 +23,6 @@ import com.warehouseinhand.slug.ui.theme.NeutralSubtler
 import com.warehouseinhand.slug.ui.theme.SlugTypographyStyle
 
 @Composable
-@Stable
 fun DDayChip(daysLeft: Int) {
     val state = DDayState.getStateByLeftDay(daysLeft)
     Box(

@@ -3,7 +3,7 @@ package com.warehouseinhand.slug.data.network
 import android.os.Build
 import com.warehouseinhand.slug.BuildConfig
 import com.warehouseinhand.slug.data.local.user.LocalUserDataRepository
-import com.warehouseinhand.slug.domain.SlugToken
+import com.warehouseinhand.slug.domain.user.SlugToken
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -127,8 +127,6 @@ fun CountAndSort(
         }
     }
 }
-
-@Stable
 @Composable
 fun VerifiedProductAnnounce() {
     Column(

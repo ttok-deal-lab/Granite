@@ -1,34 +1,81 @@
 package com.warehouseinhand.slug.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import androidx.paging.map
+import com.warehouseinhand.slug.R
+import com.warehouseinhand.slug.data.network.search.RemoteSearchRepository
+import com.warehouseinhand.slug.domain.search.AuctionSearchItem
 import com.warehouseinhand.slug.home.bottomsheet.location.Location
 import com.warehouseinhand.slug.home.bottomsheet.sorting.SortingType
 import com.warehouseinhand.slug.home.component.FilterButtonState
+import com.warehouseinhand.slug.ui.component.image.ImageResource
+import com.warehouseinhand.slug.ui.component.label.SlugLabelStyle
+import com.warehouseinhand.slug.util.calculateDaysLeft
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+    private val remoteSearchRepository: RemoteSearchRepository
 ) : ViewModel() {
+    init {
+        //2
+        requestNewItemList()
+    }
+
     private val _selectedSortingType: MutableStateFlow<SortingType> =
         MutableStateFlow(SortingType.NEWEST)
-    val selectedSortingType get() = _selectedSortingType.asStateFlow()
+    val selectedSortingType = _selectedSortingType.asStateFlow()
 
     private val _stateList: MutableStateFlow<List<FilterButtonState>> =
         MutableStateFlow(FilterButtonState.defaultStateList)
     val stateList get() = _stateList.asStateFlow()
 
-    private val _productUiModelList: MutableStateFlow<List<ProductItemUiModel>> =
-        MutableStateFlow(ProductItemUiModel.testList)
-    val productUiModelList get() = _productUiModelList.asStateFlow()
+    val productUiModelList: Flow<PagingData<ProductItemUiModel>> =
+        remoteSearchRepository.getProductListPaging()
+            .map { paging ->
+                paging.map { domain ->
+                    domain.toUiModel()
+                }
+            }
+            .cachedIn(viewModelScope)
 
-    private val _numberOfProduct: MutableStateFlow<Long> = MutableStateFlow(12_00L)
-    val numberOfProduct get() = _numberOfProduct.asStateFlow()
+    //1
+//    private val _productUiModelList: MutableStateFlow<List<ProductItemUiModel>> =
+//        MutableStateFlow(emptyList())
+//    val productUiModelList: StateFlow<List<ProductItemUiModel>> =
+//        _productUiModelList
+//            .stateIn(
+//                scope = viewModelScope,
+//                started = SharingStarted.WhileSubscribed(5_000),
+//                initialValue = emptyList()
+//            )
+    //2
+//    val productUiModelList: StateFlow<List<ProductItemUiModel>> =
+//        _productUiModelList
+//            .onStart { requestNewItemList() }
+//            .stateIn(
+//                scope = viewModelScope,
+//                started = SharingStarted.WhileSubscribed(5_000),
+//                initialValue = emptyList()
+//            )
 
-    private val _tempProductSize: MutableStateFlow<Long> = MutableStateFlow(1_200L)
+    private val _numberOfProduct: MutableStateFlow<Long> = MutableStateFlow(0L)
+    val numberOfProduct = _numberOfProduct.asStateFlow()
+
+    private val _tempProductSize: MutableStateFlow<Long> = MutableStateFlow(0L)
     val tempProductSize get() = _tempProductSize.asStateFlow()
 
     private var isFinishedProductFilterSelected = false
@@ -106,10 +153,103 @@ class HomeViewModel @Inject constructor(
 
     }
 
+//    private var lastestCursor: String? = ""
+
+    private var lastJob: Job? = Job().apply { complete() }
     private fun requestNewItemList() {
+        //debounce 어떻게? 목록 그냥 요청은 계속 받아야하나, 필터변경시에는 force 처리해야하는데?
         //TODO : REQUEST API to new item List
-        //debounce 필요!!
+        //TODO : viewmodel에서 커서를 가지는게 맞나?
+        lastJob?.cancel()
+        lastJob = viewModelScope.launch {
+            remoteSearchRepository.getProductListByCursor(nextCursor = "")
+                .onSuccess { it ->
+//                    lastestCursor = it.nextCursor
+
+//                    _productUiModelList.emit(
+//                        it.items.map { it.toUiModel() }
+//                    )
+                    _numberOfProduct.emit(it.totalCount)
+                    Log.d("TESTTEST", "requestNewItemList: SUCCESS")
+                }.onFailure {
+                    Log.d("TESTTEST", "requestNewItemList: FAIL $it")
+
+                    //TODO
+                }
+        }
     }
+
+    fun requestNextItemList() {
+        //debounce 어떻게? 목록 그냥 요청은 계속 받아야하나, 필터변경시에는 force 처리해야하는데?
+        //TODO : REQUEST API to new item List
+        //TODO : viewmodel에서 커서를 가지는게 맞나?
+//        if (lastJob?.isCompleted?.not() ?: true) {
+//            return
+//        }
+//        lastJob = viewModelScope.launch {
+//            remoteSearchRepository.getProductListByCursor(nextCursor = lastestCursor)
+//                .onSuccess { it ->
+//                    lastestCursor = it.nextCursor
+//                    val newList = it.items.map { it.toUiModel() }
+////                    _productUiModelList.update { lastList -> lastList + newList }
+//                    _numberOfProduct.emit(it.totalCount)
+//                    Log.d("TESTTEST", "requestNewItemList: SUCCESS")
+//                }.onFailure {
+//                    Log.d("TESTTEST", "requestNewItemList: FAIL $it")
+//
+//                    //TODO
+//                }
+//        }
+    }
+
+    private fun AuctionSearchItem.toUiModel(
+        nowMillis: Long = System.currentTimeMillis()
+    ): ProductItemUiModel {
+
+        val daysLeft = calculateDaysLeft(salesDateTime, nowMillis)
+
+        return ProductItemUiModel(
+            id = id,
+            priceOfProduct = appraisalPrice,
+            nameOfProduct = buildingName ?: caseNumber, // fallback
+            location = address,
+            daysLeft = daysLeft,
+            buildingImage =
+                if (salesPicture.isNotEmpty())
+                    ImageResource.Url(salesPicture)
+                else ImageResource.Id(R.drawable.logo_metaopo),
+            isFavorite = isFavorite,
+            favoritePersons = zzimCount,
+            infoChipList = buildSearchInfoChips()
+        )
+    }
+
+    private fun AuctionSearchItem.buildSearchInfoChips()
+            : List<Pair<SlugLabelStyle, String>> {
+
+        val chips = mutableListOf<Pair<SlugLabelStyle, String>>()
+
+        // 1. 인증 매물
+        if (verified) {
+            chips += SlugLabelStyle.GradientBackground.Verified to "인증매물"
+        }
+
+        // 2. 매각 상태
+        if (soldOut) {
+            chips += SlugLabelStyle.BuildingInfo.State to "매각완료"
+        } else if (failBidCount > 0) {
+            chips += SlugLabelStyle.BuildingInfo.State to "유찰 ${failBidCount}회"
+        }
+
+        // 3. 건물 카테고리 (대표 1개)
+        salesCategories.firstOrNull()?.let { category ->
+            chips += SlugLabelStyle.BuildingInfo.Apartment to category
+            // 실제로는 category → 스타일 매핑 함수로 분리 권장
+        }
+
+        return chips
+    }
+
 
     fun changeFinishedSelected() {
         isFinishedProductFilterSelected = !isFinishedProductFilterSelected
@@ -160,7 +300,7 @@ class HomeViewModel @Inject constructor(
         _selectedMainLocation.update { mainLocation }
         _selectedSubLocation.update { subLocation }
 
-        requestNewItemList()
+//        requestNewItemList()
         //TODO : filter초기화
         requestNewItemList()
     }

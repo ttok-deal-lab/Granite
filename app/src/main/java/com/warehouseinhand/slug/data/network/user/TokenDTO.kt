@@ -2,7 +2,7 @@ package com.warehouseinhand.slug.data.network.user
 
 import com.google.gson.annotations.SerializedName
 import com.warehouseinhand.slug.data.network.MapperToDomain
-import com.warehouseinhand.slug.domain.SlugToken
+import com.warehouseinhand.slug.domain.user.SlugToken
 
 //TODO : 현재 REFRESH 정보 없음 정책 확인 후 수정 할 것!
 data class TokenDTO(

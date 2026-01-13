@@ -88,7 +88,6 @@ fun SlugLabelSmall(
 
 
 @Composable
-@Stable
 private fun SlugLabel(
     labelStyle: SlugLabelStyle,
     text: String,

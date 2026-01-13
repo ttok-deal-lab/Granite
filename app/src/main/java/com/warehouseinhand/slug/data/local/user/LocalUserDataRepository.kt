@@ -9,8 +9,8 @@ import com.warehouseinhand.slug.data.local.getStoredData
 import com.warehouseinhand.slug.data.local.removeAllData
 import com.warehouseinhand.slug.data.local.setDataStore
 import com.warehouseinhand.slug.data.local.storeData
-import com.warehouseinhand.slug.domain.SlugToken
-import com.warehouseinhand.slug.domain.UserProfile
+import com.warehouseinhand.slug.domain.user.SlugToken
+import com.warehouseinhand.slug.domain.user.UserProfile
 import javax.inject.Inject
 
 //TODO : 현재 REFRESH 정보 없음 정책 확인 후 수정 할 것!

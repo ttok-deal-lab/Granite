@@ -1,7 +1,7 @@
 package com.warehouseinhand.slug.data.network.user
 
-import com.warehouseinhand.slug.domain.SlugToken
-import com.warehouseinhand.slug.domain.UserProfile
+import com.warehouseinhand.slug.domain.user.SlugToken
+import com.warehouseinhand.slug.domain.user.UserProfile
 import javax.inject.Inject
 
 class RemoteUserDataRepository @Inject constructor(

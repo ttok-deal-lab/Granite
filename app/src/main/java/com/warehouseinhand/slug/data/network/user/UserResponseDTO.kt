@@ -2,7 +2,7 @@ package com.warehouseinhand.slug.data.network.user
 
 import com.google.gson.annotations.SerializedName
 import com.warehouseinhand.slug.data.network.MapperToDomain
-import com.warehouseinhand.slug.domain.UserProfile
+import com.warehouseinhand.slug.domain.user.UserProfile
 
 data class UserResponseDTO(
     @SerializedName("user")
