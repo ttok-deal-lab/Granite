@@ -69,18 +69,27 @@ class LoginViewModel @Inject constructor(
     fun checkTokenValidate(doOnSuccess: () -> Unit) {
         networkWithProgress {
             withContext(Dispatchers.IO) {
+               val currentAccessToken = localUserDataRepository.getUserAccessToken().getOrNull()
+                if (currentAccessToken.isNullOrBlank()){
+                    _isReadyToRemoveSplash.emit(true)
+                    return@withContext
+                    //TODO :실패 전달!!
+                }
+
                 val userId = localUserDataRepository.getUserId().getOrNull()
                 if (userId == null) {
                     _isReadyToRemoveSplash.emit(true)
                     return@withContext
                     //TODO :실패 전달!!
                 }
+
                 val userProfile = remoteUserDataRepository.getUserInfo(userId).getOrNull()
                 if (userProfile == null || userProfile.status == "INACTIVE") {
                     //TODO :실패 전달!!
                     _isReadyToRemoveSplash.emit(true)
                     return@withContext
                 }
+
                 localUserDataRepository.setUserProfile(userProfile)
                 _isReadyToRemoveSplash.emit(true)
                 doOnSuccess()

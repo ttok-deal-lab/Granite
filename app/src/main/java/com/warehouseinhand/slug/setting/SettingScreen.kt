@@ -19,6 +19,7 @@ import androidx.navigation.compose.rememberNavController
 import com.warehouseinhand.slug.main.Route
 import com.warehouseinhand.slug.setting.terms.termsNavGraph
 import com.warehouseinhand.slug.setting.withdraw.withdrawNavGraph
+import com.warehouseinhand.slug.ui.component.ProgressCover
 import com.warehouseinhand.slug.util.moveToLoginWithBackStackClear
 
 @Composable
@@ -29,6 +30,9 @@ fun SettingScreen(
 ) {
     val context = LocalContext.current
     val dialogVisibility by settingViewModel.isNeedToShowLogOutDialog.collectAsStateWithLifecycle()
+
+    val isNeedToShowProgress by settingViewModel.isNeedToShowProgress.collectAsStateWithLifecycle()
+
     val onLogoutConfirmClicked: () -> Unit = {
         settingViewModel.requestLogout(doAfterSuccess = { moveToLoginWithBackStackClear(context) })
     }
@@ -46,27 +50,29 @@ fun SettingScreen(
     }
 
 
+    Box(modifier = Modifier.fillMaxSize()){
+        Scaffold(
+            modifier = modifier.navigationBarsPadding(),
+            content = { paddingValues ->
+                //MainNavHost
+                SettingNavHost(
+                    padding = paddingValues,
+                    navController = navController,
+                    startDestination = RouteSettingMain,
+                    onBackClick = onBackClick,
+                    onNavigate = navTo
+                )
 
-    Scaffold(
-        modifier = modifier.navigationBarsPadding(),
-        content = { paddingValues ->
-            //MainNavHost
-            SettingNavHost(
-                padding = paddingValues,
-                navController = navController,
-                startDestination = RouteSettingMain,
-                onBackClick = onBackClick,
-                onNavigate = navTo
-            )
+                LogoutDialog(
+                    dialogVisibility = dialogVisibility,
+                    onLogOutConfirmClicked = onLogoutConfirmClicked,
+                    onDismissRequest = onLogoutDismissClicked
+                )
+            }
+        )
+        ProgressCover(isVisible = isNeedToShowProgress)
+    }
 
-            LogoutDialog(
-                dialogVisibility = dialogVisibility,
-                onLogOutConfirmClicked = onLogoutConfirmClicked,
-                onDismissRequest = onLogoutDismissClicked
-            )
-        }
-
-    )
 }
 
 

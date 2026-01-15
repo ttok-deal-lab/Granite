@@ -18,7 +18,7 @@ interface UserPrivateService {
         @Path(USER_ID) userId: String,
     ): String
 
-    @POST("$CONTEXT/$VERSION/$AUTH}")
+    @POST("$CONTEXT/$VERSION/$AUTH/$LOGOUT")
     suspend fun logout(): String
 
     companion object {
@@ -26,6 +26,7 @@ interface UserPrivateService {
         private const val VERSION: String = "v1"
 
         private const val AUTH: String = "auth"
+        private const val LOGOUT: String = "logout"
 
         private const val USERS: String = "users"
         private const val USER_ID: String = "userId"

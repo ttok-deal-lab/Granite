@@ -29,4 +29,7 @@ class RemoteUserDataRepository @Inject constructor(
             ).run(UserDTO::toDomain)
         }
 
+    suspend fun requestLogout()
+            : Result<String> = kotlin.runCatching { privateUserService.logout() }
+
 }

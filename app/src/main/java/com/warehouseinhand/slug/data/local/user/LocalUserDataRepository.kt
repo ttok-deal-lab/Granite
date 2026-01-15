@@ -13,7 +13,6 @@ import com.warehouseinhand.slug.domain.user.SlugToken
 import com.warehouseinhand.slug.domain.user.UserProfile
 import javax.inject.Inject
 
-//TODO : 현재 REFRESH 정보 없음 정책 확인 후 수정 할 것!
 //TODO : 레이어 모듈 분리시 interface 로
 class LocalUserDataRepository @Inject constructor(
     @DataStoreModule.DataStoreUser private val userDataStore: DataStore<Preferences>
@@ -33,30 +32,18 @@ class LocalUserDataRepository @Inject constructor(
     ): Result<Unit> =
         kotlin.runCatching {
             userDataStore.setDataStore(key = ACCESS_TOKEN, value = token.accessToken)
-//            userDataStore.setDataStore(key = REFRESH_TOKEN, value = token.refreshToken)
         }
 
     suspend fun getUserSlugToken(): Result<SlugToken> =
         kotlin.runCatching {
             SlugToken(
                 accessToken = userDataStore.getStoredData(key = ACCESS_TOKEN).getOrThrow(),
-//                refreshToken = userDataStore.getStoredData(key = REFRESH_TOKEN).getOrThrow()
             )
         }
 
     suspend fun getUserAccessToken(): Result<String> =
         userDataStore.getStoredData(key = ACCESS_TOKEN)
 
-
-//    suspend fun setUserRefreshToken(
-//        refreshToken: String
-//    ): Result<Unit> =
-//        kotlin.runCatching {
-//            userDataStore.setDataStore(key = REFRESH_TOKEN, value = refreshToken)
-//        }
-
-//    suspend fun getUserRefreshToken(): Result<String> =
-//        userDataStore.getStoredData(key = REFRESH_TOKEN)
 
     //USER DATA
     //TODO: 에러 처리 관련 확장 필요.
