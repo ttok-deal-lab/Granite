@@ -22,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -54,8 +55,8 @@ fun HomeProductList(
     LazyColumn {
         items(
             count = uiModelList.itemCount,
-            ) { index ->
-            val item = uiModelList.get(index)?:return@items
+        ) { index ->
+            val item = uiModelList.get(index) ?: return@items
             ProductItem(
                 uiModel = item,
                 onItemClicked = onItemClicked
@@ -88,7 +89,11 @@ private fun ProductItem(
                 .clip(RoundedCornerShape(8.dp))
                 .background(color = Primary)
         ) {
-            ImageProcessor(imageResource = uiModel.buildingImage)
+            ImageProcessor(
+                imageResource = uiModel.buildingImage,
+                contentScale = ContentScale.Crop,
+
+            )
             DDayChip(uiModel.daysLeft)
         }
         Spacer(Modifier.width(16.dp))
