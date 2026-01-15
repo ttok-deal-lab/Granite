@@ -56,7 +56,6 @@ fun HomeProductList(
             count = uiModelList.itemCount,
             ) { index ->
             val item = uiModelList.get(index)?:return@items
-            Text(text = index.toString())
             ProductItem(
                 uiModel = item,
                 onItemClicked = onItemClicked
