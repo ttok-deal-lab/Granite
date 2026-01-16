@@ -20,7 +20,9 @@ package com.warehouseinhand.slug.home.component.tooltip
 
 import android.content.res.Configuration
 import android.util.Log
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -88,9 +90,11 @@ fun AlertSlugTooltip(
 ) {
     val tooltipState = rememberTooltipState(isPersistent = true)
     val coroutineScope = rememberCoroutineScope()
+    val positionProvider = rememberSlugPlainTooltipPositionProvider(7.dp)
+
     TooltipBox(
         modifier = Modifier,
-        positionProvider = rememberSlugPlainTooltipPositionProvider(7.dp),
+        positionProvider = positionProvider,
         tooltip = {
             SlugPlainTooltip(
                 modifier = Modifier,
@@ -98,6 +102,7 @@ fun AlertSlugTooltip(
                 containerColor = Neutral,
                 contentColor = Neutral,
                 shape = RoundedCornerShape(8.dp),
+                getIsToolTopTop = positionProvider::getIsToolTipTop,
             ) {
                 Text(
                     text = tooltipText,
@@ -124,27 +129,38 @@ fun AlertSlugTooltip(
 @Composable
 private fun rememberSlugPlainTooltipPositionProvider(
     spacingBetweenTooltipAndAnchor: Dp = SpacingBetweenTooltipAndAnchor
-): PopupPositionProvider {
+): SlugPopupPositionProvider {
     val tooltipAnchorSpacing =
         with(LocalDensity.current) { spacingBetweenTooltipAndAnchor.roundToPx() }
     return remember(tooltipAnchorSpacing) {
-        object : PopupPositionProvider {
-            override fun calculatePosition(
-                anchorBounds: IntRect,
-                windowSize: IntSize,
-                layoutDirection: LayoutDirection,
-                popupContentSize: IntSize
-            ): IntOffset {
-                val x = anchorBounds.left + (anchorBounds.width - popupContentSize.width) / 2
+        SlugPopupPositionProvider(tooltipAnchorSpacing)
+    }
+}
 
-                var y = anchorBounds.bottom + tooltipAnchorSpacing
+class SlugPopupPositionProvider(val tooltipAnchorSpacing: Int) : PopupPositionProvider {
+    private var isToolTipTop = false
 
-                if (y > windowSize.height)
-                    y = anchorBounds.top - tooltipAnchorSpacing - popupContentSize.height
+    fun getIsToolTipTop(): Boolean {
+        return isToolTipTop
+    }
 
-                return IntOffset(x, y)
-            }
-        }
+
+    override fun calculatePosition(
+        anchorBounds: IntRect,
+        windowSize: IntSize,
+        layoutDirection: LayoutDirection,
+        popupContentSize: IntSize
+    ): IntOffset {
+        val x = anchorBounds.left + (anchorBounds.width - popupContentSize.width) / 2
+
+        isToolTipTop =
+            anchorBounds.bottom + tooltipAnchorSpacing + popupContentSize.height > windowSize.height
+
+        val y = if (isToolTipTop)
+            anchorBounds.top - tooltipAnchorSpacing - popupContentSize.height
+        else
+            anchorBounds.bottom + tooltipAnchorSpacing
+        return IntOffset(x, y)
     }
 }
 
@@ -158,7 +174,8 @@ private fun TooltipScope.SlugPlainTooltip(
     containerColor: Color,
     tonalElevation: Dp = 0.dp,
     shadowElevation: Dp = 0.dp,
-    content: @Composable () -> Unit
+    getIsToolTopTop: () -> Boolean,
+    content: @Composable () -> Unit,
 ) {
     val drawCaretModifier =
         if (caretSize.isSpecified) {
@@ -171,7 +188,8 @@ private fun TooltipScope.SlugPlainTooltip(
                         configuration,
                         containerColor,
                         caretSize,
-                        anchorLayoutCoordinates
+                        anchorLayoutCoordinates,
+                        getIsToolTopTop
                     )
                 }
                 .then(modifier)
@@ -209,7 +227,8 @@ private fun CacheDrawScope.drawCaretWithPath(
     configuration: Configuration,
     containerColor: Color,
     caretSize: DpSize,
-    anchorLayoutCoordinates: LayoutCoordinates?
+    anchorLayoutCoordinates: LayoutCoordinates?,
+    getIsToolTopTop: () -> Boolean
 ): DrawResult {
     val path = Path()
 
@@ -217,24 +236,26 @@ private fun CacheDrawScope.drawCaretWithPath(
         val caretHeightPx: Int
         val caretWidthPx: Int
         val screenWidthPx: Int
+        val screenHeightPx: Int
         val tooltipAnchorSpacing: Int
         with(density) {
             caretHeightPx = caretSize.height.roundToPx()
             caretWidthPx = caretSize.width.roundToPx()
             screenWidthPx = configuration.screenWidthDp.dp.roundToPx()
+            screenHeightPx = configuration.screenHeightDp.dp.roundToPx()
             tooltipAnchorSpacing = SpacingBetweenTooltipAndAnchor.roundToPx()
         }
         val anchorBounds = anchorLayoutCoordinates.boundsInWindow()
         val anchorLeft = anchorBounds.left
         val anchorRight = anchorBounds.right
         val anchorTop = anchorBounds.top
+        val anchorBottom = anchorBounds.bottom
         val anchorMid = (anchorRight + anchorLeft) / 2
         val anchorWidth = anchorRight - anchorLeft
         val tooltipWidth = this.size.width
         val tooltipHeight = this.size.height
 
-        val isCaretTop = anchorTop - tooltipHeight - tooltipAnchorSpacing < 0
-
+        val isCaretTop = !getIsToolTopTop()
         val caretY =
             if (isCaretTop) {
                 0f
@@ -295,23 +316,40 @@ internal val PlainTooltipMaxWidth = 200.dp
 @Composable
 @Preview
 private fun PreviewSlugTooltip() {
-    Box(
+    Column(
         modifier = Modifier
             .systemBarsPadding()
             .fillMaxSize()
             .padding(10.dp),
-
-        ) {
+        verticalArrangement = Arrangement.SpaceBetween,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         val tooltipText = "법원이 책정한 입찰을 시작할 수 있는 가장 낮은 가격이에요."
-        Box(
-            modifier = Modifier.align(Alignment.TopCenter)
-        ) {
-            AlertSlugTooltip(tooltipText)
-        }
-        Box(
-            modifier = Modifier.align(Alignment.BottomCenter)
-        ) {
-            AlertSlugTooltip(tooltipText)
-        }
+
+        AlertSlugTooltip(tooltipText)
+        AlertSlugTooltip(tooltipText)
+        AlertSlugTooltip(tooltipText)
+        AlertSlugTooltip(tooltipText)
+        AlertSlugTooltip(tooltipText)
+        AlertSlugTooltip(tooltipText)
+        AlertSlugTooltip(tooltipText)
+        AlertSlugTooltip(tooltipText)
+        AlertSlugTooltip(tooltipText)
+        AlertSlugTooltip(tooltipText)
+        AlertSlugTooltip(tooltipText)
+        AlertSlugTooltip(tooltipText)
+        AlertSlugTooltip(tooltipText)
+        AlertSlugTooltip(tooltipText)
+        AlertSlugTooltip(tooltipText)
+        AlertSlugTooltip(tooltipText)
+        AlertSlugTooltip(tooltipText)
+        AlertSlugTooltip(tooltipText)
+        AlertSlugTooltip(tooltipText)
+        AlertSlugTooltip(tooltipText)
+        AlertSlugTooltip(tooltipText)
+        AlertSlugTooltip(tooltipText)
+        AlertSlugTooltip(tooltipText)
+        AlertSlugTooltip(tooltipText)
+
     }
 }
