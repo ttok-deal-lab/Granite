@@ -46,13 +46,14 @@ import com.warehouseinhand.slug.ui.theme.SlugTheme
 import com.warehouseinhand.slug.ui.theme.SlugTypographyStyle
 import com.warehouseinhand.slug.util.blockingClickable
 import com.warehouseinhand.slug.util.dropShadow
+import com.warehouseinhand.slug.util.numberToNumberFormatKR
 
 //TODO : i18n
 
+
 @Composable
-fun TitleAnalysisPage() {
-    val listOfLessee = LesseeInfo.lesseePreviewList
-    val numberOfLessee = listOfLessee.size
+fun TitleAnalysisPage(listOfLessee: List<LesseeInfo>) {
+    val numberOfLessee: Int = listOfLessee.size
     Column(
         modifier = Modifier.padding(vertical = 24.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp)
@@ -143,6 +144,9 @@ private fun LesseeNameCard(name: String, isSelected: Boolean, state: OccupancySt
 
 @Composable
 private fun LesseeDataCard(data: LesseeInfo) {
+    val depositAmount = remember(data.depositAmount) { numberToNumberFormatKR(data.depositAmount) }
+    val monthlyRent = remember(data.monthlyRent) { numberToNumberFormatKR(data.monthlyRent) }
+
     val shape = RoundedCornerShape(8.dp)
     Column(
         modifier = Modifier
@@ -200,8 +204,8 @@ private fun LesseeDataCard(data: LesseeInfo) {
                 value = if (data.hasDividendClaim) "있음" else "없음"
             )
             LesseeDataCardItemValue(name = "배당요구일", value = data.dividendClaimDate)
-            LesseeDataCardItemValue(name = "보증금", value = data.depositAmount)
-            LesseeDataCardItemValue(name = "월세", value = data.monthlyRent)
+            LesseeDataCardItemValue(name = "보증금", value = "${depositAmount}원")
+            LesseeDataCardItemValue(name = "월세", value = "${monthlyRent}원")
 
         }
     }
@@ -232,6 +236,7 @@ private fun LesseeDataCardItemValue(name: String, value: String) {
 enum class OccupancyStatus(val displayName: String, val statusColor: Color) {
     OCCUPIED(displayName = "점유중", statusColor = Primary),
     VACANT(displayName = "공실", statusColor = NeutralSubtler),
+    NONE(displayName = "없음", statusColor = NeutralSubtler),
     UNKNOWN(displayName = "점유확인 필요", statusColor = NeutralSubtler)
 }
 
@@ -245,8 +250,8 @@ data class LesseeInfo(
     val confirmedDate: String,     // 확정일자
     val hasDividendClaim: Boolean,  // 배당요구 있음/없음
     val dividendClaimDate: String, // 배당요구일
-    val depositAmount: String,     // 보증금
-    val monthlyRent: String        // 월세
+    val depositAmount: Long,     // 보증금
+    val monthlyRent: Long        // 월세
 ) {
     companion object {
         val lesseePreviewList by lazy {
@@ -261,8 +266,8 @@ data class LesseeInfo(
                     confirmedDate = "2023.09.10",
                     hasDividendClaim = true,
                     dividendClaimDate = "2024.09.06",
-                    depositAmount = "100,000,000원",
-                    monthlyRent = "100,000원"
+                    depositAmount = 100_000_000,
+                    monthlyRent = 100_000
                 ),
                 LesseeInfo(
                     lesseeName = "박시은",
@@ -274,8 +279,8 @@ data class LesseeInfo(
                     confirmedDate = "—",
                     hasDividendClaim = false,
                     dividendClaimDate = "—",
-                    depositAmount = "50,000,000원",
-                    monthlyRent = "0원"
+                    depositAmount = 50_000_000,
+                    monthlyRent = 0
                 ),
                 LesseeInfo(
                     lesseeName = "공시리",
@@ -287,8 +292,8 @@ data class LesseeInfo(
                     confirmedDate = "2024.02.01",
                     hasDividendClaim = false,
                     dividendClaimDate = "—",
-                    depositAmount = "80,000,000원",
-                    monthlyRent = "200,000원"
+                    depositAmount = 80_000_000,
+                    monthlyRent = 200_000
                 )
             )
         }
@@ -312,5 +317,6 @@ fun PreviewLesseeNameCard() {
 @Composable
 @Preview
 fun PreviewTitleAnalysisPage() {
-    TitleAnalysisPage()
+    val listOfLessee: List<LesseeInfo> = LesseeInfo.lesseePreviewList
+    TitleAnalysisPage(listOfLessee)
 }

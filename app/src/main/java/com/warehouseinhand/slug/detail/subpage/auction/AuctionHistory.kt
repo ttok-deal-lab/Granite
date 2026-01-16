@@ -45,6 +45,7 @@ import com.warehouseinhand.slug.ui.theme.PrimaryLight
 import com.warehouseinhand.slug.ui.theme.PrimaryWhite
 import com.warehouseinhand.slug.ui.theme.SlugTypographyStyle
 import com.warehouseinhand.slug.util.blockingClickable
+import com.warehouseinhand.slug.util.numberToNumberFormatKR
 
 
 @Composable
@@ -66,7 +67,7 @@ fun AuctionHistory(uiModel: AuctionHistoryUiModel) {
         ItemInfo(name = "배당종기일", value = uiModel.dividendDeadline)
         ItemInfo(name = "감정평가일", value = uiModel.appraisalDate)
 
-        Column {
+        if (uiModel.rounds.isNotEmpty())
             Box {
                 Column(
                     modifier = Modifier
@@ -100,33 +101,34 @@ fun AuctionHistory(uiModel: AuctionHistoryUiModel) {
                             )
                     )
             }
-            if (isExpandable)
-                Box(
+        if (isExpandable)
+            Box(
+                modifier = Modifier
+                    .blockingClickable(onClick = {
+                        isExpanded = !isExpanded
+                    })
+                    .height(48.dp)
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                ImageProcessor(
                     modifier = Modifier
-                        .blockingClickable(onClick = {
-                            isExpanded = !isExpanded
-                        })
-                        .height(48.dp)
-                        .fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    ImageProcessor(
-                        modifier = Modifier
-                            .rotate(if (isExpanded) 0f else 180f)
-                            .size(16.dp),
-                        imageResource = ImageResource.Id(R.drawable.ic_arrow_up_16_16)
-                    )
-                }
-            else {
-                //아랫 패딩 역활을 대신함!
-                Spacer(Modifier.height(24.dp))
+                        .rotate(if (isExpanded) 0f else 180f)
+                        .size(16.dp),
+                    imageResource = ImageResource.Id(R.drawable.ic_arrow_up_16_16)
+                )
             }
+        else {
+            //아랫 패딩 역활을 대신함!
+            Spacer(Modifier.height(24.dp))
         }
     }
 }
 
 @Composable
 private fun Round(index: Int, round: AuctionRound) {
+    val numberToNumberFormatKR =
+        remember(round.minSalePrice) { numberToNumberFormatKR(round.minSalePrice) }
     Column(
         modifier = Modifier.padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -173,7 +175,7 @@ private fun Round(index: Int, round: AuctionRound) {
                 color = NeutralSubtler
             )
             Text(
-                text = round.minSalePrice,
+                text = "${numberToNumberFormatKR}원",
                 style = SlugTypographyStyle.BodySmallMedium,
                 color = NeutralSubtler
             )
@@ -244,13 +246,25 @@ enum class AuctionResult(val displayName: String, val color: Color, val tooltipT
         displayName = "종료",
         color = NeutralSubtler,
         tooltipText = "매각허가결정이 확정되면서 경매절차가 종료된 상태"
+    ),
+    INVALID(
+        displayName = "INVALID",
+        color = Critical,
+        tooltipText = "INVALID"
     )
+
+    ;
+
+    companion object {
+        fun fromDisplayName(displayName: String): AuctionResult =
+            entries.find { it.displayName == displayName } ?: INVALID
+    }
 }
 
 data class AuctionRound(
     val round: Int,              // 회차 (예: 8)
     val date: String,            // 날짜 (예: "2025.05.12")
-    val minSalePrice: String,    // 최저매각 (예: "419,000,000원")
+    val minSalePrice: Long,    // 최저매각 (예: "419,000,000원")
     val result: AuctionResult    // 결과
 )
 
@@ -269,49 +283,49 @@ data class AuctionHistoryUiModel(
                 AuctionRound(
                     round = 8,
                     date = "2025.05.12",
-                    minSalePrice = "419,000,000원",
+                    minSalePrice = 419_000_000,
                     result = AuctionResult.PROCEEDING
                 ),
                 AuctionRound(
                     round = 7,
                     date = "2025.05.12",
-                    minSalePrice = "419,000,000원",
+                    minSalePrice = 419_000_000,
                     result = AuctionResult.CHANGED
                 ),
                 AuctionRound(
                     round = 6,
                     date = "2025.05.12",
-                    minSalePrice = "419,000,000원",
+                    minSalePrice = 419_000_000,
                     result = AuctionResult.FAILED
                 ),
                 AuctionRound(
                     round = 5,
                     date = "2025.05.12",
-                    minSalePrice = "419,000,000원",
+                    minSalePrice = 419_000_000,
                     result = AuctionResult.SOLD
                 ),
                 AuctionRound(
                     round = 4,
                     date = "2025.05.12",
-                    minSalePrice = "419,000,000원",
+                    minSalePrice = 419_000_000,
                     result = AuctionResult.APPROVED
                 ),
                 AuctionRound(
                     round = 3,
                     date = "2025.05.12",
-                    minSalePrice = "419,000,000원",
+                    minSalePrice = 419_000_000,
                     result = AuctionResult.WITHDRAWN
                 ),
                 AuctionRound(
                     round = 2,
                     date = "2025.05.12",
-                    minSalePrice = "419,000,000원",
+                    minSalePrice = 419_000_000,
                     result = AuctionResult.REJECTED
                 ),
                 AuctionRound(
                     round = 1,
                     date = "2025.05.12",
-                    minSalePrice = "419,000,000원",
+                    minSalePrice = 419_000_000,
                     result = AuctionResult.ENDED
                 )
             )
@@ -324,7 +338,7 @@ data class AuctionHistoryUiModel(
                 AuctionRound(
                     round = 1,
                     date = "2025.05.12",
-                    minSalePrice = "419,000,000원",
+                    minSalePrice = 419_000_000,
                     result = AuctionResult.ENDED
                 )
             )

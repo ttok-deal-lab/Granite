@@ -75,7 +75,24 @@ data class AuctionCardUiModel(
     val value: String,
     val isCritical: Boolean,
     val type: DetailBottomSheetType
-)
+) {
+    companion object {
+        val preview = listOf(
+            AuctionCardUiModel(
+                name = "경매구분", value = "강제경매", isCritical = true,
+                DetailBottomSheetType.InfoSheetType.TypeOfAuction
+            ),
+            AuctionCardUiModel(
+                name = "임차인", value = "대항력 있음", isCritical = true,
+                DetailBottomSheetType.InfoSheetType.Lessee
+            ),
+            AuctionCardUiModel(
+                name = "채권자", value = "5명", isCritical = false,
+                DetailBottomSheetType.InfoSheetType.Creditor
+            ),
+        )
+    }
+}
 
 @Composable
 @Preview

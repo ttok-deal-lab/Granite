@@ -40,3 +40,9 @@ fun numberToCurrency(number: Long, dropUnder10000: Boolean = true): String {
     return prefix + valueList.joinToString(separator = " ") + "원"
 }
 
+fun numberToNumberFormatKR(number: Long): String {
+    val formatter = NumberFormat.getNumberInstance(Locale.KOREA)
+    return formatter.format(number)
+
+}
+

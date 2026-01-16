@@ -12,12 +12,16 @@ import com.warehouseinhand.slug.setting.SettingActivity
 
 fun startDetailActivity(
     context: Context,
-//    id: String // TODO : API 연결 이후 설정 필요.
+    id: String // TODO : API 연결 이후 설정 필요.
 ) {
     val toDetailedActivity = Intent(context, DetailActivity::class.java)
+        .apply {
+            putExtra(PRODUCT_ID,id)
+        }
     //TODO : putExtra로 id등 전달
     context.startActivity(toDetailedActivity)
 }
+const val PRODUCT_ID = "PRODUCT_ID"
 fun startSettingActivity(
     context: Context,
 //    id: String // TODO : API 연결 이후 설정 필요.

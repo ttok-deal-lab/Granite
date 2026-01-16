@@ -120,8 +120,8 @@ private fun ProductItem(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                uiModel.infoChipList.forEach { (type, text) ->
-                    SlugLabelLarge(labelStyle = type, text = text)
+                uiModel.infoChipList.forEach { uiModel ->
+                    SlugLabelLarge(uiModel = uiModel)
                 }
 
                 Spacer(Modifier.weight(1f))

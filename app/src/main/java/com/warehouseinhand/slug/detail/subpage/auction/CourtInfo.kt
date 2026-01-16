@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.warehouseinhand.slug.detail.subpage.ItemInfo
@@ -35,7 +34,7 @@ fun CourtInfo(uiModel: CourtInfoUiModel, onMapFocused: (Boolean) -> Unit) {
         ItemTitle("법원 정보")
 
         ItemInfo(name = "관할법원", value = uiModel.courtName)
-        ItemInfo(name = "담당", value = uiModel.inCharge)
+        ItemInfo(name = "담당", value = uiModel.courtTeam)
         ItemInfo(name = "매각기일", value = uiModel.saleDate)
         ItemInfo(name = "입찰시간", value = uiModel.bidTime)
         ItemInfo(name = "개찰시간", value = uiModel.openingTime)
@@ -58,7 +57,7 @@ fun CourtInfo(uiModel: CourtInfoUiModel, onMapFocused: (Boolean) -> Unit) {
 
 data class CourtInfoUiModel(
     val courtName: String,
-    val inCharge: String,
+    val courtTeam: String,
     val saleDate: String,
     val bidTime: String,
     val openingTime: String,
@@ -68,7 +67,7 @@ data class CourtInfoUiModel(
     companion object {
         val preview = CourtInfoUiModel(
             courtName = "성남지원",
-            inCharge = "경매 2개",
+            courtTeam = "경매 2개",
             saleDate = "2025.05.05",
             bidTime = "10:00 - 11:10",
             openingTime = "11:30",

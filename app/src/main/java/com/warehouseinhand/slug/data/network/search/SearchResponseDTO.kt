@@ -3,7 +3,7 @@ package com.warehouseinhand.slug.data.network.search
 import com.google.gson.annotations.SerializedName
 import com.warehouseinhand.slug.data.network.MapperToDomain
 import com.warehouseinhand.slug.data.network.MapperToDomain.Companion.toDomain
-import com.warehouseinhand.slug.data.network.sales.SalesPictureDTO
+import com.warehouseinhand.slug.data.network.search.SalesPictureDTO
 import com.warehouseinhand.slug.domain.search.AuctionSearchItem
 import com.warehouseinhand.slug.domain.search.SearchResultPage
 
@@ -28,7 +28,7 @@ data class SearchResponseDTO(
 
 data class AuctionItemResponseDTO(
     @SerializedName("id")
-    val id: Long,
+    val id: String,
 
     @SerializedName("caseNumber")
     val caseNumber: String,

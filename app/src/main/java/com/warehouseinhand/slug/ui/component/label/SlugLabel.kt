@@ -36,23 +36,21 @@ import com.warehouseinhand.slug.ui.theme.VerifiedGradientUpper
 
 @Composable
 fun SlugLabelLarge(
-    labelStyle: SlugLabelStyle,
-    text: String,
+    uiModel: SlugLabelUiModel,
     frontSlot: @Composable RowScope.() -> Unit = { },
     backSlot: @Composable RowScope.() -> Unit = { },
 ) {
     SlugLabel(
-        labelStyle = labelStyle,
-        text = text,
+        uiModel = uiModel,
         textStyle = SlugTypographyStyle.BodyMicroMedium,
         frontSlot = frontSlot,
         backSlot = backSlot,
     )
 }
+
 @Composable
 fun VerifiedSlugLabelLarge(
-    labelStyle: SlugLabelStyle,
-    text: String,
+    uiModel: SlugLabelUiModel,
     frontSlot: @Composable RowScope.() -> Unit = {
         ImageProcessor(
             modifier = Modifier.size(16.dp),
@@ -62,8 +60,7 @@ fun VerifiedSlugLabelLarge(
     backSlot: @Composable RowScope.() -> Unit = { },
 ) {
     SlugLabel(
-        labelStyle = labelStyle,
-        text = text,
+        uiModel = uiModel,
         textStyle = SlugTypographyStyle.BodyMicroMedium,
         frontSlot = frontSlot,
         backSlot = backSlot,
@@ -72,14 +69,12 @@ fun VerifiedSlugLabelLarge(
 
 @Composable
 fun SlugLabelSmall(
-    labelStyle: SlugLabelStyle,
-    text: String,
+    uiModel: SlugLabelUiModel,
     frontSlot: @Composable RowScope.() -> Unit = { },
     backSlot: @Composable RowScope.() -> Unit = { },
 ) {
     SlugLabel(
-        labelStyle = labelStyle,
-        text = text,
+        uiModel = uiModel,
         textStyle = SlugTypographyStyle.CaptionLargeMedium,
         frontSlot = frontSlot,
         backSlot = backSlot,
@@ -89,8 +84,7 @@ fun SlugLabelSmall(
 
 @Composable
 private fun SlugLabel(
-    labelStyle: SlugLabelStyle,
-    text: String,
+    uiModel: SlugLabelUiModel,
     textStyle: TextStyle,
     frontSlot: @Composable RowScope.() -> Unit = { },
     backSlot: @Composable RowScope.() -> Unit = { },
@@ -98,13 +92,13 @@ private fun SlugLabel(
     Row(
         modifier = Modifier
             .clip(RoundedCornerShape(4.dp))
-            .labelBackground(slugBackground = labelStyle.background)
+            .labelBackground(slugBackground = uiModel.labelStyle.background)
             .padding(vertical = 3.dp, horizontal = 6.dp),
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         frontSlot()
-        Text(text = text, color = labelStyle.textColor, style = textStyle)
+        Text(text = uiModel.text, color = uiModel.labelStyle.textColor, style = textStyle)
         backSlot()
     }
 }
@@ -194,6 +188,11 @@ sealed class SlugLabelBackground() {
     }
 }
 
+data class SlugLabelUiModel(
+    val labelStyle: SlugLabelStyle,
+    val text: String,
+)
+
 
 @Composable
 @Preview
@@ -205,14 +204,14 @@ fun PreviewSlugLabel() {
             SlugLabelStyle.GradientBackground.Verified
         ).forEach { it ->
             Column {
-                SlugLabelLarge(labelStyle = it, text = text)
+                SlugLabelLarge(uiModel = SlugLabelUiModel(labelStyle = it, text = text))
                 Spacer(Modifier.height(8.dp))
-                SlugLabelSmall(labelStyle = it, text = text)
+                SlugLabelSmall(uiModel = SlugLabelUiModel(labelStyle = it, text = text))
             }
         }
 
         SlugLabelLarge(
-            labelStyle = SlugLabelStyle.GradientBackground.Verified, text = text,
+            SlugLabelUiModel(labelStyle = SlugLabelStyle.GradientBackground.Verified, text = text),
             frontSlot = {
                 ImageProcessor(
                     modifier = Modifier.size(16.dp),
@@ -227,7 +226,10 @@ fun PreviewSlugLabel() {
             }
         )
         SlugLabelLarge(
-            labelStyle = SlugLabelStyle.GradientBackground.Verified, text = "인증매물",
+            SlugLabelUiModel(
+                labelStyle = SlugLabelStyle.GradientBackground.Verified,
+                text = "인증매물"
+            ),
             frontSlot = {
                 ImageProcessor(
                     modifier = Modifier.size(16.dp),

@@ -1,5 +1,6 @@
 package com.warehouseinhand.slug.detail
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -16,22 +17,21 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.warehouseinhand.slug.R
 import com.warehouseinhand.slug.home.component.tooltip.AlertSlugTooltip
-import com.warehouseinhand.slug.ui.component.label.SlugLabelBackground
 import com.warehouseinhand.slug.ui.component.label.SlugLabelLarge
 import com.warehouseinhand.slug.ui.component.label.SlugLabelStyle
+import com.warehouseinhand.slug.ui.component.label.SlugLabelUiModel
 import com.warehouseinhand.slug.ui.component.label.VerifiedSlugLabelLarge
 import com.warehouseinhand.slug.ui.theme.Critical
-import com.warehouseinhand.slug.ui.theme.CriticalWeak
 import com.warehouseinhand.slug.ui.theme.Gray150
 import com.warehouseinhand.slug.ui.theme.Neutral
 import com.warehouseinhand.slug.ui.theme.NeutralInverted
@@ -41,63 +41,57 @@ import com.warehouseinhand.slug.ui.theme.NeutralSubtler
 import com.warehouseinhand.slug.ui.theme.Primary
 import com.warehouseinhand.slug.ui.theme.SlugTheme
 import com.warehouseinhand.slug.ui.theme.SlugTypographyStyle
+import com.warehouseinhand.slug.util.ClipBoardModule
 import com.warehouseinhand.slug.util.blockingClickable
 import com.warehouseinhand.slug.util.numberToCurrency
 
 //TODO : 각 리소스 별 Description 처리 할것.
 //TODO : home Top bar와 공통 컴포넌트화 할지 고민
+
 @Composable
 fun DetailSimpleInformation(
-    itemNumberCopyRequest: () -> Unit,
+    uiModel: DetailSimpleInformationUiModel,
     likeClicked: () -> Unit,
 ) {
-    val isFavorite = false
-    val numberOfFavorite = 100
-
-    val nameOfProduct: String = "신촌금호2단지"
-    val numberOfProduct: String = "2023타경 102411"
-    val typeDisplayName: String = "아파트"
-    val size: String = "공급 110.52㎡ (33평)"
-    val labelModels: List<Pair<SlugLabelStyle, String>> = listOf(
-        SlugLabelStyle.GradientBackground.Verified to "인증매물",
-        SlugLabelStyle.BuildingInfo.State to "유찰 2회",
-        SlugLabelStyle.Dynamic(
-            background = SlugLabelBackground.Solid(CriticalWeak),
-            textColor = Critical
-        ) to "매각 D-2",
-        SlugLabelStyle.BuildingInfo.State to "매각 D-4",
-    )
-
-    Column(
-        modifier = Modifier.padding(20.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        NameAndLike(
-            nameOfProduct = nameOfProduct,
-            numberOfProduct = numberOfProduct,
-            typeDisplayName = typeDisplayName,
-            size = size,
-            isFavorite = isFavorite,
-            numberOfFavorite = numberOfFavorite,
-            itemNumberCopyRequest = itemNumberCopyRequest,
-            likeClicked = likeClicked
-        )
-        LabelList(labelModels = labelModels)
-        RecentAuctionPrice()
-        //info
+    Column {
+        if (uiModel.imageList.isNotEmpty()) {
+            DetailPageTopImagePager(uiModel.imageList)
+        }
+        Column(
+            modifier = Modifier.padding(20.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            NameAndLike(
+                nameOfProduct = uiModel.nameOfProduct,
+                numberOfProduct = uiModel.numberOfProduct,
+                typeDisplayName = uiModel.typeDisplayName,
+                size = uiModel.size,
+                isFavorite = uiModel.isFavorite,
+                numberOfFavorite = uiModel.numberOfFavorite,
+                likeClicked = likeClicked
+            )
+            LabelList(labelModels = uiModel.labelModels)
+            RecentAuctionPrice(
+                lowestPrice = uiModel.lowestPrice,
+                priceDiff = uiModel.priceDiff,
+                recentDealPrice = uiModel.recentDealPrice,
+                recentDealDate = uiModel.recentDealDate,
+                lastSaleDate = uiModel.lastSaleDate,
+            )
+        }
     }
+
 }
 
 @Composable
-private fun RecentAuctionPrice() {
+private fun RecentAuctionPrice(
+    lowestPrice: Long,
+    priceDiff: Long,
+    recentDealPrice: Long,
+    recentDealDate: String,
+    lastSaleDate: String,
+) {
     //TODO : i18n
-
-    val lowestPrice = 183200000L
-    val priceDiff = -48000000L
-    val recentDealPrice = 554210000L
-    val recentDealDate = "25.03.16"
-    val lastSaleDate = "2025.04.08 10:00"
-
     val displayLowestPrice = remember { numberToCurrency(lowestPrice) }
     val displayPriceDiff = remember { numberToCurrency(priceDiff) }
     val displayRecentDealPrice = remember { numberToCurrency(recentDealPrice) }
@@ -233,13 +227,13 @@ private fun RecentAuctionPrice() {
 }
 
 @Composable
-private fun LabelList(labelModels: List<Pair<SlugLabelStyle, String>>) {
+private fun LabelList(labelModels: List<SlugLabelUiModel>) {
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-        labelModels.forEach { (style, string) ->
-            if (style is SlugLabelStyle.GradientBackground.Verified) {
-                VerifiedSlugLabelLarge(labelStyle = style, text = string)
+        labelModels.forEach { uiModel ->
+            if (uiModel.labelStyle is SlugLabelStyle.GradientBackground.Verified) {
+                VerifiedSlugLabelLarge(uiModel = uiModel)
             } else
-                SlugLabelLarge(labelStyle = style, text = string)
+                SlugLabelLarge(uiModel = uiModel)
         }
     }
 }
@@ -253,9 +247,10 @@ private fun NameAndLike(
     size: String,
     isFavorite: Boolean,
     numberOfFavorite: Int,
-    itemNumberCopyRequest: () -> Unit,
     likeClicked: () -> Unit,
 ) {
+    val context = LocalContext.current
+    fun toastIt(string: String) = Toast.makeText(context, string, Toast.LENGTH_SHORT).show()
     Row(modifier = Modifier.fillMaxWidth()) {
         Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
             Text(
@@ -270,7 +265,12 @@ private fun NameAndLike(
             )
             Row(
                 modifier = Modifier.blockingClickable(onClick = {
-                    itemNumberCopyRequest()
+                    ClipBoardModule.addTextToClipBoard(
+                        context = context,
+                        textToClipData = numberOfProduct
+                    )
+                    toastIt("매물번호가 복사 되었습니다.\n$numberOfProduct")
+
                 }),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
@@ -312,10 +312,9 @@ private fun NameAndLike(
 @Preview
 fun PreviewDetailSimpleInformation() {
     SlugTheme {
-        Surface() {
-
+        Surface {
             DetailSimpleInformation(
-                itemNumberCopyRequest = {},
+                uiModel = DetailSimpleInformationUiModel.preview,
                 likeClicked = {}
             )
         }

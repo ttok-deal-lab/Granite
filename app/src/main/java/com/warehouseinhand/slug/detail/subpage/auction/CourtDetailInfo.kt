@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.warehouseinhand.slug.detail.subpage.ItemTitle
+import com.warehouseinhand.slug.ui.theme.Critical
 import com.warehouseinhand.slug.ui.theme.NeutralInverted
 import com.warehouseinhand.slug.ui.theme.NeutralSubtler
 import com.warehouseinhand.slug.ui.theme.SlugTypographyStyle
@@ -32,7 +33,8 @@ fun CourtDetailInfo(courtDetailInfo: String) {
         Text(
             text = courtDetailInfo,
             style = SlugTypographyStyle.BodySmallMedium,
-            color = NeutralSubtler
+            color = Critical //TODO : 서버에 요청해서 재확인 해야하는 부분
+//            color = NeutralSubtler
         )
     }
 }

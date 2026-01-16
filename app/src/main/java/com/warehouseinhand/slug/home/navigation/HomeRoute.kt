@@ -54,7 +54,8 @@ internal fun HomeRoute(
     val onItemClicked: (ProductItemUiModel) -> Unit = { model ->
 
         //TODO :API연결 이후 재확인
-        startDetailActivity(currentContext)
+        startDetailActivity(currentContext, model.id)
+
 //        Toast.makeText(currentContext, model.nameOfProduct, Toast.LENGTH_SHORT).show()
     }
 

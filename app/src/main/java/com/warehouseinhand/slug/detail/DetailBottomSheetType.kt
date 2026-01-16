@@ -83,6 +83,14 @@ sealed interface DetailBottomSheetType {
                 )
 
         }
+//        //채권자 TODO: 보류
+//        data class SaleEffect(override val subInfo: List<InfoSheetData>): InfoSheetType{
+//            override val info: InfoSheetData =
+//                InfoSheetData(
+//                    name = "매각효력",
+//                    description = ""
+//                )
+//        }
     }
 
     object Share : DetailBottomSheetType

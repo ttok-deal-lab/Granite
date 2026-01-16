@@ -10,24 +10,29 @@ interface CourtSalesService {
      * 경매 목록 조회 V2
      * 조건에 맞는 경매 목록을 조회합니다.
      */
-    @GET("$VERSION/courts/sales")
+    @GET("$CONTEXT/$VERSION/$COURTS/$SALES")
     suspend fun getCourtSales(
-        @Query("ids") ids: List<Long>
+        @Query("ids") ids: List<String>
     ): List<CourtSalesResponseDTO>
 
-    @GET("$VERSION/courts/sales/{$ID}")
+    @GET("$CONTEXT/$VERSION/$COURTS/$SALES/{$ID}")
     suspend fun getCourtSaleDetail(
-        @Path(ID) id: Long
+        @Path(ID) id: String
     ): CourtSaleDetailResponseDTO
 
 
-    @GET("$VERSION/courts/sales/all")
+    @GET("$CONTEXT/$VERSION/$COURTS/$SALES/$ALL")
     suspend fun getCourtSalesAll(
         @Query("cursor") cursor: String? = null,
         @Query("size") size: Int = 20,
     ): CourtSalesCursorResponseDTO
     companion object {
+        private const val CONTEXT: String = "api/sherbet-api"
+
         private const val VERSION: String = "v2"
+        private const val COURTS: String = "courts"
+        private const val SALES: String = "sales"
+        private const val ALL: String = "all"
         private const val ID: String = "id"
     }
 }

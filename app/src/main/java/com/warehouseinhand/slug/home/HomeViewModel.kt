@@ -14,6 +14,7 @@ import com.warehouseinhand.slug.home.bottomsheet.sorting.SortingType
 import com.warehouseinhand.slug.home.component.FilterButtonState
 import com.warehouseinhand.slug.ui.component.image.ImageResource
 import com.warehouseinhand.slug.ui.component.label.SlugLabelStyle
+import com.warehouseinhand.slug.ui.component.label.SlugLabelUiModel
 import com.warehouseinhand.slug.util.calculateDaysLeft
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -21,7 +22,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -225,25 +225,25 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun AuctionSearchItem.buildSearchInfoChips()
-            : List<Pair<SlugLabelStyle, String>> {
+            : List<SlugLabelUiModel> {
 
-        val chips = mutableListOf<Pair<SlugLabelStyle, String>>()
+        val chips = mutableListOf<SlugLabelUiModel>()
 
         // 1. 인증 매물
         if (verified) {
-            chips += SlugLabelStyle.GradientBackground.Verified to "인증매물"
+            chips += SlugLabelUiModel(SlugLabelStyle.GradientBackground.Verified , "인증매물")
         }
 
         // 2. 매각 상태
         if (soldOut) {
-            chips += SlugLabelStyle.BuildingInfo.State to "매각완료"
+            chips += SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State , "매각완료")
         } else if (failBidCount > 0) {
-            chips += SlugLabelStyle.BuildingInfo.State to "유찰 ${failBidCount}회"
+            chips += SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State , "유찰 ${failBidCount}회")
         }
 
         // 3. 건물 카테고리 (대표 1개)
         salesCategories.firstOrNull()?.let { category ->
-            chips += SlugLabelStyle.BuildingInfo.Apartment to category
+            chips += SlugLabelUiModel(SlugLabelStyle.BuildingInfo.Apartment , category)
             // 실제로는 category → 스타일 매핑 함수로 분리 권장
         }
 

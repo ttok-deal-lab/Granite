@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.warehouseinhand.slug.R
@@ -38,7 +39,10 @@ fun DetailPageTopImagePager(imageList: List<ImageResource>) {
                         .background(color = Gray150),
                     contentAlignment = Alignment.Center
                 ) {
-                    ImageProcessor(imageResource = imageList[index])
+                    ImageProcessor(
+                        imageResource = imageList[index],
+                        contentScale = ContentScale.Inside
+                    )
                 }
             }
             Row(

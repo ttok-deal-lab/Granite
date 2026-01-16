@@ -1,13 +1,14 @@
 package com.warehouseinhand.slug.data.network.sales
 
 import com.warehouseinhand.slug.domain.court.CourtSalesItem
+import com.warehouseinhand.slug.domain.sales.CourtSaleDetail
 import javax.inject.Inject
 
 class RemoteSalesDataRepository @Inject constructor(
     private val courtSalesService: CourtSalesService,
 ) {
     suspend fun getCourtSales(
-        ids: List<Long>
+        ids: List<String>
     ): Result<List<CourtSalesItem>> =
         runCatching {
             courtSalesService.getCourtSales(ids = ids)
@@ -15,7 +16,7 @@ class RemoteSalesDataRepository @Inject constructor(
         }
 
     suspend fun getCourtSaleDetail(
-        id: Long
+        id: String
     ): Result<CourtSaleDetail> =
         runCatching {
             courtSalesService.getCourtSaleDetail(id)

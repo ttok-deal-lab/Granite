@@ -1,7 +1,7 @@
 package com.warehouseinhand.slug.domain.search
 
 data class AuctionSearchItem(
-    val id: Long,
+    val id: String,
     val caseNumber: String,
 
     val buildingName: String?, // search 응답엔 이름이 없어서 nullable  -> TODO 처리해야한다!

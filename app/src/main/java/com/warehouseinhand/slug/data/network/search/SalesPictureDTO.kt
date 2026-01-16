@@ -1,4 +1,4 @@
-package com.warehouseinhand.slug.data.network.sales
+package com.warehouseinhand.slug.data.network.search
 
 import com.google.gson.annotations.SerializedName
 
