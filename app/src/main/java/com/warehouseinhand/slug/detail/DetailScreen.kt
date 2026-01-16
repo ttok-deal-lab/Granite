@@ -5,9 +5,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,10 +22,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.warehouseinhand.slug.detail.subpage.LesseeInfo
 import com.warehouseinhand.slug.detail.subpage.TitleAnalysisPage
 import com.warehouseinhand.slug.detail.subpage.auction.AuctionInfoPage
-import com.warehouseinhand.slug.detail.subpage.auction.AuctionInfoUiModel
 import com.warehouseinhand.slug.ui.theme.NeutralInverted
 import com.warehouseinhand.slug.ui.theme.NeutralWeak
 import com.warehouseinhand.slug.ui.theme.SlugTheme
@@ -31,9 +32,8 @@ import kotlinx.serialization.Serializable
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreen(
-    detailSimpleInformationUiModel: DetailSimpleInformationUiModel,
-    auctionInfoUiModel: AuctionInfoUiModel,
-    listOfLessee: List<LesseeInfo>,
+    onBackButtonClicked: () -> Unit,
+    uiState: CourtSaleDetailUiState
 ) {
 
     var selectedRoute: DetailedRoute by remember { mutableStateOf(DetailedRoute.AuctionInfo) }
@@ -43,88 +43,105 @@ fun DetailScreen(
 
     val startDestination: DetailedRoute = DetailedRoute.AuctionInfo
 
-    val likeClicked: () -> Unit = {
-
+    var selectedBottomSheetType: DetailBottomSheetType by remember {
+        mutableStateOf(DetailBottomSheetType.EMPTY)
     }
-
-    var selectedBottomSheetType: DetailBottomSheetType by
-    remember { mutableStateOf(DetailBottomSheetType.EMPTY) }
 
     val showBottomSheet: (type: DetailBottomSheetType) -> Unit = { type ->
         selectedBottomSheetType = type
     }
+
+    val likeClicked: () -> Unit = { }
+    val onShareClicked: () -> Unit = {
+        selectedBottomSheetType = DetailBottomSheetType.Share
+    }
+
 
     var userScrollEnabled by remember { mutableStateOf(true) }
     val onMapFocused: (focused: Boolean) -> Unit = {
         userScrollEnabled = !it
     }
 
-    Column {
-        LazyColumn(
-            modifier = Modifier
-                .background(NeutralInverted),
-            userScrollEnabled = userScrollEnabled
+    Scaffold(modifier = Modifier.systemBarsPadding(), topBar = {
+        DetailTopBar(
+            onBackButtonClicked,
+            onShareClicked,
+            uiState.detailSimpleInformation.topTitle
+        )
+    }) { paddingValues ->
+        Box(
+            modifier = Modifier.padding(paddingValues)
         ) {
-            item {
-                DetailSimpleInformation(
-                    uiModel = detailSimpleInformationUiModel,
-                    likeClicked = likeClicked
-                )
-                HorizontalDivider(color = NeutralWeak, thickness = 10.dp)
-            }
-            stickyHeader {
-                Box(
+            Column {
+                LazyColumn(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .background(color = NeutralInverted)
+                        .background(NeutralInverted),
+                    userScrollEnabled = userScrollEnabled
                 ) {
-                    DetailedTabRow(
-                        selectedRoute = selectedRoute,
-                        onTabClicked = {
-                            if (selectedRoute != it) {
-                                selectedRoute = it
-                                navController.navigate(it)
-                            }
-                        }
-                    )
-                }
-            }
-            item {
-                Box(
-                    modifier = Modifier
-                        .animateContentSize()
-                        .fillMaxWidth()
-                ) {
-                    NavHost(
-                        navController = navController,
-                        startDestination = startDestination,
-                    ) {
-                        composable<DetailedRoute.AuctionInfo> {
-                            AuctionInfoPage(
-                                uiModel = auctionInfoUiModel,
-                                requestBottomSheet = showBottomSheet,
-                                onMapFocused = onMapFocused
+                    item {
+                        DetailSimpleInformation(
+                            uiModel = uiState.detailSimpleInformation,
+                            likeClicked = likeClicked
+                        )
+                        HorizontalDivider(color = NeutralWeak, thickness = 10.dp)
+                    }
+                    stickyHeader {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(color = NeutralInverted)
+                        ) {
+                            DetailedTabRow(
+                                selectedRoute = selectedRoute,
+                                onTabClicked = {
+                                    if (selectedRoute != it) {
+                                        selectedRoute = it
+                                        navController.navigate(it)
+                                    }
+                                }
                             )
                         }
-                        composable<DetailedRoute.TitleAnalysis> {
-                            TitleAnalysisPage(listOfLessee)
-                        }
+                    }
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .animateContentSize()
+                                .fillMaxWidth()
+                        ) {
+                            NavHost(
+                                navController = navController,
+                                startDestination = startDestination,
+                            ) {
+                                composable<DetailedRoute.AuctionInfo> {
+                                    AuctionInfoPage(
+                                        uiModel = uiState.auctionInfo,
+                                        requestBottomSheet = showBottomSheet,
+                                        onMapFocused = onMapFocused
+                                    )
+                                }
+                                composable<DetailedRoute.TitleAnalysis> {
+                                    TitleAnalysisPage(uiState.listOfLessees)
+                                }
 //                        composable<DetailedRoute.BuildingInfo> {
 //                            BuildingInfoPage(
 //                                data = buildingInfoUiModel,
 //                                onMapFocused = onMapFocused
 //                            )
 //                        }
+                            }
+                        }
                     }
                 }
-            }
-        }
 
+            }
+            DetailedBottomSheet(
+                detailBottomSheetType = selectedBottomSheetType,
+                onDismiss = { selectedBottomSheetType = DetailBottomSheetType.EMPTY }
+            )
+        }
     }
-    DetailedBottomSheet(
-        detailBottomSheetType = selectedBottomSheetType,
-        onDismiss = { selectedBottomSheetType = DetailBottomSheetType.EMPTY }
-    )
+
+
 }
 
 sealed class DetailedRoute {
@@ -165,16 +182,11 @@ sealed class DetailedRoute {
 @Preview(heightDp = 2000)
 @Composable
 private fun PreviewDetailPage() {
-    val detailSimpleInformationUiModel: DetailSimpleInformationUiModel =
-        DetailSimpleInformationUiModel.preview
-    val listOfLessee: List<LesseeInfo> = LesseeInfo.lesseePreviewList
-    val auctionInfoUiModel: AuctionInfoUiModel = AuctionInfoUiModel.preview
 
     SlugTheme {
         DetailScreen(
-            detailSimpleInformationUiModel = detailSimpleInformationUiModel,
-            listOfLessee = listOfLessee,
-            auctionInfoUiModel = auctionInfoUiModel,
+            onBackButtonClicked = {},
+            uiState = CourtSaleDetailUiState.preview
         )
     }
 }

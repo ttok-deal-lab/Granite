@@ -50,7 +50,7 @@ class DetailedViewModel @Inject constructor(
 
                     _uiState.update {
                         it.copy(
-                            lessees = lessees,
+                            listOfLessees = lessees,
                             detailSimpleInformation = detailSimpleInformation,
                             auctionInfo = auctionInfo,
                         )
@@ -64,13 +64,13 @@ class DetailedViewModel @Inject constructor(
 
 data class CourtSaleDetailUiState(
     val detailSimpleInformation: DetailSimpleInformationUiModel,
-    val lessees: List<LesseeInfo>,
+    val listOfLessees: List<LesseeInfo>,
     val auctionInfo: AuctionInfoUiModel,
 ) {
     companion object {
         val preview = CourtSaleDetailUiState(
             detailSimpleInformation = DetailSimpleInformationUiModel.preview,
-            lessees = LesseeInfo.lesseePreviewList,
+            listOfLessees = LesseeInfo.lesseePreviewList,
             auctionInfo = AuctionInfoUiModel.preview
         )
     }
