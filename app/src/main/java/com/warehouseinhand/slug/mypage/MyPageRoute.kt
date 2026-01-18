@@ -6,9 +6,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.warehouseinhand.slug.login.SocialLoginUIModel
+import com.warehouseinhand.slug.util.openInquiryEmail
 
 
 @Composable
@@ -17,11 +19,12 @@ internal fun MyPageRoute(
     viewModel: MyPageViewModel = hiltViewModel(),
 ) {
 
-    val onSettingClick: () -> Unit = {}
+//    val onSettingClick: () -> Unit = {}
+    val context = LocalContext.current
     val userName by viewModel.userName.collectAsStateWithLifecycle()
     val lastLoginType by viewModel.lastLoginType.collectAsStateWithLifecycle()
     val onRecentViewClicked = {}
-    val onInquiryClicked = {}
+    val onInquiryClicked = {context.openInquiryEmail()}
 
     Box(modifier = Modifier.padding(padding)) {
         MyPageScreen(
