@@ -1,7 +1,9 @@
 package com.warehouseinhand.slug.detail
 
 import androidx.lifecycle.ViewModel
+import com.warehouseinhand.slug.data.local.user.LocalUserDataRepository
 import com.warehouseinhand.slug.data.network.sales.RemoteSalesDataRepository
+import com.warehouseinhand.slug.data.network.user.RemoteUserDataRepository
 import com.warehouseinhand.slug.detail.subpage.LesseeInfo
 import com.warehouseinhand.slug.detail.subpage.OccupancyStatus
 import com.warehouseinhand.slug.detail.subpage.auction.AuctionCardUiModel
@@ -21,6 +23,7 @@ import com.warehouseinhand.slug.ui.theme.CriticalWeak
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -33,11 +36,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailedViewModel @Inject constructor(
-    private val remoteSalesDataRepository: RemoteSalesDataRepository
+    private val remoteSalesDataRepository: RemoteSalesDataRepository,
+    private val userDataRepository: RemoteUserDataRepository,
+    private val localUserDataRepository: LocalUserDataRepository,
 ) : ViewModel() {
-    private val _uiState: MutableStateFlow<CourtSaleDetailUiState> = MutableStateFlow(CourtSaleDetailUiState.preview)
+    private val _uiState: MutableStateFlow<CourtSaleDetailUiState> =
+        MutableStateFlow(CourtSaleDetailUiState.preview)
     val uiState: StateFlow<CourtSaleDetailUiState> = _uiState.asStateFlow()
-
 
     fun requestData(id: String) {
         CoroutineScope(Dispatchers.IO).launch {
@@ -57,6 +62,53 @@ class DetailedViewModel @Inject constructor(
                     }
                 }
         }
+    }
+
+    var lastFavoriteJob: Job = Job().apply { complete() }
+    fun onLikeChangeRequest(productId: String) {
+        val isFavorite = _uiState.value.detailSimpleInformation.isFavorite
+        lastFavoriteJob.cancel()
+        lastFavoriteJob = CoroutineScope(Dispatchers.IO).launch {
+            val userId: Long? = localUserDataRepository.getUserId().getOrNull()
+            userId ?: return@launch //TODO 수정되어야함!
+            if (isFavorite)
+                removeFavorite(userId, productId)
+            else
+                addFavorite(userId, productId)
+        }
+    }
+
+    private suspend fun addFavorite(userId: Long, productId: String) {
+        _uiState.update {
+            it.copy(
+                detailSimpleInformation = it.detailSimpleInformation.copy(
+                    isFavorite = true,
+                    numberOfFavorite = it.detailSimpleInformation.numberOfFavorite + 1,
+                )
+            )
+        }
+        lastFavoriteJob.cancel()
+        lastFavoriteJob = CoroutineScope(Dispatchers.IO).launch {
+            userDataRepository.addProductFavorite(
+                userId = userId.toString(),
+                productId = productId
+            )
+        }
+    }
+
+    private suspend fun removeFavorite(userId: Long, productId: String) {
+        _uiState.update {
+            it.copy(
+                detailSimpleInformation = it.detailSimpleInformation.copy(
+                    isFavorite = false,
+                    numberOfFavorite = it.detailSimpleInformation.numberOfFavorite - 1,
+                )
+            )
+        }
+        userDataRepository.removeProductFavorite(
+            userId = userId.toString(),
+            productId = productId
+        )
     }
 
 

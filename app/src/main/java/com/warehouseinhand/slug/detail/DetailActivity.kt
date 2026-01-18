@@ -31,8 +31,9 @@ class DetailActivity : ComponentActivity() {
 
             SlugTheme {
                 DetailScreen(
-                    onBackButtonClicked = { this.finish() },
                     uiState = uiState,
+                    onBackButtonClicked = { this.finish() },
+                    likeClicked = {detailedViewModel.onLikeChangeRequest(currentId)}
                 )
             }
         }

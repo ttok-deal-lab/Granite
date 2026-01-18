@@ -282,7 +282,7 @@ private fun NameAndLike(
                 Icon(
                     modifier = Modifier.size(18.dp),
                     painter = painterResource(R.drawable.ic_copy_18_18),
-                    tint = if (isFavorite) Critical else NeutralMuted,
+                    tint = NeutralMuted,
                     contentDescription = "CopyProductNumber",
                 )
             }

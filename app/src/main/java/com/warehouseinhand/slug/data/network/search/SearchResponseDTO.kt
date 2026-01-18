@@ -72,12 +72,12 @@ data class AuctionItemResponseDTO(
         salesDateTime = salesDateTime,
         registerDate = registerDate,
         appraisalPrice = appraisalPrice,
-        salesPicture = salesPicture?.firstOrNull()?.imageUrl?:"", // ✅ 핵심
+        salesPicture = salesPicture?.firstOrNull()?.imageUrl?:"",
         failBidCount = failBidCount,
         zzimCount = zzimCount,
         verified = verified,
         soldOut = soldOut,
-        isFavorite = false
+        isFavorite = false //TODO : 데이터 내려 오면 처리해야함
     )
 
 }

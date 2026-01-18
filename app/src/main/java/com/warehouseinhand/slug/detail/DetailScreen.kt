@@ -32,8 +32,9 @@ import kotlinx.serialization.Serializable
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreen(
+    uiState: CourtSaleDetailUiState,
     onBackButtonClicked: () -> Unit,
-    uiState: CourtSaleDetailUiState
+    likeClicked: () -> Unit
 ) {
 
     var selectedRoute: DetailedRoute by remember { mutableStateOf(DetailedRoute.AuctionInfo) }
@@ -51,7 +52,6 @@ fun DetailScreen(
         selectedBottomSheetType = type
     }
 
-    val likeClicked: () -> Unit = { }
     val onShareClicked: () -> Unit = {
         selectedBottomSheetType = DetailBottomSheetType.Share
     }
@@ -185,8 +185,9 @@ private fun PreviewDetailPage() {
 
     SlugTheme {
         DetailScreen(
+            uiState = CourtSaleDetailUiState.preview,
             onBackButtonClicked = {},
-            uiState = CourtSaleDetailUiState.preview
+            likeClicked = {},
         )
     }
 }

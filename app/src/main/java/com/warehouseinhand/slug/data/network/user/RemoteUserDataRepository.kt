@@ -29,6 +29,15 @@ class RemoteUserDataRepository @Inject constructor(
             ).run(UserDTO::toDomain)
         }
 
+    suspend fun addProductFavorite(userId: String, productId: String): Result<String> =
+        kotlin.runCatching {
+            privateUserService.requestAddFavoriteProduct(userId = userId, productId = productId)
+        }
+    suspend fun removeProductFavorite(userId: String, productId: String): Result<String> =
+        kotlin.runCatching {
+            privateUserService.requestRemoveFavoriteProduct(userId = userId, productId = productId)
+        }
+
     suspend fun requestLogout()
             : Result<String> = kotlin.runCatching { privateUserService.logout() }
 
