@@ -11,22 +11,22 @@ interface UserPrivateService {
     //user Default
     @GET("$CONTEXT/$VERSION/$USERS/{$USER_ID}")
     suspend fun getUserInfo(
-        @Path(USER_ID) userId: Long,
+        @Path(USER_ID) userId: String,
     ): UserDTO
 
     @DELETE("$CONTEXT/$VERSION/$USERS/{$USER_ID}")
     suspend fun deleteUser(
-        @Path(USER_ID) userId: Long,
+        @Path(USER_ID) userId: String,
     ): String
 
+    //TODO : 해당 데이터를 USERS~ 에서 받아 온다고 해서 user데이터로 받는게 맞나?
     @GET("$CONTEXT/$VERSION/$USERS/{$USER_ID}/$FAVORITES")
     suspend fun getUserFavoriteProductList(
-        @Path(USER_ID) userId: Long,
-        @Path(PRODUCT_ID) productId: Long,
+        @Path(USER_ID) userId: String,
         @Query("type") type: String = "product",
         @Query("cursor") cursor: String = "unknown",
         @Query("size") size: Int = 20,
-    ): String
+    ): FavoriteSalesCursorResponseDTO
 
     @POST("$CONTEXT/$VERSION/$USERS/{$USER_ID}/$FAVORITES/{$PRODUCT_ID}")
     suspend fun requestAddFavoriteProduct(

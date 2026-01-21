@@ -14,7 +14,7 @@ data class UserResponseDTO(
 
 data class UserDTO(
     @SerializedName("id")
-    val id: Long,
+    val id: String,
 
     @SerializedName("email")
     val email: String,

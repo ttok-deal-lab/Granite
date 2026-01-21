@@ -1,7 +1,7 @@
 package com.warehouseinhand.slug.domain.user
 
 data class UserProfile(
-    val id: Long,
+    val id: String,
     val email: String,
     val name: String,
     val provider: String,

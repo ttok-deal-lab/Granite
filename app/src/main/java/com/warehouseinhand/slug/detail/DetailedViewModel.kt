@@ -69,7 +69,7 @@ class DetailedViewModel @Inject constructor(
         val isFavorite = _uiState.value.detailSimpleInformation.isFavorite
         lastFavoriteJob.cancel()
         lastFavoriteJob = CoroutineScope(Dispatchers.IO).launch {
-            val userId: Long? = localUserDataRepository.getUserId().getOrNull()
+            val userId: String? = localUserDataRepository.getUserId().getOrNull()
             userId ?: return@launch //TODO 수정되어야함!
             if (isFavorite)
                 removeFavorite(userId, productId)
@@ -78,7 +78,7 @@ class DetailedViewModel @Inject constructor(
         }
     }
 
-    private suspend fun addFavorite(userId: Long, productId: String) {
+    private suspend fun addFavorite(userId: String, productId: String) {
         _uiState.update {
             it.copy(
                 detailSimpleInformation = it.detailSimpleInformation.copy(
@@ -90,13 +90,13 @@ class DetailedViewModel @Inject constructor(
         lastFavoriteJob.cancel()
         lastFavoriteJob = CoroutineScope(Dispatchers.IO).launch {
             userDataRepository.addProductFavorite(
-                userId = userId.toString(),
+                userId = userId,
                 productId = productId
             )
         }
     }
 
-    private suspend fun removeFavorite(userId: Long, productId: String) {
+    private suspend fun removeFavorite(userId: String, productId: String) {
         _uiState.update {
             it.copy(
                 detailSimpleInformation = it.detailSimpleInformation.copy(
@@ -106,7 +106,7 @@ class DetailedViewModel @Inject constructor(
             )
         }
         userDataRepository.removeProductFavorite(
-            userId = userId.toString(),
+            userId = userId,
             productId = productId
         )
     }

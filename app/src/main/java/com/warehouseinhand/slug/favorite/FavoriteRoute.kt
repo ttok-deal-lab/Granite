@@ -6,6 +6,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.warehouseinhand.slug.home.ProductItemUiModel
 import com.warehouseinhand.slug.util.startDetailActivity
 
@@ -16,18 +17,17 @@ internal fun FavoriteRoute(
     viewModel: FavoriteViewModel = hiltViewModel(viewModelStoreOwner = LocalContext.current as ViewModelStoreOwner)
 ) {
 
-//    val favoriteList by viewModel.favoriteUiModelList.collectAsStateWithLifecycle()
-    val favoriteList  = ProductItemUiModel.pagingItems()
+    val favoriteList = viewModel.productUiModelList.collectAsLazyPagingItems()
 
     val currentContext = LocalContext.current
     val onItemClicked: (ProductItemUiModel) -> Unit = {
-        startDetailActivity(currentContext,it.id)
+        startDetailActivity(currentContext, it.id)
     }
     val onNotificationClick: () -> Unit = {}
     //TODO : 아래 영역에서 favorite 버튼 눌러도 사라지지 않게 만들고, 상세화면에서만 해제 가능하게 할것!
-    LaunchedEffect(Unit) {
-        viewModel.requestFavoriteList()
-    }
+//    LaunchedEffect(Unit) {
+//        viewModel.requestFavoriteList()
+//    }
     FavoriteScreen(
         padding = padding,
         productUiModelList = favoriteList,

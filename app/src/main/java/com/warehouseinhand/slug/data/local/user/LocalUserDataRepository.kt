@@ -73,10 +73,10 @@ class LocalUserDataRepository @Inject constructor(
             )
         }
 
-    suspend fun setUserId(userId: Long): Result<Unit> =
+    suspend fun setUserId(userId: String): Result<Unit> =
         userDataStore.storeData(key = USER_ID, value = userId)
 
-    suspend fun getUserId(): Result<Long> =
+    suspend fun getUserId(): Result<String> =
         userDataStore.getStoredData(key = USER_ID)
 
     suspend fun setUserEmail(userEmail: String): Result<Unit> =
@@ -108,7 +108,7 @@ class LocalUserDataRepository @Inject constructor(
         private val ACCESS_TOKEN = stringPreferencesKey("access_token")
         private val REFRESH_TOKEN = stringPreferencesKey("refresh_token")
 
-        private val USER_ID = longPreferencesKey("user_id")
+        private val USER_ID = stringPreferencesKey("user_id")
         private val USER_EMAIL = stringPreferencesKey("user_email")
         private val USER_NAME = stringPreferencesKey("user_name")
         private val USER_PROVIDER = stringPreferencesKey("user_provider")

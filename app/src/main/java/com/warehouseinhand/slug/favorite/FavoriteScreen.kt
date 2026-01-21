@@ -18,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices.PIXEL_7_PRO
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.warehouseinhand.slug.R
 import com.warehouseinhand.slug.home.HomeProductList
@@ -36,13 +37,12 @@ fun FavoriteScreen(
     productUiModelList: LazyPagingItems<ProductItemUiModel>,
     onItemClicked: (ProductItemUiModel) -> Unit,
     onNotificationClick: () -> Unit,
-
     ) {
     Column(modifier = Modifier.padding(padding)) {
         FavoriteTopBar(
             onNotificationClick = onNotificationClick,
         )
-        if (productUiModelList.itemCount==0) {
+        if (productUiModelList.loadState.refresh is LoadState.NotLoading && productUiModelList.itemCount == 0) {
             EmptyFavoriteScreen()
         } else {
             HomeProductList(productUiModelList, onItemClicked)
