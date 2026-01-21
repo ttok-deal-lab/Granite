@@ -14,7 +14,7 @@ import androidx.paging.compose.LazyPagingItems
 import com.warehouseinhand.slug.R
 import com.warehouseinhand.slug.home.bottomsheet.sorting.SortingType
 import com.warehouseinhand.slug.home.component.FilterButtonState
-import com.warehouseinhand.slug.ui.component.EmptyScreen
+import com.warehouseinhand.slug.ui.component.ProductListEmpty
 
 
 @Composable
@@ -50,7 +50,7 @@ fun HomeScreen(
             onFilterClick = onFilterClick,
         )
         if (isListEmpty) {
-            EmptyScreen(stringResource(R.string.home_product_list_empty_title))
+            ProductListEmpty(stringResource(R.string.home_product_list_empty_title))
         } else
             HomeProductList(productUiModelList, onItemClicked)
     }
