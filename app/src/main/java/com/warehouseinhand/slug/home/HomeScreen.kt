@@ -11,8 +11,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices.PIXEL_7_PRO
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.paging.compose.LazyPagingItems
+import com.warehouseinhand.slug.R
 import com.warehouseinhand.slug.home.bottomsheet.sorting.SortingType
 import com.warehouseinhand.slug.home.component.FilterButtonState
+import com.warehouseinhand.slug.ui.component.EmptyScreen
 
 
 @Composable
@@ -31,7 +33,7 @@ fun HomeScreen(
     onSearchClick: () -> Unit,
     onLocationSelectClick: () -> Unit
 ) {
-
+    val isListEmpty = productUiModelList.itemCount == 0
     Column(modifier = Modifier.padding(padding)) {
         HomeTopBar(
             sectionName = sectionName,
@@ -47,7 +49,10 @@ fun HomeScreen(
             onSortingClick = onSortingClick,
             onFilterClick = onFilterClick,
         )
-        HomeProductList(productUiModelList, onItemClicked)
+        if (isListEmpty) {
+            EmptyScreen(stringResource(R.string.home_product_list_empty_title))
+        } else
+            HomeProductList(productUiModelList, onItemClicked)
     }
 }
 
