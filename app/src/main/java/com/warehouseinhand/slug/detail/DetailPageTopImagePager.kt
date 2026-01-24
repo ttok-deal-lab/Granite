@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -15,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.warehouseinhand.slug.R
@@ -36,12 +38,14 @@ fun DetailPageTopImagePager(imageList: List<ImageResource>) {
                 Box(
                     Modifier
                         .aspectRatio(1.7f)
-                        .background(color = Gray150),
+                        .background(color = Gray150)
+                    ,
                     contentAlignment = Alignment.Center
                 ) {
                     ImageProcessor(
+                        modifier = Modifier.fillMaxSize(),
                         imageResource = imageList[index],
-                        contentScale = ContentScale.Inside
+                        contentScale = ContentScale.Fit
                     )
                 }
             }
