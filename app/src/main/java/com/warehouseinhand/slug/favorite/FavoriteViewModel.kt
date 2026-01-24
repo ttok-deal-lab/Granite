@@ -7,16 +7,13 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import com.warehouseinhand.slug.R
 import com.warehouseinhand.slug.data.local.user.LocalUserDataRepository
-import com.warehouseinhand.slug.data.network.search.RemoteSearchRepository
 import com.warehouseinhand.slug.data.network.user.RemoteUserDataRepository
 import com.warehouseinhand.slug.domain.sales.FavoriteSaleSummary
-import com.warehouseinhand.slug.domain.search.AuctionSearchItem
 import com.warehouseinhand.slug.home.ProductItemUiModel
 import com.warehouseinhand.slug.ui.component.image.ImageResource
 import com.warehouseinhand.slug.ui.component.label.SlugLabelStyle
 import com.warehouseinhand.slug.ui.component.label.SlugLabelUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
