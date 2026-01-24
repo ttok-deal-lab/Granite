@@ -6,7 +6,8 @@ import com.warehouseinhand.slug.domain.search.AuctionSearchItem
 
 class ProductsByCursorPagingSource(
     private val service: SearchService,
-) : PagingSource<String, AuctionSearchItem>() {
+    private val onSizeReturn: (Long) -> Unit,
+    ) : PagingSource<String, AuctionSearchItem>() {
 
     override suspend fun load(params: LoadParams<String>): LoadResult<String, AuctionSearchItem> =
         try {
@@ -14,7 +15,7 @@ class ProductsByCursorPagingSource(
 
             val dto = service.search(nextCursor = cursor)
             val domainItems = dto.auctionItemResponses.map { it.toDomain() } // DTO -> Domain
-
+            onSizeReturn(dto.searchHitCount)
             val nextKey = if (cursor == "unknown") null else dto.nextCursor// null을 입력하면 더이상 받아오지 않음!
 
             LoadResult.Page(

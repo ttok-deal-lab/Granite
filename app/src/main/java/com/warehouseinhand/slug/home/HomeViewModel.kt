@@ -44,7 +44,13 @@ class HomeViewModel @Inject constructor(
     val stateList get() = _stateList.asStateFlow()
 
     val productUiModelList: Flow<PagingData<ProductItemUiModel>> =
-        remoteSearchRepository.getProductListPaging()
+        remoteSearchRepository.getProductListPaging(
+            onSizeReturn = { totalCount:Long ->
+                viewModelScope.launch {
+                    _numberOfProduct.emit(totalCount)
+                }
+            }
+        )
             .map { paging ->
                 paging.map { domain ->
                     domain.toUiModel()
@@ -169,7 +175,7 @@ class HomeViewModel @Inject constructor(
 //                    _productUiModelList.emit(
 //                        it.items.map { it.toUiModel() }
 //                    )
-                    _numberOfProduct.emit(it.totalCount)
+//                    _numberOfProduct.emit(it.totalCount)
                     Log.d("TESTTEST", "requestNewItemList: SUCCESS")
                 }.onFailure {
                     Log.d("TESTTEST", "requestNewItemList: FAIL $it")

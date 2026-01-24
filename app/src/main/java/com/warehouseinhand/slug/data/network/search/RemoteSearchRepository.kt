@@ -24,7 +24,10 @@ class RemoteSearchRepository @Inject constructor(
         }
 
     //TODO : USECASE로 이동 필요!
-    fun getProductListPaging(size: Int = DEFAULT_PAGING_SIZE): Flow<PagingData<AuctionSearchItem>> =
+    fun getProductListPaging(
+        size: Int = DEFAULT_PAGING_SIZE,
+        onSizeReturn: (Long) -> Unit,
+    ): Flow<PagingData<AuctionSearchItem>> =
         Pager(
             config = PagingConfig(
                 pageSize = size,
@@ -34,7 +37,8 @@ class RemoteSearchRepository @Inject constructor(
             pagingSourceFactory = {
                 ProductsByCursorPagingSource(
                     service = searchService,
-                )
+                    onSizeReturn = onSizeReturn
+                    )
             }
         ).flow
 
