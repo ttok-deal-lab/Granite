@@ -68,11 +68,6 @@ fun EmptyFavoriteScreen() {
     }
 }
 
-@Preview
-@Composable
-fun PreviewEmptyFavoriteScreen() {
-    EmptyFavoriteScreen()
-}
 
 @Preview(device = PIXEL_7_PRO)
 @Composable
@@ -90,4 +85,9 @@ fun PreviewHomeScreen() {
         onItemClicked = onItemClicked,
         productUiModelList = productUiModelList,
     )
+}
+@Preview
+@Composable
+fun PreviewEmptyFavoriteScreen() {
+    EmptyFavoriteScreen()
 }

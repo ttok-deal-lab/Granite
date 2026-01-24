@@ -47,26 +47,26 @@ fun FavoriteTopBar(
             )
         }
         Spacer(Modifier.weight(1f))
-
-        Row(
-            Modifier.fillMaxHeight(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            val minSizeModifier = Modifier.sizeIn(48.dp, minHeight = 48.dp)
-            Box(
-                modifier = minSizeModifier
-                    .blockingClickable(onClick = onNotificationClick),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    modifier = Modifier.sizeIn(28.dp, minHeight = 28.dp),
-                    painter = painterResource(R.drawable.notification_line_28_28),
-                    tint = Neutral,
-                    contentDescription = "notificationIcon"
-                )
-            }
-            Spacer(Modifier.width(10.dp))
-        }
+        //TODO : 알림제거
+//        Row(
+//            Modifier.fillMaxHeight(),
+//            verticalAlignment = Alignment.CenterVertically
+//        ) {
+//            val minSizeModifier = Modifier.sizeIn(48.dp, minHeight = 48.dp)
+//            Box(
+//                modifier = minSizeModifier
+//                    .blockingClickable(onClick = onNotificationClick),
+//                contentAlignment = Alignment.Center
+//            ) {
+//                Icon(
+//                    modifier = Modifier.sizeIn(28.dp, minHeight = 28.dp),
+//                    painter = painterResource(R.drawable.notification_line_28_28),
+//                    tint = Neutral,
+//                    contentDescription = "notificationIcon"
+//                )
+//            }
+//            Spacer(Modifier.width(10.dp))
+//        }
     }
 }
 
