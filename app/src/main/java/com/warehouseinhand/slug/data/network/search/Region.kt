@@ -1,5 +1,6 @@
 package com.warehouseinhand.slug.data.network.search
 
+//TODO : 도메인 이동 필요!
 enum class Region {
     ALL,
     SEOUL, BUSAN, DAEGU, INCHEON, GWANGJU, DAEJEON, ULSAN, SEJONG,

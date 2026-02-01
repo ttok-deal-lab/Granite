@@ -1,5 +1,6 @@
 package com.warehouseinhand.slug.home.bottomsheet.location
 
+import com.warehouseinhand.slug.data.network.search.Region
 import com.warehouseinhand.slug.home.bottomsheet.location.Location.LocationSub.ALL
 import com.warehouseinhand.slug.home.bottomsheet.location.Location.LocationSub.BUSAN
 import com.warehouseinhand.slug.home.bottomsheet.location.Location.LocationSub.CHUNGBUK
@@ -64,6 +65,8 @@ sealed interface Location {
     }
 
     sealed interface LocationSub : Location {
+        
+        fun toDistrict():String
         enum class SEOUL(val displayName: String) : LocationSub {
             ALL("전체"),
             JONGNO("종로구"),
@@ -94,6 +97,7 @@ sealed interface Location {
             ;
 
             override fun getLocationString() = displayName
+            override fun toDistrict() = name
         }
 
         enum class BUSAN(val displayName: String) : LocationSub {
@@ -117,6 +121,7 @@ sealed interface Location {
             ;
 
             override fun getLocationString() = displayName
+            override fun toDistrict() = name
         }
 
         enum class DAEGU(val displayName: String) : LocationSub {
@@ -133,6 +138,7 @@ sealed interface Location {
             ;
 
             override fun getLocationString() = displayName
+            override fun toDistrict() = name
         }
 
         enum class INCHEON(val displayName: String) : LocationSub {
@@ -150,6 +156,7 @@ sealed interface Location {
             ;
 
             override fun getLocationString() = displayName
+            override fun toDistrict() = name
         }
 
         enum class GWANGJU(val displayName: String) : LocationSub {
@@ -162,6 +169,7 @@ sealed interface Location {
             ;
 
             override fun getLocationString() = displayName
+            override fun toDistrict() = name
         }
 
         enum class DAEJEON(val displayName: String) : LocationSub {
@@ -174,6 +182,7 @@ sealed interface Location {
             ;
 
             override fun getLocationString() = displayName
+            override fun toDistrict() = name
         }
 
         enum class ULSAN(val displayName: String) : LocationSub {
@@ -186,6 +195,7 @@ sealed interface Location {
             ;
 
             override fun getLocationString() = displayName
+            override fun toDistrict() = name
         }
 
         enum class SEJONG(val displayName: String) : LocationSub {
@@ -194,6 +204,7 @@ sealed interface Location {
             ;
 
             override fun getLocationString() = displayName
+            override fun toDistrict() = name
         }
 
         enum class GYEONGGI(val displayName: String) : LocationSub {
@@ -232,6 +243,7 @@ sealed interface Location {
             ;
 
             override fun getLocationString() = displayName
+            override fun toDistrict() = name
         }
 
         enum class GANGWON(val displayName: String) : LocationSub {
@@ -257,6 +269,7 @@ sealed interface Location {
             ;
 
             override fun getLocationString() = displayName
+            override fun toDistrict() = name
         }
 
         enum class CHUNGBUK(val displayName: String) : LocationSub {
@@ -275,6 +288,7 @@ sealed interface Location {
             ;
 
             override fun getLocationString() = displayName
+            override fun toDistrict() = name
         }
 
         enum class CHUNGNAM(val displayName: String) : LocationSub {
@@ -297,6 +311,7 @@ sealed interface Location {
             ;
 
             override fun getLocationString() = displayName
+            override fun toDistrict() = name
         }
 
         enum class JEONBUK(val displayName: String) : LocationSub {
@@ -318,6 +333,7 @@ sealed interface Location {
             ;
 
             override fun getLocationString() = displayName
+            override fun toDistrict() = name
         }
 
         enum class JEONNAM(val displayName: String) : LocationSub {
@@ -347,6 +363,7 @@ sealed interface Location {
             ;
 
             override fun getLocationString() = displayName
+            override fun toDistrict() = name
         }
 
         enum class GYEONGBUK(val displayName: String) : LocationSub {
@@ -376,6 +393,7 @@ sealed interface Location {
             ;
 
             override fun getLocationString() = displayName
+            override fun toDistrict() = name
         }
 
         enum class GYEONGNAM(val displayName: String) : LocationSub {
@@ -401,6 +419,7 @@ sealed interface Location {
             ;
 
             override fun getLocationString() = displayName
+            override fun toDistrict() = name
         }
 
         enum class JEJU(val displayName: String) : LocationSub {
@@ -410,13 +429,14 @@ sealed interface Location {
             ;
 
             override fun getLocationString() = displayName
+            override fun toDistrict() = name
         }
 
         enum class ALL(val displayName: String) : LocationSub {
             ALL("전체"), ;
 
-            override fun getLocationString(): String = displayName
-
+            override fun getLocationString() = displayName
+            override fun toDistrict() = name
         }
     }
 
@@ -442,6 +462,26 @@ sealed interface Location {
                 LocationMain.JEJU -> JEJU.entries
                 LocationMain.ALL -> ALL.entries
             }
+        }
+        fun LocationMain.toRegion(): Region = when (this) {
+            LocationMain.SEOUL -> Region.SEOUL
+            LocationMain.BUSAN -> Region.BUSAN
+            LocationMain.DAEGU -> Region.DAEGU
+            LocationMain.INCHEON -> Region.INCHEON
+            LocationMain.GWANGJU -> Region.GWANGJU
+            LocationMain.DAEJEON -> Region.DAEJEON
+            LocationMain.ULSAN -> Region.ULSAN
+            LocationMain.SEJONG -> Region.SEJONG
+            LocationMain.GYEONGGI -> Region.GYEONGGI
+            LocationMain.GANGWON -> Region.GANGWON
+            LocationMain.CHUNGBUK -> Region.CHUNGBUK
+            LocationMain.CHUNGNAM -> Region.CHUNGNAM
+            LocationMain.JEONBUK -> Region.JEONBUK
+            LocationMain.JEONNAM -> Region.JEONNAM
+            LocationMain.GYEONGBUK -> Region.GYEONGBUK
+            LocationMain.GYEONGNAM -> Region.GYEONGNAM
+            LocationMain.JEJU -> Region.JEJU
+            LocationMain.ALL -> Region.ALL
         }
 
         fun getSubLocationDefault(main: LocationMain): LocationSub {

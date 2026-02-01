@@ -34,7 +34,6 @@ fun HomeScreen(
     onSearchClick: () -> Unit,
     onLocationSelectClick: () -> Unit
 ) {
-    val isListEmpty = productUiModelList.itemCount == 0
 
     Column(modifier = Modifier.padding(padding)) {
         HomeTopBar(

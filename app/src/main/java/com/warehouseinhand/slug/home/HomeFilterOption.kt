@@ -4,7 +4,10 @@ import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.warehouseinhand.slug.R
+import com.warehouseinhand.slug.data.network.search.AuctionFailCount
+import com.warehouseinhand.slug.data.network.search.BuildType
 import com.warehouseinhand.slug.util.numberToCurrency
+import kotlin.collections.ifEmpty
 
 
 interface FilterOption {
@@ -32,7 +35,8 @@ enum class BuildingFilterType(@StringRes val stringId: Int) : FilterOption {
     OFFICETEL(R.string.filter_building_officetel),
     COMMERCIAL_HOUSE(R.string.filter_building_commercial_house),
     HOUSE(R.string.filter_building_house),
-    OTHER(R.string.filter_building_other), ;
+//    OTHER(R.string.filter_building_other),
+    ;
 
     @Composable
     override fun getDisplayText(): String = stringResource(stringId)
@@ -40,11 +44,23 @@ enum class BuildingFilterType(@StringRes val stringId: Int) : FilterOption {
     @Composable
     override fun getEmptyDisplayText() = stringResource(R.string.filter_building)
 
+    companion object {
+        fun List<BuildingFilterType>.toBuildType(): List<BuildType> =
+            map {
+                when (it) {
+                    APARTMENT -> BuildType.APARTMENT
+                    VILLA -> BuildType.VILLA
+                    OFFICETEL -> BuildType.OFFICETEL
+                    COMMERCIAL_HOUSE -> BuildType.COMMERCIAL
+                    HOUSE -> BuildType.HOUSE
+                }
+            }.ifEmpty { listOf(BuildType.ALL) }
+    }
 }
 
 enum class AuctionStatusFilterType(@StringRes val stringId: Int) : FilterOption {
     NEW(R.string.filter_auction_status_new),
-    DATE_CHANGING(R.string.filter_auction_status_date_changing),
+//    DATE_CHANGING(R.string.filter_auction_status_date_changing),
     FAILED1(R.string.filter_auction_status_failed1),
     FAILED2(R.string.filter_auction_status_failed2),
     FAILED_ABOVE3(R.string.filter_auction_status_failed_above3), ;
@@ -54,6 +70,16 @@ enum class AuctionStatusFilterType(@StringRes val stringId: Int) : FilterOption 
 
     @Composable
     override fun getEmptyDisplayText() = stringResource(R.string.filter_auction_status)
+    companion object{
+        fun List<AuctionStatusFilterType>.toAuctionFailCount(): List<AuctionFailCount> =
+            map { when(it){
+                NEW -> AuctionFailCount.FIRST_AUCTION
+                FAILED1 -> AuctionFailCount.SECOND_AUCTION
+                FAILED2 -> AuctionFailCount.THIRD_AUCTION
+                FAILED_ABOVE3 -> AuctionFailCount.MULTIPLE_AUCTION
+            } }.ifEmpty { listOf(AuctionFailCount.ALL) }
+
+    }
 }
 
 sealed class Price() : FilterOption {

@@ -6,21 +6,27 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
-import com.warehouseinhand.slug.R
+import com.warehouseinhand.slug.data.network.search.AuctionFailCount
+import com.warehouseinhand.slug.data.network.search.BuildType
+import com.warehouseinhand.slug.data.network.search.Region
 import com.warehouseinhand.slug.data.network.search.RemoteSearchRepository
-import com.warehouseinhand.slug.domain.search.AuctionSearchItem
+import com.warehouseinhand.slug.data.network.search.Sort
+import com.warehouseinhand.slug.data.network.search.VerificationStatus
+import com.warehouseinhand.slug.home.AuctionStatusFilterType.Companion.toAuctionFailCount
+import com.warehouseinhand.slug.home.BuildingFilterType.Companion.toBuildType
+import com.warehouseinhand.slug.home.ProductItemUiModel.Companion.toUiModel
 import com.warehouseinhand.slug.home.bottomsheet.location.Location
+import com.warehouseinhand.slug.home.bottomsheet.location.Location.Companion.toRegion
 import com.warehouseinhand.slug.home.bottomsheet.sorting.SortingType
 import com.warehouseinhand.slug.home.component.FilterButtonState
-import com.warehouseinhand.slug.ui.component.image.ImageResource
-import com.warehouseinhand.slug.ui.component.label.SlugLabelStyle
-import com.warehouseinhand.slug.ui.component.label.SlugLabelUiModel
-import com.warehouseinhand.slug.util.calculateDaysLeft
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -32,8 +38,11 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
     init {
         //2
-        requestNewItemList()
+//        requestNewItemList()
     }
+
+    private val _queryState = MutableStateFlow(SearchQuery())
+    val queryState = _queryState.asStateFlow()
 
     private val _selectedSortingType: MutableStateFlow<SortingType> =
         MutableStateFlow(SortingType.NEWEST)
@@ -44,19 +53,39 @@ class HomeViewModel @Inject constructor(
     val stateList get() = _stateList.asStateFlow()
 
     val productUiModelList: Flow<PagingData<ProductItemUiModel>> =
-        remoteSearchRepository.getProductListPaging(
-            onSizeReturn = { totalCount:Long ->
-                viewModelScope.launch {
-                    _numberOfProduct.emit(totalCount)
-                }
+        queryState
+            .debounce(250)                // 필터/슬라이더 연타 대비 (선택)
+            .distinctUntilChanged()       // 같은 query면 재생성 방지
+            .flatMapLatest { query ->
+                remoteSearchRepository.getProductListPaging(
+                    size = 20,
+                    query = query,
+                    onSizeReturn = { totalCount:Long ->
+                        viewModelScope.launch {
+                            _numberOfProduct.emit(totalCount)
+                        }
+                    })
             }
-        )
             .map { paging ->
-                paging.map { domain ->
-                    domain.toUiModel()
-                }
+                paging.map { domain -> domain.toUiModel() }
             }
             .cachedIn(viewModelScope)
+
+//    val productUiModelList: Flow<PagingData<ProductItemUiModel>> =
+//        remoteSearchRepository.getProductListPaging(
+//            query = SearchQuery(),
+//            onSizeReturn = { totalCount: Long ->
+//                viewModelScope.launch {
+//                    _numberOfProduct.emit(totalCount)
+//                }
+//            })
+//            .map { paging ->
+//                paging.map { domain ->
+//                    domain.toUiModel()
+//                }
+//            }
+//            .cachedIn(viewModelScope)
+
 
     //1
 //    private val _productUiModelList: MutableStateFlow<List<ProductItemUiModel>> =
@@ -84,6 +113,7 @@ class HomeViewModel @Inject constructor(
     private val _tempProductSize: MutableStateFlow<Long> = MutableStateFlow(0L)
     val tempProductSize get() = _tempProductSize.asStateFlow()
 
+
     private var isFinishedProductFilterSelected = false
     private var isVerifiedFilterSelected = false
     private val _buildingFilterSelectedList: MutableStateFlow<List<BuildingFilterType>> =
@@ -94,9 +124,12 @@ class HomeViewModel @Inject constructor(
         MutableStateFlow(listOf())
     val auctionStateFilterSelectedList get() = _auctionStateFilterSelectedList.asStateFlow()
 
-    private val _minPrice: MutableStateFlow<Long> = MutableStateFlow(0L)
+    private val MIN_PRICE = 0L
+    private val MAX_PRICE = 200_000_000L
+
+    private val _minPrice: MutableStateFlow<Long> = MutableStateFlow(MIN_PRICE)
     val minPrice get() = _minPrice.asStateFlow()
-    private val _maxPrice: MutableStateFlow<Long> = MutableStateFlow(200_000_000L)
+    private val _maxPrice: MutableStateFlow<Long> = MutableStateFlow(MAX_PRICE)
     val maxPrice get() = _maxPrice.asStateFlow()
 
     private val _priceRange: MutableStateFlow<Price> =
@@ -168,7 +201,7 @@ class HomeViewModel @Inject constructor(
         //TODO : viewmodel에서 커서를 가지는게 맞나?
         lastJob?.cancel()
         lastJob = viewModelScope.launch {
-            remoteSearchRepository.getProductListByCursor(nextCursor = "")
+            remoteSearchRepository.getProductListByCursor(nextCursor = "", queryState.value)
                 .onSuccess { it ->
 //                    lastestCursor = it.nextCursor
 
@@ -208,59 +241,55 @@ class HomeViewModel @Inject constructor(
 //        }
     }
 
-    private fun AuctionSearchItem.toUiModel(
-        nowMillis: Long = System.currentTimeMillis()
-    ): ProductItemUiModel {
+    private fun refreshPagingByCurrentFilters() {
+        _queryState.value = buildQueryFromCurrentStates()
+    }
 
-        val daysLeft = calculateDaysLeft(salesDateTime, nowMillis)
+    private fun buildQueryFromCurrentStates(): SearchQuery {
+        val verificationStatus =
+            if (isVerifiedFilterSelected) VerificationStatus.VERIFIED else VerificationStatus.ALL
 
-        return ProductItemUiModel(
-            id = id,
-            priceOfProduct = appraisalPrice,
-            nameOfProduct = buildingName ?: caseNumber, // fallback
-            location = address,
-            daysLeft = daysLeft,
-            buildingImage =
-                if (salesPicture.isNotEmpty())
-                    ImageResource.Url(salesPicture)
-                else ImageResource.Id(R.drawable.logo_metaopo),
-            isFavorite = isFavorite,
-            favoritePersons = zzimCount,
-            infoChipList = buildSearchInfoChips()
+        val buildType =
+            buildingFilterSelectedList.value.toBuildType()
+
+        val auctionFailCount = auctionStateFilterSelectedList.value.toAuctionFailCount()
+
+        val (minPrice, maxPrice) = when (val pr = priceRange.value) {
+            is Price.Range -> {
+                if (pr.start == MIN_PRICE && pr.end == MAX_PRICE)
+                    -1L to -1L
+                else
+                    pr.start to pr.end
+            }
+
+            is Price.Above -> pr.value to -1L
+            is Price.Below -> -1L to pr.value
+        }
+
+        val sort = selectedSortingType.value.toSort()
+
+        // 지역 예시 (네 Location enum에 맞춰서 변환 함수 만들면 됨)
+        val region = selectedMainLocation.value.toRegion()
+        val district: String = selectedSubLocation.value.toDistrict()
+
+        return SearchQuery(
+            keyword = "unknown",//TODO : 검색에서는 처리 되어야함!
+            region = region,
+            district = district,
+            buildType = buildType,
+            auctionFailCount = auctionFailCount,
+            verificationStatus = verificationStatus,
+            minimumPrice = minPrice,
+            maximumPrice = maxPrice,
+            sort = sort
         )
     }
-
-    private fun AuctionSearchItem.buildSearchInfoChips()
-            : List<SlugLabelUiModel> {
-
-        val chips = mutableListOf<SlugLabelUiModel>()
-
-        // 1. 인증 매물
-        if (verified) {
-            chips += SlugLabelUiModel(SlugLabelStyle.GradientBackground.Verified , "인증매물")
-        }
-
-        // 2. 매각 상태
-        if (soldOut) {
-            chips += SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State , "매각완료")
-        } else if (failBidCount > 0) {
-            chips += SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State , "유찰 ${failBidCount}회")
-        }
-
-        // 3. 건물 카테고리 (대표 1개)
-        salesCategories.firstOrNull()?.let { category ->
-            chips += SlugLabelUiModel(SlugLabelStyle.BuildingInfo.Apartment , category)
-            // 실제로는 category → 스타일 매핑 함수로 분리 권장
-        }
-
-        return chips
-    }
-
 
     fun changeFinishedSelected() {
         isFinishedProductFilterSelected = !isFinishedProductFilterSelected
         updateFilterState()
         requestNewItemList()
+        refreshPagingByCurrentFilters()
     }
 
     fun changeAuctionFilterSelectList(list: List<AuctionStatusFilterType>) {
@@ -270,6 +299,7 @@ class HomeViewModel @Inject constructor(
         }
         updateFilterState()
         requestNewItemList()
+        refreshPagingByCurrentFilters()
     }
 
     fun changeBuildingFilterSelectList(list: List<BuildingFilterType>) {
@@ -279,23 +309,27 @@ class HomeViewModel @Inject constructor(
         }
         updateFilterState()
         requestNewItemList()
+        refreshPagingByCurrentFilters()
     }
 
     fun changeVerifiedSelected() {
         isVerifiedFilterSelected = !isVerifiedFilterSelected
         updateFilterState()
         requestNewItemList()
+        refreshPagingByCurrentFilters()
     }
 
     fun changePriceRange(price: Price) {
         _priceRange.update { price }
         updateFilterState()
         requestNewItemList()
+        refreshPagingByCurrentFilters()
     }
 
     fun requestChangeSortingType(type: SortingType) {
         _selectedSortingType.value = type
         requestNewItemList()
+        refreshPagingByCurrentFilters()
     }
 
     //HOME location
@@ -306,11 +340,22 @@ class HomeViewModel @Inject constructor(
         _selectedMainLocation.update { mainLocation }
         _selectedSubLocation.update { subLocation }
 
-//        requestNewItemList()
         //TODO : filter초기화
         requestNewItemList()
+        refreshPagingByCurrentFilters()
     }
     //HOME location
-
-
 }
+
+
+data class SearchQuery(
+    val keyword: String = "unknown",
+    val region: Region = Region.ALL,
+    val district: String = "unkwon",
+    val buildType: List<BuildType> = listOf(BuildType.ALL),
+    val auctionFailCount: List<AuctionFailCount> = listOf(AuctionFailCount.ALL),
+    val verificationStatus: VerificationStatus = VerificationStatus.ALL,
+    val minimumPrice: Long = -1,
+    val maximumPrice: Long = -1,
+    val sort: Sort = Sort.LATEST_REGISTERED,
+)

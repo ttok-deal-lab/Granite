@@ -7,26 +7,16 @@ interface SearchService {
 
     @GET("$CONTEXT/$VERSION/$SEARCH")
     suspend fun search(
-        @Query("keyword") keyword: String? = null,
+        @Query("keyword") keyword: String = "unknown",
         @Query("region") region: Region? = Region.ALL,
-        @Query("district") district: String? = null,
-        @Query("buildType") buildType: BuildType? = BuildType.ALL,
-        @Query("auctionFailCount") auctionFailCount: AuctionFailCount? = AuctionFailCount.ALL,
-        @Query("varificationStatus") verificationStatus: VerificationStatus? = VerificationStatus.ALL,
+        @Query("district") district: String = "unknown",
+        @Query("buildType") buildType: String = "ALL",
+        @Query("auctionFailCount") auctionFailCount: String = "ALL",
+        @Query("varificationStatus") verificationStatus: String = "ALL",
         @Query("minimumPrice") minimumPrice: Long? = -1,
         @Query("maximumPrice") maximumPrice: Long? = -1,
-        @Query("nextCursor") nextCursor: String? = null,
+        @Query("nextCursor") nextCursor: String? = "unknown",
         @Query("sort") sort: Sort? = Sort.LATEST_REGISTERED,
-//        @Query("keyword") keyword: String? = null,
-//        @Query("region") region: Region? = Region.ALL,
-//        @Query("district") district: String? = null,
-//        @Query("buildType") buildType: BuildType? = BuildType.ALL,
-//        @Query("auctionFailCount") auctionFailCount: AuctionFailCount? = AuctionFailCount.ALL,
-//        @Query("verificationStatus") verificationStatus: VerificationStatus? = VerificationStatus.ALL,
-//        @Query("minimumPrice") minimumPrice: Long? = -1,
-//        @Query("maximumPrice") maximumPrice: Long? = -1,
-//        @Query("nextCursor") nextCursor: String? = null,
-//        @Query("sort") sort: Sort? = Sort.LATEST_REGISTERED,
     ): SearchResponseDTO
 
     companion object {
