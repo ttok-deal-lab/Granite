@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.warehouseinhand.slug.R
+import com.warehouseinhand.slug.domain.court.CourtSalesItem
+import com.warehouseinhand.slug.domain.court.SalesCategory
 import com.warehouseinhand.slug.domain.search.AuctionSearchItem
 import com.warehouseinhand.slug.ui.component.image.ImageResource
 import com.warehouseinhand.slug.ui.component.label.SlugLabelStyle
@@ -23,6 +25,72 @@ data class ProductItemUiModel(
     val infoChipList: List<SlugLabelUiModel>
 ) {
     companion object {
+
+        fun CourtSalesItem.toUiModel(
+            nowMillis: Long = System.currentTimeMillis()
+        ): ProductItemUiModel {
+
+            val daysLeft = calculateDaysLeft(
+                salesDateTime = salesDateTime,
+                nowMillis = nowMillis
+            )
+
+            return ProductItemUiModel(
+                id = id,
+                priceOfProduct = appraisalPrice,
+                nameOfProduct = salesBuildingName,
+                location = salesAddress,
+                daysLeft = daysLeft,
+                buildingImage =
+                    salesPicture?.let { ImageResource.Url(it) }
+                        ?: ImageResource.Id(R.drawable.logo_metaopo),
+                isFavorite = false, // ✅ 찜 목록/찜 여부 API 기준이라면 true
+                favoritePersons = zzimCount,
+                infoChipList = buildInfoChips()
+            )
+        }
+        private fun CourtSalesItem.buildInfoChips(): List<SlugLabelUiModel> {
+            val chips = mutableListOf<SlugLabelUiModel>()
+
+            // 1) 매각 상태
+            when {
+                soldOut -> {
+                    chips += SlugLabelUiModel(
+                        labelStyle = SlugLabelStyle.BuildingInfo.State,
+                        text = "매각완료"
+                    )
+                }
+
+                failBidCount > 0 -> {
+                    chips += SlugLabelUiModel(
+                        labelStyle = SlugLabelStyle.BuildingInfo.State,
+                        text = "유찰 ${failBidCount}회"
+                    )
+                }
+            }
+
+            // 2) 건물 타입 (대표 1개)
+            salesCategories.firstOrNull()?.let { category ->
+                chips += category.toLabelUiModel()
+            }
+
+            return chips
+        }
+
+        private fun SalesCategory.toLabelUiModel(): SlugLabelUiModel =
+            when (this) {
+                SalesCategory.APARTMENT ->
+                    SlugLabelUiModel(SlugLabelStyle.BuildingInfo.Apartment, "아파트")
+
+                SalesCategory.VILLA ->
+                    SlugLabelUiModel(SlugLabelStyle.BuildingInfo.Villa, "빌라")
+
+                SalesCategory.OFFICETEL ->
+                    SlugLabelUiModel(SlugLabelStyle.BuildingInfo.Officetel, "오피스텔")
+
+                else ->
+                    SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State, name)
+            }
 
 
         fun AuctionSearchItem.toUiModel(
@@ -68,7 +136,6 @@ data class ProductItemUiModel(
                 chips += SlugLabelUiModel(SlugLabelStyle.BuildingInfo.Apartment, category)
                 // 실제로는 category → 스타일 매핑 함수로 분리 권장
             }
-
             return chips
         }
 

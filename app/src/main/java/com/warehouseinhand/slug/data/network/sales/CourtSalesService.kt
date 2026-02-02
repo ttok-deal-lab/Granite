@@ -12,7 +12,7 @@ interface CourtSalesService {
      */
     @GET("$CONTEXT/$VERSION/$COURTS/$SALES")
     suspend fun getCourtSales(
-        @Query("ids") ids: List<String>
+        @Query("ids") ids: Array<String>
     ): List<CourtSalesResponseDTO>
 
     @GET("$CONTEXT/$VERSION/$COURTS/$SALES/{$ID}")

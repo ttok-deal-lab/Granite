@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.warehouseinhand.slug.R
-import com.warehouseinhand.slug.home.HomeProductList
+import com.warehouseinhand.slug.home.ProductList
 import com.warehouseinhand.slug.home.ProductItemUiModel
 import com.warehouseinhand.slug.ui.component.image.ImageProcessor
 import com.warehouseinhand.slug.ui.component.image.ImageResource
@@ -45,7 +45,7 @@ fun FavoriteScreen(
         if (productUiModelList.loadState.refresh is LoadState.NotLoading && productUiModelList.itemCount == 0) {
             EmptyFavoriteScreen()
         } else {
-            HomeProductList(productUiModelList, onItemClicked)
+            ProductList(productUiModelList, onItemClicked)
         }
     }
 }

@@ -11,6 +11,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.warehouseinhand.slug.login.SocialLoginUIModel
 import com.warehouseinhand.slug.util.openInquiryEmail
+import com.warehouseinhand.slug.util.startRecentItemsActivity
 
 
 @Composable
@@ -23,8 +24,8 @@ internal fun MyPageRoute(
     val context = LocalContext.current
     val userName by viewModel.userName.collectAsStateWithLifecycle()
     val lastLoginType by viewModel.lastLoginType.collectAsStateWithLifecycle()
-    val onRecentViewClicked = {}
-    val onInquiryClicked = {context.openInquiryEmail()}
+    val onRecentViewClicked = { startRecentItemsActivity(context) }
+    val onInquiryClicked = { context.openInquiryEmail() }
 
     Box(modifier = Modifier.padding(padding)) {
         MyPageScreen(

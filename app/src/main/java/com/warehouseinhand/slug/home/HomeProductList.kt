@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
@@ -48,7 +49,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 //TODO : 공통컴포넌트화 고려
 @Composable
-fun HomeProductList(
+fun ProductList(
     uiModelList: LazyPagingItems<ProductItemUiModel>,
     onItemClicked: (ProductItemUiModel) -> Unit
 ) {
@@ -57,6 +58,29 @@ fun HomeProductList(
             count = uiModelList.itemCount,
         ) { index ->
             val item = uiModelList.get(index) ?: return@items
+            ProductItem(
+                uiModel = item,
+                onItemClicked = onItemClicked
+            )
+            Spacer(
+                Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+                    .background(color = NeutralWeak)
+            )
+        }
+    }
+}
+
+@Composable
+fun ProductList(
+    uiModelList: List<ProductItemUiModel>,
+    onItemClicked: (ProductItemUiModel) -> Unit
+) {
+    LazyColumn {
+        items(
+            items = uiModelList
+        ) { item ->
             ProductItem(
                 uiModel = item,
                 onItemClicked = onItemClicked
@@ -175,6 +199,6 @@ fun PreviewHomeProductList() {
     val uiModelList = MutableStateFlow(PagingData.from(ProductItemUiModel.testList))
         .collectAsLazyPagingItems()
     Surface {
-        HomeProductList(uiModelList, onItemClicked)
+        ProductList(uiModelList, onItemClicked)
     }
 }

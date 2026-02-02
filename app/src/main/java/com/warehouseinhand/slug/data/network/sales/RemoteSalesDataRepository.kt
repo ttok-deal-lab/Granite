@@ -8,7 +8,7 @@ class RemoteSalesDataRepository @Inject constructor(
     private val courtSalesService: CourtSalesService,
 ) {
     suspend fun getCourtSales(
-        ids: List<String>
+        ids: Array<String>
     ): Result<List<CourtSalesItem>> =
         runCatching {
             courtSalesService.getCourtSales(ids = ids)

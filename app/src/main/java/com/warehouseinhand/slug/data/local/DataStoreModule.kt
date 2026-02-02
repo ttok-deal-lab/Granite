@@ -19,10 +19,15 @@ internal class DataStoreModule {
 
     @Qualifier
     @Retention(AnnotationRetention.BINARY)
-   internal annotation class DataStoreSettings
+    internal annotation class DataStoreSettings
+
     @Qualifier
     @Retention(AnnotationRetention.BINARY)
-    internal  annotation class DataStoreUser
+    internal annotation class DataStoreUser
+
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    internal annotation class DataStoreRecentItems
 
     @Provides
     @Singleton
@@ -42,12 +47,23 @@ internal class DataStoreModule {
         return applicationContext.userDataStore
     }
 
+    @Provides
+    @Singleton
+    @DataStoreRecentItems
+    fun provideRecentItemsDataStorePreferences(
+        @ApplicationContext applicationContext: Context
+    ): DataStore<Preferences> {
+        return applicationContext.recentItemsDataStore
+    }
+
     companion object {
 
         private const val SETTINGS = "settings"
         private const val USER = "user"
+        private const val RECENT_ITEMS = "recent_items"
 
         internal val Context.settingsDataStore: DataStore<Preferences> by preferencesDataStore(name = SETTINGS)
         internal val Context.userDataStore: DataStore<Preferences> by preferencesDataStore(name = USER)
+        internal val Context.recentItemsDataStore: DataStore<Preferences> by preferencesDataStore(name = RECENT_ITEMS)
     }
 }

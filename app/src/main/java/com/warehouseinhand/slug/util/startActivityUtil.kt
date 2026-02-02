@@ -7,6 +7,7 @@ import android.net.Uri
 import android.util.Log
 import com.warehouseinhand.slug.detail.DetailActivity
 import com.warehouseinhand.slug.login.LogInActivity
+import com.warehouseinhand.slug.mypage.recent.RecentItemsActivity
 import com.warehouseinhand.slug.setting.SettingActivity
 
 
@@ -28,6 +29,12 @@ fun startSettingActivity(
 ) {
     val toActivity = Intent(context, SettingActivity::class.java)
     //TODO : putExtra로 id등 전달
+    context.startActivity(toActivity)
+}
+fun startRecentItemsActivity(
+    context: Context,
+) {
+    val toActivity = Intent(context, RecentItemsActivity::class.java)
     context.startActivity(toActivity)
 }
 

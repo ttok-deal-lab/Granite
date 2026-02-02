@@ -1,7 +1,7 @@
 package com.warehouseinhand.slug.domain.court
 
 data class CourtSalesItem(
-    val id: Long,
+    val id: String,
     val salesBuildingName: String,
     val salesAddress: String,
     val salesCategories: List<SalesCategory>,
@@ -9,6 +9,6 @@ data class CourtSalesItem(
     val appraisalPrice: Long,
     val salesPicture: String?,
     val failBidCount: Int,
-    val zzimCount: Int,
+    val zzimCount: Long,
     val soldOut: Boolean,
 )

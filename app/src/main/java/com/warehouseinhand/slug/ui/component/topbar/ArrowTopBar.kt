@@ -1,4 +1,4 @@
-package com.warehouseinhand.slug.setting
+package com.warehouseinhand.slug.ui.component.topbar
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -28,7 +28,7 @@ import com.warehouseinhand.slug.ui.theme.SlugTypographyStyle
 import com.warehouseinhand.slug.util.blockingClickable
 
 @Composable
-fun SettingTopBar(
+fun ArrowTopBar(
     text: String = "",
     onBackClick: () -> Unit
 ) {
@@ -73,16 +73,14 @@ fun PreviewSettingTopBar() {
     SlugTheme {
         Surface {
             Column {
-                SettingTopBar(
+                ArrowTopBar(
                     text = "설정",
                     onBackClick = onBackClick,
                 )
-                SettingTopBar(
+                ArrowTopBar(
                     onBackClick = onBackClick,
                 )
             }
         }
     }
-
-
 }

@@ -7,7 +7,7 @@ import com.warehouseinhand.slug.domain.court.SalesCategory
 
 data class CourtSalesResponseDTO(
     @SerializedName("id")
-    val id: Long,
+    val id: String,
 
     @SerializedName("salesBuildingName")
     val salesBuildingName: String,
@@ -31,7 +31,7 @@ data class CourtSalesResponseDTO(
     val failBidCount: Int,
 
     @SerializedName("zzimCount")
-    val zzimCount: Int,
+    val zzimCount: Long,
 
     @SerializedName("soldOut")
     val soldOut: Boolean

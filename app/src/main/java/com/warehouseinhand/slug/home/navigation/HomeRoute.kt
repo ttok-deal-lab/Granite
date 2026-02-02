@@ -9,6 +9,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.warehouseinhand.slug.home.AuctionStatusFilterType
 import com.warehouseinhand.slug.home.BuildingFilterType
@@ -52,8 +53,8 @@ internal fun HomeRoute(
 
     val currentContext = LocalContext.current
     val onItemClicked: (ProductItemUiModel) -> Unit = { model ->
-
         //TODO :API연결 이후 재확인
+        homeViewModel.addRecentItem(model.id)
         startDetailActivity(currentContext, model.id)
 
 //        Toast.makeText(currentContext, model.nameOfProduct, Toast.LENGTH_SHORT).show()

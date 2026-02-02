@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
+import com.warehouseinhand.slug.data.local.recent.RecentItemRepository
+import com.warehouseinhand.slug.data.local.recent.RecentItemRepositoryImpl
 import com.warehouseinhand.slug.data.network.search.AuctionFailCount
 import com.warehouseinhand.slug.data.network.search.BuildType
 import com.warehouseinhand.slug.data.network.search.Region
@@ -20,6 +22,8 @@ import com.warehouseinhand.slug.home.bottomsheet.location.Location.Companion.toR
 import com.warehouseinhand.slug.home.bottomsheet.sorting.SortingType
 import com.warehouseinhand.slug.home.component.FilterButtonState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,12 +38,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val remoteSearchRepository: RemoteSearchRepository
+    private val remoteSearchRepository: RemoteSearchRepository,
+    private val recentItemRepository: RecentItemRepository,
 ) : ViewModel() {
-    init {
-        //2
-//        requestNewItemList()
-    }
 
     private val _queryState = MutableStateFlow(SearchQuery())
     val queryState = _queryState.asStateFlow()
@@ -60,7 +61,7 @@ class HomeViewModel @Inject constructor(
                 remoteSearchRepository.getProductListPaging(
                     size = 20,
                     query = query,
-                    onSizeReturn = { totalCount:Long ->
+                    onSizeReturn = { totalCount: Long ->
                         viewModelScope.launch {
                             _numberOfProduct.emit(totalCount)
                         }
@@ -218,27 +219,10 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun requestNextItemList() {
-        //debounce 어떻게? 목록 그냥 요청은 계속 받아야하나, 필터변경시에는 force 처리해야하는데?
-        //TODO : REQUEST API to new item List
-        //TODO : viewmodel에서 커서를 가지는게 맞나?
-//        if (lastJob?.isCompleted?.not() ?: true) {
-//            return
-//        }
-//        lastJob = viewModelScope.launch {
-//            remoteSearchRepository.getProductListByCursor(nextCursor = lastestCursor)
-//                .onSuccess { it ->
-//                    lastestCursor = it.nextCursor
-//                    val newList = it.items.map { it.toUiModel() }
-////                    _productUiModelList.update { lastList -> lastList + newList }
-//                    _numberOfProduct.emit(it.totalCount)
-//                    Log.d("TESTTEST", "requestNewItemList: SUCCESS")
-//                }.onFailure {
-//                    Log.d("TESTTEST", "requestNewItemList: FAIL $it")
-//
-//                    //TODO
-//                }
-//        }
+    fun addRecentItem(id: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            recentItemRepository.addRecentItem(id)
+        }
     }
 
     private fun refreshPagingByCurrentFilters() {

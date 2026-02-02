@@ -53,7 +53,7 @@ fun HomeScreen(
         if (productUiModelList.loadState.refresh is LoadState.NotLoading && productUiModelList.itemCount == 0) {
             ProductListEmpty(stringResource(R.string.home_product_list_empty_title))
         } else
-            HomeProductList(productUiModelList, onItemClicked)
+            ProductList(productUiModelList, onItemClicked)
     }
 }
 
