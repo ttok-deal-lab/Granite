@@ -39,6 +39,7 @@ class DetailedViewModel @Inject constructor(
     private val remoteSalesDataRepository: RemoteSalesDataRepository,
     private val userDataRepository: RemoteUserDataRepository,
     private val localUserDataRepository: LocalUserDataRepository,
+    private val remoteUserDataRepository: RemoteUserDataRepository,
 ) : ViewModel() {
     private val _uiState: MutableStateFlow<CourtSaleDetailUiState> =
         MutableStateFlow(CourtSaleDetailUiState.preview)
@@ -48,9 +49,17 @@ class DetailedViewModel @Inject constructor(
         CoroutineScope(Dispatchers.IO).launch {
             remoteSalesDataRepository.getCourtSaleDetail(id)
                 .onSuccess { detail ->
+
+                    val userId: String? = localUserDataRepository.getUserId().getOrNull()
+                    userId ?: return@launch //TODO 수정되어야함!
+
+                    val favoriteStatus = remoteUserDataRepository
+                        .getFavoriteStatusMap(userId, listOf(id))
+                        .getOrNull()?.first()?.isFavorite ?: false
+
                     val lessees = detail.toLesseesRaw()
                     val detailSimpleInformation: DetailSimpleInformationUiModel =
-                        detail.toDetailSimpleInformationUiModel()
+                        detail.toDetailSimpleInformationUiModel(isFavorite = favoriteStatus)
                     val auctionInfo = detail.toAuctionInfoUiModel()
 
                     _uiState.update {
@@ -201,11 +210,11 @@ private fun CourtSaleDetail.toLesseesRaw(): List<LesseeInfo> =
     }
 
 
-private fun CourtSaleDetail.toDetailSimpleInformationUiModel(): DetailSimpleInformationUiModel =
+private fun CourtSaleDetail.toDetailSimpleInformationUiModel(isFavorite: Boolean = false): DetailSimpleInformationUiModel =
     DetailSimpleInformationUiModel(
         topTitle = salesAddress,
         imageList = salesPictures.map { ImageResource.Url(it.imageUrl) },
-        isFavorite = false, /*TODO 서버랑 논의 필요*/
+        isFavorite = isFavorite, /*TODO 서버랑 논의 필요*/
         numberOfFavorite = zzimCount,
         nameOfProduct = salesBuildingName,
         numberOfProduct = salesNumber,
