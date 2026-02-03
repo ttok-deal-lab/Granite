@@ -43,6 +43,13 @@ interface UserPrivateService {
     ): String
 
 
+    @GET("$CONTEXT/$VERSION/$USERS/{$USER_ID}/$FAVORITES/ids")
+    suspend fun getFavoriteStatusByIds(
+        @Path("userId") userId: String,
+        @Query("ids") ids: List<String>
+    ): List<FavoriteStatusResponseDTO>
+
+
     @POST("$CONTEXT/$VERSION/$AUTH/$LOGOUT")
     suspend fun logout(): String
 

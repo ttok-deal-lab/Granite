@@ -3,7 +3,9 @@ package com.warehouseinhand.slug.mypage.recent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.warehouseinhand.slug.data.local.recent.RecentItemRepository
+import com.warehouseinhand.slug.data.local.user.LocalUserDataRepository
 import com.warehouseinhand.slug.data.network.sales.RemoteSalesDataRepository
+import com.warehouseinhand.slug.data.network.user.RemoteUserDataRepository
 import com.warehouseinhand.slug.home.ProductItemUiModel
 import com.warehouseinhand.slug.home.ProductItemUiModel.Companion.toUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,6 +22,8 @@ import javax.inject.Inject
 internal class RecentItemsViewModel @Inject constructor(
     private val recentItemRepository: RecentItemRepository,
     private val remoteSalesDataRepository: RemoteSalesDataRepository,
+    private val remoteUserDataRepository: RemoteUserDataRepository,
+    private val localUserDataRepository: LocalUserDataRepository
 ) : ViewModel() {
 
     val uiState = recentItemRepository
@@ -31,7 +35,7 @@ internal class RecentItemsViewModel @Inject constructor(
         .map { loadingState -> RecentItemsUiState(loadingState = loadingState) }
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000L),
+            started = SharingStarted.WhileSubscribed(),
             initialValue = RecentItemsUiState()
         )
 
@@ -52,13 +56,33 @@ internal class RecentItemsViewModel @Inject constructor(
             remoteSalesDataRepository.getCourtSales(ids = ids.toTypedArray())
                 .fold(
                     onSuccess = { items ->
+
+                        val userId = localUserDataRepository.getUserId().getOrNull()
+
+                        // userId를 못 가져온 경우 처리
+                        if (userId == null) {
+                            emit(RecentItemsLoadingState.Error(IllegalStateException("User not logged in")))
+                            return@fold
+                        }
+
+                        val favoriteStatusMap = remoteUserDataRepository
+                            .getFavoriteStatusMap(userId, ids)
+                            .getOrElse { emptyList() } // 즐겨찾기 조회 실패 시 빈 리스트로
+                            .associate { (it.productId to it.isFavorite) }
+
                         val itemMap = items.associateBy { it.id }
                         val sortedItems = ids.mapNotNull { id -> itemMap[id] }
-                        val uiModelList = sortedItems.map { item -> item.toUiModel() }
+
+                        val uiModelList = sortedItems.map { item ->
+                            item.toUiModel(isFavorite = favoriteStatusMap[item.id] ?: false)
+                        }
+
                         emit(RecentItemsLoadingState.Success(uiModelList))
+
                     },
                     onFailure = { emit(RecentItemsLoadingState.Error(it)) }
                 )
+
         }
 }
 

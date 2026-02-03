@@ -27,7 +27,8 @@ data class ProductItemUiModel(
     companion object {
 
         fun CourtSalesItem.toUiModel(
-            nowMillis: Long = System.currentTimeMillis()
+            nowMillis: Long = System.currentTimeMillis(),
+            isFavorite: Boolean = false
         ): ProductItemUiModel {
 
             val daysLeft = calculateDaysLeft(
@@ -44,7 +45,7 @@ data class ProductItemUiModel(
                 buildingImage =
                     salesPicture?.let { ImageResource.Url(it) }
                         ?: ImageResource.Id(R.drawable.logo_metaopo),
-                isFavorite = false, // ✅ 찜 목록/찜 여부 API 기준이라면 true
+                isFavorite = isFavorite,
                 favoritePersons = zzimCount,
                 infoChipList = buildInfoChips()
             )

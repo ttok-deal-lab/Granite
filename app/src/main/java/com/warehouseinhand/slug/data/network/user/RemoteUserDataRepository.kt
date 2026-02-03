@@ -3,9 +3,10 @@ package com.warehouseinhand.slug.data.network.user
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.warehouseinhand.slug.data.network.MapperToDomain.Companion.toDomain
 import com.warehouseinhand.slug.data.network.search.DEFAULT_PAGING_SIZE
-import com.warehouseinhand.slug.data.network.search.ProductsByCursorPagingSource
 import com.warehouseinhand.slug.domain.sales.FavoriteSaleSummary
+import com.warehouseinhand.slug.domain.user.FavoriteStatus
 import com.warehouseinhand.slug.domain.user.SlugToken
 import com.warehouseinhand.slug.domain.user.UserProfile
 import kotlinx.coroutines.flow.Flow
@@ -60,6 +61,17 @@ class RemoteUserDataRepository @Inject constructor(
                 )
             }
         ).flow
+
+
+    suspend fun getFavoriteStatusMap(
+        userId: String,
+        productIds: List<String>
+    ): Result<List<FavoriteStatus>> =
+        runCatching {
+            privateUserService
+                .getFavoriteStatusByIds(userId, productIds)
+                .toDomain()
+        }
 
     suspend fun requestLogout()
             : Result<String> = runCatching { privateUserService.logout() }
