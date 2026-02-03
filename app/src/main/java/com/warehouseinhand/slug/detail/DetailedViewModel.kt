@@ -21,6 +21,8 @@ import com.warehouseinhand.slug.ui.component.label.SlugLabelStyle
 import com.warehouseinhand.slug.ui.component.label.SlugLabelUiModel
 import com.warehouseinhand.slug.ui.theme.Critical
 import com.warehouseinhand.slug.ui.theme.CriticalWeak
+import com.warehouseinhand.slug.util.extractDateFromDateAndTime
+import com.warehouseinhand.slug.util.extractTimeHHmm
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -40,7 +42,6 @@ class DetailedViewModel @Inject constructor(
     private val remoteSalesDataRepository: RemoteSalesDataRepository,
     private val userDataRepository: RemoteUserDataRepository,
     private val localUserDataRepository: LocalUserDataRepository,
-    private val remoteUserDataRepository: RemoteUserDataRepository,
     private val getFavoriteStatusUseCase: GetFavoriteStatusUseCase
 ) : ViewModel() {
     private val _uiState: MutableStateFlow<CourtSaleDetailUiState> =
@@ -142,13 +143,13 @@ private fun CourtSaleDetail.toAuctionInfoUiModel(): AuctionInfoUiModel =
         auctionHistoryUiModel = toAuctionHistoryUiModel(),
         courtInfoUiModel = toCourtInfoUiModel(),
         registryInfoUiModel = RegistryInfoUiModel.preview, /*TODO 1차MVP 미포함*/
-        courtDetailInfo = if (salesItemDetails.isEmpty()) "" else salesItemDetails.first().content
+        courtDetailInfo = if (salesItemDetails.isEmpty()) "" else salesItemDetails.joinToString("\n") { it.content }
     )
 
 
 private fun CourtSaleDetail.toCHeckCardList(): List<AuctionCardUiModel> = listOf(
     AuctionCardUiModel(
-        name = "경매구분", value = "1차 MVP 논의 필요", isCritical = true,
+        name = "경매구분", value = caseName, isCritical = true,
         DetailBottomSheetType.InfoSheetType.TypeOfAuction
     ),
     AuctionCardUiModel(
@@ -156,22 +157,22 @@ private fun CourtSaleDetail.toCHeckCardList(): List<AuctionCardUiModel> = listOf
         DetailBottomSheetType.InfoSheetType.Lessee
     ),
     AuctionCardUiModel(
-        name = "채권자", value = "1차 MVP 논의 필요", isCritical = false,
+        name = "채권자", value = "${creditorCount}명", isCritical = false,
         DetailBottomSheetType.InfoSheetType.Creditor
     ),
 )
 
 private fun CourtSaleDetail.toAuctionHistoryUiModel(): AuctionHistoryUiModel =
     AuctionHistoryUiModel(
-        auctionStartDate = salesOpenDate,
-        dividendDeadline = distributionRequiredDeadlineDate,
-        appraisalDate = conditionReport.investigationDate,
+        auctionStartDate = salesOpenDate.extractDateFromDateAndTime(),
+        dividendDeadline = distributionRequiredDeadlineDate.extractDateFromDateAndTime(),
+        appraisalDate = conditionReport.investigationDate.extractDateFromDateAndTime(),
         rounds = salesDetails.let {
             it.size
             it.mapIndexed { index, detail ->
                 AuctionRound(
                     round = it.size - index,
-                    date = detail.timeStamp,
+                    date = detail.timeStamp.extractDateFromDateAndTime(),
                     minSalePrice = detail.leastSalesPrice,
                     result = AuctionResult.fromDisplayName(detail.result),
                 )
@@ -179,12 +180,13 @@ private fun CourtSaleDetail.toAuctionHistoryUiModel(): AuctionHistoryUiModel =
         }
     )
 
+
 private fun CourtSaleDetail.toCourtInfoUiModel(): CourtInfoUiModel =
     CourtInfoUiModel(
         courtName = courtCode,
         courtTeam = courtTeam,
-        saleDate = salesDateTime,
-        bidTime = salesDetails.first().timeStamp,
+        saleDate = salesDateTime.extractDateFromDateAndTime(),
+        bidTime = salesDetails.first().timeStamp.extractTimeHHmm(),
         openingTime = " TODO 논의 필요",
         lat = 37.453145,
         lng = 127.159211
@@ -212,7 +214,7 @@ private fun CourtSaleDetail.toDetailSimpleInformationUiModel(isFavorite: Boolean
     DetailSimpleInformationUiModel(
         topTitle = salesAddress,
         imageList = salesPictures.map { ImageResource.Url(it.imageUrl) },
-        isFavorite = isFavorite, /*TODO 서버랑 논의 필요*/
+        isFavorite = isFavorite,
         numberOfFavorite = zzimCount,
         nameOfProduct = salesBuildingName,
         numberOfProduct = salesNumber,

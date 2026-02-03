@@ -33,8 +33,7 @@ fun CourtDetailInfo(courtDetailInfo: String) {
         Text(
             text = courtDetailInfo,
             style = SlugTypographyStyle.BodySmallMedium,
-            color = Critical //TODO : 서버에 요청해서 재확인 해야하는 부분
-//            color = NeutralSubtler
+            color = NeutralSubtler
         )
     }
 }

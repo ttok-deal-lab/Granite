@@ -77,6 +77,7 @@ fun DetailSimpleInformation(
                 recentDealPrice = uiModel.recentDealPrice,
                 recentDealDate = uiModel.recentDealDate,
                 lastSaleDate = uiModel.lastSaleDate,
+                appraisalPrice = uiModel.appraisalPrice
             )
         }
     }
@@ -88,13 +89,16 @@ private fun RecentAuctionPrice(
     lowestPrice: Long,
     priceDiff: Long,
     recentDealPrice: Long,
+    appraisalPrice: Long,
     recentDealDate: String,
     lastSaleDate: String,
 ) {
     //TODO : i18n
-    val displayLowestPrice = remember { numberToCurrency(lowestPrice) }
-    val displayPriceDiff = remember { numberToCurrency(priceDiff) }
-    val displayRecentDealPrice = remember { numberToCurrency(recentDealPrice) }
+    val displayLowestPrice = numberToCurrency(lowestPrice)
+    val displayPriceDiff = numberToCurrency(priceDiff)
+    val displayAppraisalPrice = numberToCurrency(appraisalPrice)
+    val displayRecentDealPrice = numberToCurrency(recentDealPrice)
+    val percentageOfPriceDiff = priceDiff * 10000 / appraisalPrice / 100.0
 
     val shape = RoundedCornerShape(8.dp)
     Column(
@@ -146,10 +150,15 @@ private fun RecentAuctionPrice(
                         style = SlugTypographyStyle.BodyTinyMedium,
                         color = NeutralSubtler
                     )
+                    Spacer(Modifier.width(2.dp))
                     Text(
-                        text = displayPriceDiff,
+                        text = if (priceDiff == 0L) "-" else "$displayPriceDiff (${percentageOfPriceDiff}%)",
                         style = SlugTypographyStyle.BodyTinyMedium,
-                        color = if (priceDiff >= 0) Critical else Primary
+                        color = when {
+                            priceDiff > 0 -> Critical
+                            priceDiff < 0 -> Primary
+                            else -> NeutralSubtler
+                        }
                     )
                 }
             }
@@ -176,7 +185,7 @@ private fun RecentAuctionPrice(
                 }
                 Spacer(Modifier.weight(1f))
                 Text(
-                    text = displayLowestPrice,
+                    text = displayAppraisalPrice,
                     style = SlugTypographyStyle.BodySmallMedium,
                     color = NeutralSubtler
                 )
