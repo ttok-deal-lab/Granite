@@ -2,8 +2,9 @@ package com.warehouseinhand.slug.domain.sales
 
 data class FavoriteSaleSummary(
     val id: Long,
-    val isSoldOut: Boolean,
-    val salesBuildingName: String,
+    val caseNumber: String,
+    val soldOut: Boolean,
+    val buildingName: String?,
     val salesAddress: String,
     val salesCategories: List<String>,
     val salesDateTime: String,
@@ -11,5 +12,7 @@ data class FavoriteSaleSummary(
     val salesPicture: String?,
     val failBidCount: Int,
     val zzimCount: Long,
+    val registerDate: String,
     val isFavorite: Boolean,
+    val verified: Boolean,
 )

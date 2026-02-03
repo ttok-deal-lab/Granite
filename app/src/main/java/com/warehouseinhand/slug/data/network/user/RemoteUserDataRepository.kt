@@ -5,7 +5,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.warehouseinhand.slug.data.network.MapperToDomain.Companion.toDomain
 import com.warehouseinhand.slug.data.network.search.DEFAULT_PAGING_SIZE
-import com.warehouseinhand.slug.domain.sales.FavoriteSaleSummary
+import com.warehouseinhand.slug.domain.search.AuctionSearchItem
 import com.warehouseinhand.slug.domain.user.FavoriteStatus
 import com.warehouseinhand.slug.domain.user.SlugToken
 import com.warehouseinhand.slug.domain.user.UserProfile
@@ -47,7 +47,7 @@ class RemoteUserDataRepository @Inject constructor(
             privateUserService.requestRemoveFavoriteProduct(userId = userId, productId = productId)
         }
 
-    fun getUserFavoriteProductList(userId: String, size: Int = DEFAULT_PAGING_SIZE): Flow<PagingData<FavoriteSaleSummary>> =
+    fun getUserFavoriteProductList(userId: String, size: Int = DEFAULT_PAGING_SIZE): Flow<PagingData<AuctionSearchItem>> =
         Pager(
             config = PagingConfig(
                 pageSize = size,

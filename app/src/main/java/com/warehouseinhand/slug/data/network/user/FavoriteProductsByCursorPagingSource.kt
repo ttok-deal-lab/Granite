@@ -2,22 +2,26 @@ package com.warehouseinhand.slug.data.network.user
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.warehouseinhand.slug.domain.sales.FavoriteSaleSummary
+import com.warehouseinhand.slug.domain.search.AuctionSearchItem
 
 class FavoriteProductsByCursorPagingSource(
     private val service: UserPrivateService,
     private val userId: String,
-) : PagingSource<String, FavoriteSaleSummary>() {
+) : PagingSource<String, AuctionSearchItem>() {
 
-    override suspend fun load(params: LoadParams<String>): LoadResult<String, FavoriteSaleSummary> =
+    override suspend fun load(params: LoadParams<String>): LoadResult<String, AuctionSearchItem> =
         try {
             val cursor = params.key
 
-            val dto = service.getUserFavoriteProductList(userId = userId, cursor = cursor ?: "unknown")
+            val dto =
+                service.getUserFavoriteProductList(userId = userId, cursor = cursor ?: "unknown")
 
-            val domainItems = dto.items.map { it.toDomain() } // DTO -> Domain
+            val domainItems = dto.items.map {
+                it.toDomain()
+            } // DTO -> Domain
+
             val nextKey =
-                if (cursor == "unknown" || !dto.hasNext) null else dto.nextCursor// null을 입력하면 더이상 받아오지 않음!
+                if (cursor == "unknown") null else dto.nextCursor// null을 입력하면 더이상 받아오지 않음!
 
             LoadResult.Page(
                 data = domainItems,
@@ -28,5 +32,5 @@ class FavoriteProductsByCursorPagingSource(
             LoadResult.Error(e)
         }
 
-    override fun getRefreshKey(state: PagingState<String, FavoriteSaleSummary>): String? = null
+    override fun getRefreshKey(state: PagingState<String, AuctionSearchItem>): String? = null
 }
