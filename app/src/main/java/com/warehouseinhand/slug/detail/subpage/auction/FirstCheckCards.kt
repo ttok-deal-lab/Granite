@@ -3,8 +3,10 @@ package com.warehouseinhand.slug.detail.subpage.auction
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -37,14 +39,17 @@ fun FirstCheckCards(
             .padding(horizontal = 20.dp, vertical = 24.dp)
     ) {
         ItemTitle("한 눈에 보기")
-        Spacer(Modifier.Companion.height(20.dp))
+        Spacer(Modifier.height(20.dp))
         Row(
-            modifier = Modifier.Companion.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(IntrinsicSize.Max),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             checkCardList.forEach { data ->
                 Column(
-                    modifier = Modifier.Companion
+                    modifier = Modifier
+                        .fillMaxHeight()
                         .blockingClickable(onClick = { requestBottomSheet(data.type) })
                         .background(
                             if (data.isCritical) CriticalLight else NeutralLight,
@@ -52,14 +57,15 @@ fun FirstCheckCards(
                         )
                         .padding(12.dp)
                         .weight(1f),
-                    horizontalAlignment = Alignment.Companion.CenterHorizontally,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
                 ) {
                     Text(
                         data.name,
                         style = SlugTypographyStyle.BodyMicroMedium,
                         color = NeutralSubtler
                     )
-                    Spacer(Modifier.Companion.height(4.dp))
+                    Spacer(Modifier.height(4.dp))
                     Text(
                         data.value,
                         style = SlugTypographyStyle.BodySmallBold,
