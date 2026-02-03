@@ -68,7 +68,9 @@ class HomeViewModel @Inject constructor(
                     })
             }
             .map { paging ->
-                paging.map { domain -> domain.toUiModel() }
+                paging.map {
+                    domain -> domain.toUiModel()
+                }
             }
             .cachedIn(viewModelScope)
 

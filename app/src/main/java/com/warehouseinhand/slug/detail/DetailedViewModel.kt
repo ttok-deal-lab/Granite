@@ -14,6 +14,7 @@ import com.warehouseinhand.slug.detail.subpage.auction.AuctionRound
 import com.warehouseinhand.slug.detail.subpage.auction.CourtInfoUiModel
 import com.warehouseinhand.slug.detail.subpage.auction.RegistryInfoUiModel
 import com.warehouseinhand.slug.domain.sales.CourtSaleDetail
+import com.warehouseinhand.slug.domain.user.GetFavoriteStatusUseCase
 import com.warehouseinhand.slug.ui.component.image.ImageResource
 import com.warehouseinhand.slug.ui.component.label.SlugLabelBackground
 import com.warehouseinhand.slug.ui.component.label.SlugLabelStyle
@@ -40,6 +41,7 @@ class DetailedViewModel @Inject constructor(
     private val userDataRepository: RemoteUserDataRepository,
     private val localUserDataRepository: LocalUserDataRepository,
     private val remoteUserDataRepository: RemoteUserDataRepository,
+    private val getFavoriteStatusUseCase: GetFavoriteStatusUseCase
 ) : ViewModel() {
     private val _uiState: MutableStateFlow<CourtSaleDetailUiState> =
         MutableStateFlow(CourtSaleDetailUiState.preview)
@@ -50,12 +52,8 @@ class DetailedViewModel @Inject constructor(
             remoteSalesDataRepository.getCourtSaleDetail(id)
                 .onSuccess { detail ->
 
-                    val userId: String? = localUserDataRepository.getUserId().getOrNull()
-                    userId ?: return@launch //TODO 수정되어야함!
-
-                    val favoriteStatus = remoteUserDataRepository
-                        .getFavoriteStatusMap(userId, listOf(id))
-                        .getOrNull()?.first()?.isFavorite ?: false
+                    val favoriteStatus = getFavoriteStatusUseCase(id)
+                        .getOrDefault(false)
 
                     val lessees = detail.toLesseesRaw()
                     val detailSimpleInformation: DetailSimpleInformationUiModel =

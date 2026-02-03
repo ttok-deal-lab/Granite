@@ -49,7 +49,7 @@ internal fun HomeRoute(
     }
     val onSearchClick: () -> Unit = {}
     val onNotificationClick: () -> Unit = {}
-    val verifiedProductExist: Boolean = true
+    val verifiedProductExist: Boolean = true //TODO : 처리해야함!
 
     val currentContext = LocalContext.current
     val onItemClicked: (ProductItemUiModel) -> Unit = { model ->

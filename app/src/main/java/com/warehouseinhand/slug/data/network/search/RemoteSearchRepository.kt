@@ -5,12 +5,14 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.warehouseinhand.slug.domain.search.AuctionSearchItem
 import com.warehouseinhand.slug.domain.search.SearchResultPage
+import com.warehouseinhand.slug.domain.user.GetFavoriteStatusUseCase
 import com.warehouseinhand.slug.home.SearchQuery
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class RemoteSearchRepository @Inject constructor(
     private val searchService: SearchService,
+    private val getFavoriteStatusUseCase: GetFavoriteStatusUseCase,
 ) {
 
     suspend fun getProductListByCursor(
@@ -32,7 +34,6 @@ class RemoteSearchRepository @Inject constructor(
             ).toDomain()
         }
 
-    //TODO : USECASE로 이동 필요!
     fun getProductListPaging(
         size: Int = DEFAULT_PAGING_SIZE,
         query: SearchQuery,
@@ -48,6 +49,7 @@ class RemoteSearchRepository @Inject constructor(
                 ProductsByCursorPagingSource(
                     service = searchService,
                     query = query,
+                    getFavoriteStatusUseCase = getFavoriteStatusUseCase,
                     onSizeReturn = onSizeReturn
                 )
             }
