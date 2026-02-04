@@ -60,7 +60,7 @@ data class AuctionItemResponseDTO(
     @SerializedName("verified")
     val verified: Boolean,
 
-    @SerializedName("soldOut")
+    @SerializedName("isSoldOut")
     val soldOut: Boolean
 ):MapperToDomain<AuctionSearchItem>{
     override fun toDomain(): AuctionSearchItem = AuctionSearchItem(
