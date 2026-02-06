@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -28,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.warehouseinhand.slug.R
 import com.warehouseinhand.slug.search.SearchViewModel
+import com.warehouseinhand.slug.ui.component.ProductListEmpty
 import com.warehouseinhand.slug.search.component.SearchTopBar
 import com.warehouseinhand.slug.ui.component.image.ImageProcessor
 import com.warehouseinhand.slug.ui.component.image.ImageResource
@@ -48,11 +50,15 @@ fun SearchBridgeRoute(
     val searchKeyword by viewModel.searchKeyword.collectAsState()
     val recentSearches by viewModel.recentSearches.collectAsState()
     val autoCompleteResults by viewModel.autoCompleteResults.collectAsState()
+    val isSearchResultEmpty by viewModel.isSearchResultEmpty.collectAsState()
+    val isSearchLoading by viewModel.isSearchLoading.collectAsState()
 
     SearchBridgeScreen(
         searchKeyword = searchKeyword,
         recentSearches = recentSearches,
         autoCompleteResults = autoCompleteResults,
+        isSearchResultEmpty = isSearchResultEmpty,
+        isSearchLoading = isSearchLoading,
         onSearchTextChange = viewModel::updateSearchKeyword,
         onBackClick = onBackClick,
         onClearClick = viewModel::clearSearchKeyword,
@@ -75,6 +81,8 @@ fun SearchBridgeScreen(
     searchKeyword: String,
     recentSearches: List<String>,
     autoCompleteResults: List<String>,
+    isSearchResultEmpty: Boolean = false,
+    isSearchLoading: Boolean = false,
     onSearchTextChange: (String) -> Unit,
     onBackClick: () -> Unit,
     onClearClick: () -> Unit,
@@ -99,15 +107,23 @@ fun SearchBridgeScreen(
         )
 
         when {
+            isSearchLoading -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+            isSearchResultEmpty -> {
+                ProductListEmpty("검색 결과가 없어요.")
+            }
             searchKeyword.isNotEmpty() && autoCompleteResults.isNotEmpty() -> {
                 AutoCompleteList(
                     keyword = searchKeyword,
                     results = autoCompleteResults,
                     onItemClick = onAutoCompleteItemClick
                 )
-            }
-            searchKeyword.isNotEmpty() && autoCompleteResults.isEmpty() -> {
-                SearchNoResult()
             }
             recentSearches.isEmpty() -> {
                 RecentSearchEmpty()

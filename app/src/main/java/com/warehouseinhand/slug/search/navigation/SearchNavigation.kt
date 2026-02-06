@@ -27,9 +27,10 @@ fun NavGraphBuilder.searchNavGraph(
             viewModel = searchViewModel,
             onBackClick = onBackClick,
             onSearch = { keyword ->
-                searchViewModel.search(keyword)
-                navController.navigate(RouteSearchResult(keyword)) {
-                    popUpTo<RouteSearchBridge> { inclusive = false }
+                searchViewModel.searchWithCheck(keyword) {
+                    navController.navigate(RouteSearchResult(keyword)) {
+                        popUpTo<RouteSearchBridge> { inclusive = false }
+                    }
                 }
             }
         )

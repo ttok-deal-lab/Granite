@@ -8,6 +8,7 @@ import androidx.navigation.toRoute
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
+import androidx.room.util.query
 import com.warehouseinhand.slug.data.local.search.RecentSearchRepository
 import com.warehouseinhand.slug.data.network.search.RemoteSearchRepository
 import com.warehouseinhand.slug.data.network.search.VerificationStatus
@@ -25,6 +26,8 @@ import com.warehouseinhand.slug.home.component.FilterButtonState
 import com.warehouseinhand.slug.search.navigation.RouteSearchResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -59,6 +62,12 @@ class SearchViewModel @Inject constructor(
 
     private val _autoCompleteResults = MutableStateFlow<List<String>>(emptyList())
     val autoCompleteResults = _autoCompleteResults.asStateFlow()
+
+    private val _isSearchResultEmpty = MutableStateFlow(false)
+    val isSearchResultEmpty = _isSearchResultEmpty.asStateFlow()
+
+    private val _isSearchLoading = MutableStateFlow(false)
+    val isSearchLoading = _isSearchLoading.asStateFlow()
 
     private val _numberOfProduct = MutableStateFlow(0L)
     val numberOfProduct = _numberOfProduct.asStateFlow()
@@ -128,10 +137,17 @@ class SearchViewModel @Inject constructor(
             }
             .cachedIn(viewModelScope)
 
+    private var autoCompleteJob: Job? = null
+
     fun updateSearchKeyword(keyword: String) {
         _searchKeyword.update { keyword }
+        _isSearchResultEmpty.value = false
+        autoCompleteJob?.cancel()
         if (keyword.isNotEmpty()) {
-            fetchAutoComplete(keyword)
+            autoCompleteJob = viewModelScope.launch {
+                delay(300L)
+                fetchAutoComplete(keyword)
+            }
         } else {
             _autoCompleteResults.update { emptyList() }
         }
@@ -143,6 +159,33 @@ class SearchViewModel @Inject constructor(
             addToRecentSearches(keyword)
             _searchKeyword.update { keyword }
             refreshPagingByCurrentFilters()
+        }
+    }
+
+    fun searchWithCheck(keyword: String, onHasResult: () -> Unit) {
+        lastJob?.cancel()
+        lastJob = viewModelScope.launch {
+            if (keyword.isBlank()) return@launch
+            _isSearchLoading.value = true
+            _isSearchResultEmpty.value = false
+            addToRecentSearches(keyword)
+            _searchKeyword.update { keyword }
+
+            remoteSearchRepository.getProductListByCursor(
+                nextCursor = "",
+                query = SearchQuery(keyword = keyword)
+            ).onSuccess { result ->
+                if (result.totalCount > 0) {
+                    refreshPagingByCurrentFilters()
+                    onHasResult()
+                } else {
+                    _isSearchResultEmpty.value = true
+                }
+            }.onFailure {
+                _isSearchResultEmpty.value = true
+            }
+
+            _isSearchLoading.value = false
         }
     }
 
@@ -284,6 +327,30 @@ class SearchViewModel @Inject constructor(
 
     private suspend fun addToRecentSearches(keyword: String) {
         recentSearchRepository.addRecentSearch(keyword)
+    }
+
+    private var lastJob: Job? = Job().apply { complete() }
+    private fun checkItemsExist() {
+        lastJob?.cancel()
+        lastJob = viewModelScope.launch {
+            remoteSearchRepository.getProductListByCursor(
+                nextCursor = "",
+                query = SearchQuery(keyword = _searchKeyword.value)
+            )
+                .onSuccess { it ->
+//                    lastestCursor = it.nextCursor
+
+//                    _productUiModelList.emit(
+//                        it.items.map { it.toUiModel() }
+//                    )
+//                    _numberOfProduct.emit(it.totalCount)
+                    Log.d("TESTTEST", "requestNewItemList: SUCCESS")
+                }.onFailure {
+                    Log.d("TESTTEST", "requestNewItemList: FAIL $it")
+
+                    //TODO
+                }
+        }
     }
 
     private fun fetchAutoComplete(keyword: String) {
