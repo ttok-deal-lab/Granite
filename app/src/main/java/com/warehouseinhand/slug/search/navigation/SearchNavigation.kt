@@ -40,7 +40,10 @@ fun NavGraphBuilder.searchNavGraph(
             viewModel = searchViewModel,
             onBackClick = onBackClick,
             onItemClick = onItemClick,
-            onNavBackClick = { navController.popBackStack() },
+            onNavBackClick = {
+                navController.popBackStack()
+                searchViewModel.clearSearchKeyword()
+            },
             onShowBottomSheet = onShowBottomSheet,
         )
     }
