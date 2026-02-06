@@ -23,6 +23,7 @@ import com.warehouseinhand.slug.home.component.FilterButtonState
 import com.warehouseinhand.slug.main.MainBottomSheetType.HomeBottomSheetType
 import com.warehouseinhand.slug.main.MainViewModel
 import com.warehouseinhand.slug.util.startDetailActivity
+import com.warehouseinhand.slug.util.startSearchActivity
 
 
 @Composable
@@ -46,7 +47,8 @@ internal fun HomeRoute(
     val onLocationSelectClick: () -> Unit = {
         mainViewModel.requestToShowBottomSheet(HomeBottomSheetType.LocationSelect)
     }
-    val onSearchClick: () -> Unit = {}
+    val context = LocalContext.current
+    val onSearchClick: () -> Unit = { startSearchActivity(context) }
     val onNotificationClick: () -> Unit = {}
     val verifiedProductExist: Boolean = true //TODO : 처리해야함!
 

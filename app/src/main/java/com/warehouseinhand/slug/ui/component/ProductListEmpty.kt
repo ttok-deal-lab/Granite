@@ -26,7 +26,7 @@ fun ProductListEmpty(title: String) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             ImageProcessor(
                 modifier = Modifier.requiredWidthIn(max = 50.dp),
-                imageResource = ImageResource.Id(R.drawable.favorite_empty)
+                imageResource = ImageResource.Id(R.drawable.list_empty_50_50)
             )
             Spacer(Modifier.height(12.dp))
             Text(

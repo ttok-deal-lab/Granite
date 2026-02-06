@@ -120,6 +120,11 @@ dependencies {
     implementation(libs.datastore.preferences)
     implementation(libs.kotlinx.serialization.json)
 
+    // Room
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    kapt(libs.room.compiler)
+
     //firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.cloud.messaging)
