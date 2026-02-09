@@ -116,7 +116,7 @@ private fun ProductItem(
             ImageProcessor(
                 imageResource = uiModel.buildingImage,
                 contentScale = ContentScale.Crop,
-                )
+            )
             DDayChip(uiModel.daysLeft)
         }
         Spacer(Modifier.width(16.dp))
@@ -148,7 +148,10 @@ private fun ProductItem(
                 }
             }
         }
-        Row(modifier = Modifier.align(Alignment.Bottom)) {
+        Row(
+            modifier = Modifier.align(Alignment.Bottom),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Icon(
                 modifier = Modifier.size(18.dp),
                 painter = painterResource(R.drawable.ic_heart),
