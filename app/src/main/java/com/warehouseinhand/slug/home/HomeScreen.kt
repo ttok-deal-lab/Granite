@@ -50,10 +50,17 @@ fun HomeScreen(
             onSortingClick = onSortingClick,
             onFilterClick = onFilterClick,
         )
-        if (productUiModelList.loadState.refresh is LoadState.NotLoading && productUiModelList.itemCount == 0) {
-            ProductListEmpty(stringResource(R.string.home_product_list_empty_title))
-        } else
-            ProductList(productUiModelList, onItemClicked)
+        when {
+            productUiModelList.loadState.refresh is LoadState.Loading -> {
+                ProductListSkeleton()
+            }
+            productUiModelList.loadState.refresh is LoadState.NotLoading && productUiModelList.itemCount == 0 -> {
+                ProductListEmpty(stringResource(R.string.home_product_list_empty_title))
+            }
+            else -> {
+                ProductList(productUiModelList, onItemClicked)
+            }
+        }
     }
 }
 

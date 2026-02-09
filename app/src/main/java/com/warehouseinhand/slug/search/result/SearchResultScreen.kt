@@ -22,6 +22,7 @@ import com.warehouseinhand.slug.home.HomeFilterBar
 import com.warehouseinhand.slug.home.Price
 import com.warehouseinhand.slug.home.ProductItemUiModel
 import com.warehouseinhand.slug.home.ProductList
+import com.warehouseinhand.slug.home.ProductListSkeleton
 import com.warehouseinhand.slug.home.ToggleFilterType
 import com.warehouseinhand.slug.home.component.FilterButtonState
 import com.warehouseinhand.slug.search.SearchViewModel
@@ -86,13 +87,19 @@ fun SearchResultScreen(
             onFilterClick = onFilterClick
         )
 
-        if (productList.loadState.refresh is LoadState.NotLoading && productList.itemCount == 0) {
-            ProductListEmpty(stringResource(R.string.home_product_list_empty_title))
-        } else {
-            ProductList(
-                uiModelList = productList,
-                onItemClicked = onItemClick
-            )
+        when {
+            productList.loadState.refresh is LoadState.Loading -> {
+                ProductListSkeleton()
+            }
+            productList.loadState.refresh is LoadState.NotLoading && productList.itemCount == 0 -> {
+                ProductListEmpty(stringResource(R.string.home_product_list_empty_title))
+            }
+            else -> {
+                ProductList(
+                    uiModelList = productList,
+                    onItemClicked = onItemClick
+                )
+            }
         }
     }
 }

@@ -21,6 +21,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.warehouseinhand.slug.R
 import com.warehouseinhand.slug.home.ProductItemUiModel
 import com.warehouseinhand.slug.home.ProductList
+import com.warehouseinhand.slug.home.ProductListSkeleton
 import com.warehouseinhand.slug.ui.component.ProductListEmpty
 import com.warehouseinhand.slug.ui.component.topbar.ArrowTopBar
 import com.warehouseinhand.slug.ui.theme.SlugTheme
@@ -72,7 +73,7 @@ fun RecentItemsScreen(
         ) {
             when (val state = uiState.loadingState) {
                 RecentItemsLoadingState.Loading -> {
-                    //TODO :
+                    ProductListSkeleton()
                 }
                 is RecentItemsLoadingState.Success -> {
                     if (state.items.isNotEmpty()) {

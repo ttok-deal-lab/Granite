@@ -112,12 +112,10 @@ private fun ProductItem(
             Modifier
                 .size(100.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .background(color = Primary)
         ) {
             ImageProcessor(
                 imageResource = uiModel.buildingImage,
                 contentScale = ContentScale.Crop,
-
                 )
             DDayChip(uiModel.daysLeft)
         }
