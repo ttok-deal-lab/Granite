@@ -10,8 +10,8 @@ plugins {
     alias(libs.plugins.google.services)
     alias(libs.plugins.hilt)
     alias(libs.plugins.google.oss.licenses)
+    alias(libs.plugins.ksp)
 
-    kotlin("kapt")
 }
 
 android {
@@ -123,7 +123,7 @@ dependencies {
     // Room
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
-    kapt(libs.room.compiler)
+    ksp(libs.room.compiler)
 
     //firebase
     implementation(platform(libs.firebase.bom))
@@ -148,7 +148,7 @@ dependencies {
     //hilt
     implementation(libs.hilt.navigation.compose)
     implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
 
     //Opensource
     implementation(libs.google.play.services.oss.licenses)
