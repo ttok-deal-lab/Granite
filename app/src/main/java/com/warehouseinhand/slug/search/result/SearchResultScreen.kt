@@ -26,40 +26,25 @@ import com.warehouseinhand.slug.home.ToggleFilterType
 import com.warehouseinhand.slug.home.component.FilterButtonState
 import com.warehouseinhand.slug.search.SearchViewModel
 import com.warehouseinhand.slug.search.bottomsheet.SearchBottomSheetType
-import com.warehouseinhand.slug.search.component.SearchTopBar
 import com.warehouseinhand.slug.ui.component.ProductListEmpty
 import com.warehouseinhand.slug.ui.theme.NeutralInverted
 
 @Composable
 fun SearchResultRoute(
     viewModel: SearchViewModel = hiltViewModel(),
-    onBackClick: () -> Unit,
-    onNavBackClick: () -> Unit,
     onItemClick: (String) -> Unit,
     onShowBottomSheet: (SearchBottomSheetType) -> Unit,
 ) {
-    val searchKeyword by viewModel.searchKeyword.collectAsStateWithLifecycle()
     val numberOfProduct by viewModel.numberOfProduct.collectAsStateWithLifecycle()
     val stateList by viewModel.stateList.collectAsStateWithLifecycle()
     val selectedSortingType by viewModel.selectedSortingType.collectAsStateWithLifecycle()
     val productList = viewModel.productList.collectAsLazyPagingItems()
 
     SearchResultScreen(
-        searchKeyword = searchKeyword,
         numberOfProduct = numberOfProduct,
         stateList = stateList,
         sortTypeName = stringResource(selectedSortingType.localizedText),
         productList = productList,
-        onSearchTextChange = viewModel::updateSearchKeyword,
-        onBackClick = onNavBackClick,
-        onCloseClick = onBackClick,
-        onKeywordClearClick = {
-            viewModel.clearSearchKeyword()
-            onNavBackClick()
-        },
-        onSearch = { keyword ->
-            viewModel.search(keyword)
-        },
         onItemClick = { item ->
             onItemClick(item.id)
         },
@@ -79,16 +64,10 @@ fun SearchResultRoute(
 
 @Composable
 fun SearchResultScreen(
-    searchKeyword: String,
     numberOfProduct: Long,
     stateList: List<FilterButtonState>,
     sortTypeName: String,
     productList: LazyPagingItems<ProductItemUiModel>,
-    onSearchTextChange: (String) -> Unit,
-    onBackClick: () -> Unit,
-    onCloseClick: () -> Unit,
-    onKeywordClearClick: () -> Unit,
-    onSearch: (String) -> Unit,
     onItemClick: (ProductItemUiModel) -> Unit,
     onFilterClick: (FilterOption) -> Unit,
     onSortingClick: () -> Unit
@@ -98,16 +77,6 @@ fun SearchResultScreen(
             .fillMaxSize()
             .background(NeutralInverted)
     ) {
-        SearchTopBar(
-            searchText = searchKeyword,
-            onSearchTextChange = onSearchTextChange,
-            onBackClick = onBackClick,
-            onKeywordClearClick = onKeywordClearClick,
-            onSearch = onSearch,
-            onCloseClick = onCloseClick,
-            autoFocus = false
-        )
-
         HomeFilterBar(
             verifiedProductExist = numberOfProduct > 0,
             numberOfProduct = numberOfProduct,
@@ -133,19 +102,13 @@ fun SearchResultScreen(
 fun PreviewSearchResultScreen() {
     Surface {
         SearchResultScreen(
-            searchKeyword = "관악구",
             numberOfProduct = 13894,
             stateList = FilterButtonState.defaultStateList,
             sortTypeName = "최신 등록순",
             productList = ProductItemUiModel.pagingItems(),
-            onSearchTextChange = {},
-            onBackClick = {},
-            onKeywordClearClick = {},
-            onSearch = {},
             onItemClick = {},
             onFilterClick = {},
             onSortingClick = {},
-            onCloseClick = {},
         )
     }
 }

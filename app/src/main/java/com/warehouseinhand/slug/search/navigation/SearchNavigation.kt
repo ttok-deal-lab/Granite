@@ -18,14 +18,12 @@ data class RouteSearchResult(val keyword: String)
 fun NavGraphBuilder.searchNavGraph(
     searchViewModel: SearchViewModel,
     navController: NavHostController,
-    onBackClick: () -> Unit,
     onItemClick: (String) -> Unit,
     onShowBottomSheet: (SearchBottomSheetType) -> Unit,
 ) {
     composable<RouteSearchBridge> {
         SearchBridgeRoute(
             viewModel = searchViewModel,
-            onBackClick = onBackClick,
             onSearch = { keyword ->
                 searchViewModel.searchWithCheck(keyword) {
                     navController.navigate(RouteSearchResult(keyword)) {
@@ -39,12 +37,7 @@ fun NavGraphBuilder.searchNavGraph(
     composable<RouteSearchResult> { backStackEntry ->
         SearchResultRoute(
             viewModel = searchViewModel,
-            onBackClick = onBackClick,
             onItemClick = onItemClick,
-            onNavBackClick = {
-                navController.popBackStack()
-                searchViewModel.clearSearchKeyword()
-            },
             onShowBottomSheet = onShowBottomSheet,
         )
     }

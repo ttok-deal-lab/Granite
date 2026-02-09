@@ -27,11 +27,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.warehouseinhand.slug.search.bottomsheet.SearchBottomSheetContent
 import com.warehouseinhand.slug.search.bottomsheet.SearchBottomSheetType
+import com.warehouseinhand.slug.search.component.SearchTopBar
 import com.warehouseinhand.slug.search.navigation.RouteSearchBridge
+import com.warehouseinhand.slug.search.navigation.RouteSearchResult
 import com.warehouseinhand.slug.search.navigation.searchNavGraph
 import com.warehouseinhand.slug.ui.theme.SlugTheme
 import com.warehouseinhand.slug.util.startDetailActivity
@@ -66,31 +70,78 @@ class SearchActivity : ComponentActivity() {
                     }
                 }
 
+                val searchKeyword by searchViewModel.searchKeyword.collectAsStateWithLifecycle()
+                val currentEntry by navController.currentBackStackEntryAsState()
+                val isOnSearchResult =
+                    currentEntry?.destination?.route?.contains("RouteSearchResult") == true
+
                 Scaffold(
                     modifier = Modifier
                         .fillMaxSize()
                         .imePadding()
-                        .systemBarsPadding()
-                ) { innerPadding ->
-                    NavHost(
-                        navController = navController,
-                        startDestination = RouteSearchBridge,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(innerPadding)
-                    ) {
-                        searchNavGraph(
-                            searchViewModel = searchViewModel,
-                            navController = navController,
-                            onBackClick = { finish() },
-                            onItemClick = { itemId ->
-                                startDetailActivity(this@SearchActivity, itemId)
+                        .systemBarsPadding(),
+                    topBar = {
+                        SearchTopBar(
+                            searchText = searchKeyword,
+                            onSearchTextChange = { keyword ->
+                                searchViewModel.updateSearchKeyword(keyword)
+                                if (isOnSearchResult) {
+                                    navController.popBackStack()
+                                }
                             },
-                            onShowBottomSheet = { type ->
-                                bottomSheetType = type
-                                isBottomSheetShowing = true
-                            }
+                            onBackClick = {
+                                if (isOnSearchResult) {
+                                    navController.popBackStack()
+                                    searchViewModel.clearSearchKeyword()
+                                } else {
+                                    finish()
+                                }
+                            },
+                            onKeywordClearClick = {
+                                searchViewModel.clearSearchKeyword()
+                                if (isOnSearchResult) {
+                                    navController.popBackStack()
+                                }
+                            },
+                            onSearch = { keyword ->
+                                if (isOnSearchResult) {
+                                    searchViewModel.search(keyword)
+                                } else {
+                                    searchViewModel.searchWithCheck(keyword) {
+                                        navController.navigate(RouteSearchResult(keyword)) {
+                                            popUpTo<RouteSearchBridge> { inclusive = false }
+                                        }
+                                    }
+                                }
+                            },
+                            onCloseClick = { finish() },
+//                            autoFocus = !isOnSearchResult
                         )
+
+                    }
+                ) { innerPadding ->
+                    Box(
+                        modifier = Modifier
+                            .padding(innerPadding)
+                            .fillMaxSize(),
+                    ) {
+                        NavHost(
+                            navController = navController,
+                            startDestination = RouteSearchBridge,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            searchNavGraph(
+                                searchViewModel = searchViewModel,
+                                navController = navController,
+                                onItemClick = { itemId ->
+                                    startDetailActivity(this@SearchActivity, itemId)
+                                },
+                                onShowBottomSheet = { type ->
+                                    bottomSheetType = type
+                                    isBottomSheetShowing = true
+                                }
+                            )
+                        }
                     }
 
                     if (isBottomSheetShowing) {

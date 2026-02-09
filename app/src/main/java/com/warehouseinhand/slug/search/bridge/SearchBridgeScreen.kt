@@ -19,7 +19,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,10 +26,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.warehouseinhand.slug.R
 import com.warehouseinhand.slug.search.SearchViewModel
 import com.warehouseinhand.slug.ui.component.ProductListEmpty
-import com.warehouseinhand.slug.search.component.SearchTopBar
 import com.warehouseinhand.slug.ui.component.image.ImageProcessor
 import com.warehouseinhand.slug.ui.component.image.ImageResource
 import com.warehouseinhand.slug.ui.theme.Neutral
@@ -44,14 +43,13 @@ import com.warehouseinhand.slug.util.blockingClickable
 @Composable
 fun SearchBridgeRoute(
     viewModel: SearchViewModel = hiltViewModel(),
-    onBackClick: () -> Unit,
     onSearch: (String) -> Unit
 ) {
-    val searchKeyword by viewModel.searchKeyword.collectAsState()
-    val recentSearches by viewModel.recentSearches.collectAsState()
-    val autoCompleteResults by viewModel.autoCompleteResults.collectAsState()
-    val isSearchResultEmpty by viewModel.isSearchResultEmpty.collectAsState()
-    val isSearchLoading by viewModel.isSearchLoading.collectAsState()
+    val searchKeyword by viewModel.searchKeyword.collectAsStateWithLifecycle()
+    val recentSearches by viewModel.recentSearches.collectAsStateWithLifecycle()
+    val autoCompleteResults by viewModel.autoCompleteResults.collectAsStateWithLifecycle()
+    val isSearchResultEmpty by viewModel.isSearchResultEmpty.collectAsStateWithLifecycle()
+    val isSearchLoading by viewModel.isSearchLoading.collectAsStateWithLifecycle()
 
     SearchBridgeScreen(
         searchKeyword = searchKeyword,
@@ -59,10 +57,6 @@ fun SearchBridgeRoute(
         autoCompleteResults = autoCompleteResults,
         isSearchResultEmpty = isSearchResultEmpty,
         isSearchLoading = isSearchLoading,
-        onSearchTextChange = viewModel::updateSearchKeyword,
-        onBackClick = onBackClick,
-        onClearClick = viewModel::clearSearchKeyword,
-        onSearch = onSearch,
         onRecentItemClick = { keyword ->
             viewModel.updateSearchKeyword(keyword)
             onSearch(keyword)
@@ -83,10 +77,6 @@ fun SearchBridgeScreen(
     autoCompleteResults: List<String>,
     isSearchResultEmpty: Boolean = false,
     isSearchLoading: Boolean = false,
-    onSearchTextChange: (String) -> Unit,
-    onBackClick: () -> Unit,
-    onClearClick: () -> Unit,
-    onSearch: (String) -> Unit,
     onRecentItemClick: (String) -> Unit,
     onRecentItemRemove: (String) -> Unit,
     onClearAllRecentSearches: () -> Unit,
@@ -97,15 +87,6 @@ fun SearchBridgeScreen(
             .fillMaxSize()
             .background(NeutralInverted)
     ) {
-        SearchTopBar(
-            searchText = searchKeyword,
-            onSearchTextChange = onSearchTextChange,
-            onBackClick = onBackClick,
-            onKeywordClearClick = onClearClick,
-            onCloseClick = onBackClick,
-            onSearch = onSearch
-        )
-
         when {
             isSearchLoading -> {
                 Box(
@@ -359,10 +340,6 @@ fun PreviewSearchBridgeScreenEmpty() {
             searchKeyword = "",
             recentSearches = emptyList(),
             autoCompleteResults = emptyList(),
-            onSearchTextChange = {},
-            onBackClick = {},
-            onClearClick = {},
-            onSearch = {},
             onRecentItemClick = {},
             onRecentItemRemove = {},
             onClearAllRecentSearches = {},
@@ -379,10 +356,6 @@ fun PreviewSearchBridgeScreenWithRecent() {
             searchKeyword = "",
             recentSearches = listOf("안양시 동안구", "군포시", "의왕시", "수원시 권선구", "시흥시"),
             autoCompleteResults = emptyList(),
-            onSearchTextChange = {},
-            onBackClick = {},
-            onClearClick = {},
-            onSearch = {},
             onRecentItemClick = {},
             onRecentItemRemove = {},
             onClearAllRecentSearches = {},
@@ -399,10 +372,6 @@ fun PreviewSearchBridgeScreenWithAutoComplete() {
             searchKeyword = "서",
             recentSearches = emptyList(),
             autoCompleteResults = listOf("서울시", "서울시 강동구", "서울시 관악구"),
-            onSearchTextChange = {},
-            onBackClick = {},
-            onClearClick = {},
-            onSearch = {},
             onRecentItemClick = {},
             onRecentItemRemove = {},
             onClearAllRecentSearches = {},
