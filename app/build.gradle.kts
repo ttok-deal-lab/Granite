@@ -105,7 +105,8 @@ dependencies {
     //accompanist
     implementation(libs.accompanist.webview)
     //image
-    implementation(libs.glide.compose)
+    implementation(libs.landscapist.image)
+    implementation(libs.landscapist.placeholder)
 
 
     //Network

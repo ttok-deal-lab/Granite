@@ -16,7 +16,9 @@ androidxCoreSplashscreen = "1.0.1"
 googleServices = "4.4.2"
 lifecycleRuntimeComposeAndroid = "2.8.7"
 
-glide-compose = "1.0.0-beta01"
+#Image
+landscapist = "2.9.3"
+
 
 paging-compose = "3.4.0-beta01"
 
@@ -86,7 +88,9 @@ androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", 
 
 accompanist-webview = { group = "com.google.accompanist", name = "accompanist-webview" ,version.ref = "accompanist-webview"}
 
-glide-compose = { group = "com.github.bumptech.glide", name = "compose", version.ref = "glide-compose" }
+#Image
+landscapist-image = { group = "com.github.skydoves", name = "landscapist-image", version.ref = "landscapist" }
+landscapist-placeholder = { group = "com.github.skydoves", name = "landscapist-placeholder", version.ref = "landscapist" }
 
 
 #SNS

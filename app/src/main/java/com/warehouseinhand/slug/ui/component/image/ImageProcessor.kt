@@ -1,14 +1,16 @@
 package com.warehouseinhand.slug.ui.component.image
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
+import com.skydoves.landscapist.ImageOptions
+import com.skydoves.landscapist.image.LandscapistImage
+import com.warehouseinhand.slug.ui.component.skeleton.shimmerEffect
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun ImageProcessor(
     modifier: Modifier = Modifier,
@@ -19,11 +21,17 @@ fun ImageProcessor(
     when (imageResource) {
         is ImageResource.Url -> {
             //캐시 처리 할것!
-            GlideImage(
-                modifier = modifier,
-                model = imageResource.url,
-                contentScale = contentScale,
-                contentDescription = contentDescription,
+            LandscapistImage(
+                imageModel = { imageResource.url },
+                imageOptions = ImageOptions(
+                    contentScale = contentScale,
+                    contentDescription = contentDescription,
+                ),
+                loading = {
+                    Box(modifier = modifier
+                        .fillMaxSize()
+                        .shimmerEffect())
+                }
             )
         }
 
