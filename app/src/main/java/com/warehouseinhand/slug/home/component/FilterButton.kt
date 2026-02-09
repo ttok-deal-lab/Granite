@@ -1,5 +1,9 @@
 package com.warehouseinhand.slug.home.component
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.VisibilityThreshold
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.warehouseinhand.slug.R
 import com.warehouseinhand.slug.home.AuctionStatusFilterType
@@ -55,7 +60,7 @@ data class FilterButtonState(
         else
             filterOption.getDisplayText()
 
-    companion object{
+    companion object {
         val defaultStateList = listOf(
             FilterButtonState(
                 isFilterSelected = false,
@@ -81,18 +86,38 @@ data class FilterButtonState(
     }
 }
 
+private const val stiffnessForFilter = 2500f
+
+private val animationSpecForColor = spring<Color>(stiffness = stiffnessForFilter)
+
+private val animationSpecForSize = spring(
+    stiffness = stiffnessForFilter,
+    visibilityThreshold = IntSize.VisibilityThreshold,
+)
+
 @Composable
 fun FilterButton(
     onClick: () -> Unit,
     state: FilterButtonState
 ) {
-    val backgroundColor: Color = if (state.isFilterSelected) Neutral else Gray150
-    val contentColor: Color = if (state.isFilterSelected) Gray150 else Neutral
+//    val backgroundColor: Color = if (state.isFilterSelected) Neutral else Gray150
+    val backgroundColor by animateColorAsState(
+        if (state.isFilterSelected) Neutral else Gray150,
+        animationSpec = animationSpecForColor,
+        label = "color"
+    )
+    val contentColor by animateColorAsState(
+        if (state.isFilterSelected) Gray150 else Neutral,
+        animationSpec = animationSpecForColor,
+        label = "color"
+    )
+
     Row(
         modifier = Modifier
             .background(color = backgroundColor, shape = RoundedCornerShape(100.dp))
             .blockingClickable(onClick = onClick)
-            .padding(horizontal = 12.dp, vertical = 8.dp),
+            .padding(horizontal = 12.dp, vertical = 8.dp)
+            .animateContentSize(animationSpec = animationSpecForSize),
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
