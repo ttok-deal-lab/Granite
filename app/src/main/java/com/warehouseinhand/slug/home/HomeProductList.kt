@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -117,11 +118,11 @@ private fun ProductItem(
                 imageResource = uiModel.buildingImage,
                 contentScale = ContentScale.Crop,
 
-            )
+                )
             DDayChip(uiModel.daysLeft)
         }
         Spacer(Modifier.width(16.dp))
-        Column {
+        Column(modifier = Modifier.weight(1f)) {
             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                 Text(
                     text = priceOfProductByCurrency,
@@ -140,28 +141,28 @@ private fun ProductItem(
                 )
             }
             Spacer(Modifier.height(8.dp))
-            Row(
+            FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 uiModel.infoChipList.forEach { uiModel ->
                     SlugLabelLarge(uiModel = uiModel)
                 }
-
-                Spacer(Modifier.weight(1f))
-                Icon(
-                    modifier = Modifier.size(18.dp),
-                    painter = painterResource(R.drawable.ic_heart),
-                    tint = if (uiModel.isFavorite) Critical else NeutralMuted,
-                    contentDescription = "FavoriteIcon",
+            }
+        }
+        Row(modifier = Modifier.align(Alignment.Bottom)) {
+            Icon(
+                modifier = Modifier.size(18.dp),
+                painter = painterResource(R.drawable.ic_heart),
+                tint = if (uiModel.isFavorite) Critical else NeutralMuted,
+                contentDescription = "FavoriteIcon",
+            )
+            if (uiModel.favoritePersons > 0) {
+                Text(
+                    text = "${uiModel.favoritePersons}",
+                    style = SlugTypographyStyle.BodyMicroMedium,
+                    color = NeutralSubtle
                 )
-                if (uiModel.favoritePersons > 0) {
-                    Text(
-                        text = "${uiModel.favoritePersons}",
-                        style = SlugTypographyStyle.BodyMicroMedium,
-                        color = NeutralSubtle
-                    )
-                }
             }
         }
     }
