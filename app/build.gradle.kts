@@ -11,9 +11,8 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.google.oss.licenses)
     alias(libs.plugins.ksp)
-
 }
-
+//TODO : AGP 9.0에 대응하게 수정할 것
 android {
     namespace = "com.warehouseinhand.slug"
     compileSdk = 36
