@@ -1,5 +1,6 @@
 import com.android.build.api.dsl.VariantDimension
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.application)
@@ -11,6 +12,7 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.google.oss.licenses)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.stability.analyzer)
 }
 //TODO : AGP 9.0에 대응하게 수정할 것
 android {
@@ -49,11 +51,13 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
-    kotlinOptions {
-        jvmTarget = "11"
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_21)
+        }
     }
     buildFeatures {
         compose = true

@@ -1,6 +1,6 @@
 [versions]
 agp = "9.0.0-rc01"
-kotlin = "2.2.10"
+kotlin = "2.3.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -153,3 +153,5 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 google-oss-licenses = { id = "com.google.android.gms.oss-licenses-plugin", version.ref = "oss-licenses-plugin" }
+
+stability-analyzer = { id = "com.github.skydoves.compose.stability.analyzer", version = "0.6.7" }
