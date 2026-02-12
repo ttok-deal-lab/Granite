@@ -21,7 +21,8 @@ private val LightColorScheme = lightColorScheme(
     primary = Primary,
     secondary = Secondary,
     tertiary = Secondary,
-    surface = NeutralInverted
+    surface = NeutralInverted,
+    background = NeutralInverted
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -44,7 +45,8 @@ fun SlugTheme(
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+//            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+            if (darkTheme) dynamicDarkColorScheme(context) else LightColorScheme
         }
 
 //        darkTheme -> DarkColorScheme
