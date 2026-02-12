@@ -36,6 +36,9 @@ data class AuctionItemResponseDTO(
     @SerializedName("salesAddress")
     val salesAddress: String,
 
+    @SerializedName("salesBuildingName")
+    val salesBuildingName: String,
+
     @SerializedName("salesCategories")
     val salesCategories: List<String>,
 
@@ -46,7 +49,8 @@ data class AuctionItemResponseDTO(
     val appraisalPrice: Long,
 
     @SerializedName("salesPicture")
-    val salesPicture: List<SalesPictureDTO>?,
+//    val salesPicture: List<SalesPictureDTO>?,
+    val salesPicture: String?,
 
     @SerializedName("failBidCount")
     val failBidCount: Long,
@@ -66,13 +70,13 @@ data class AuctionItemResponseDTO(
     override fun toDomain(): AuctionSearchItem = AuctionSearchItem(
         id = id,
         caseNumber = caseNumber,
-        buildingName = null,
+        buildingName = salesBuildingName,
         address = salesAddress,
         salesCategories = salesCategories,
         salesDateTime = salesDateTime,
         registerDate = registerDate,
         appraisalPrice = appraisalPrice,
-        salesPicture = salesPicture?.firstOrNull()?.imageUrl?:"",
+        salesPicture = salesPicture?:"",
         failBidCount = failBidCount,
         zzimCount = zzimCount,
         verified = verified,

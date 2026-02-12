@@ -13,7 +13,7 @@ data class AuctionSearchItem(
     val registerDate: String,
 
     val appraisalPrice: Long,
-    val salesPicture: String,//TODO : 논의 필요 salesPicture 라고 되어 있으나 하나가 아닌 여럿이 내려옴
+    val salesPicture: String,
 
     val failBidCount: Long,
     val zzimCount: Long,
