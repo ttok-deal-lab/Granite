@@ -1,8 +1,10 @@
 package com.warehouseinhand.slug.home
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,12 +15,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.warehouseinhand.slug.R
@@ -26,6 +29,7 @@ import com.warehouseinhand.slug.home.component.FilterButton
 import com.warehouseinhand.slug.home.component.FilterButtonState
 import com.warehouseinhand.slug.ui.component.image.ImageProcessor
 import com.warehouseinhand.slug.ui.component.image.ImageResource
+import com.warehouseinhand.slug.ui.component.skeleton.shimmerEffect
 import com.warehouseinhand.slug.ui.theme.Neutral
 import com.warehouseinhand.slug.ui.theme.NeutralLight
 import com.warehouseinhand.slug.ui.theme.NeutralSubtler
@@ -42,7 +46,8 @@ fun HomeFilterBar(
     sortTypeName: String,
     stateList: List<FilterButtonState>,
     onSortingClick: () -> Unit,
-    onFilterClick: (FilterOption) -> Unit
+    onFilterClick: (FilterOption) -> Unit,
+    isLoading: Boolean
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -54,7 +59,8 @@ fun HomeFilterBar(
         CountAndSort(
             numberOfProduct = numberOfProduct,
             sortTypeName = sortTypeName,
-            onSortingClick = onSortingClick
+            onSortingClick = onSortingClick,
+            isLoading = isLoading,
         )
         if (verifiedProductExist)
             VerifiedProductAnnounce()
@@ -83,6 +89,7 @@ fun FilterRow(stateList: List<FilterButtonState>, onClick: (FilterOption) -> Uni
 
 @Composable
 fun CountAndSort(
+    isLoading: Boolean,
     numberOfProduct: Long,
     sortTypeName: String,
     onSortingClick: () -> Unit
@@ -95,18 +102,27 @@ fun CountAndSort(
             .sizeIn(minHeight = 42.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Row {
+        Row(modifier = Modifier.animateContentSize(), verticalAlignment = Alignment.CenterVertically){
             Text(
                 "상품",
                 style = SlugTypographyStyle.BodyMicroMedium,
                 color = Neutral
             )
             Spacer(modifier = Modifier.width(4.dp))
-            Text(
-                formattedNumber,
-                style = SlugTypographyStyle.BodyMicroBold,
-                color = Neutral
-            )
+            if (isLoading)
+                Box(
+                    modifier = Modifier
+                        .width(35.dp)
+                        .height(15.dp)
+                        .clip(RoundedCornerShape(4.dp))
+                        .shimmerEffect()
+                )
+            else
+                Text(
+                    formattedNumber,
+                    style = SlugTypographyStyle.BodyMicroBold,
+                    color = Neutral
+                )
         }
         Spacer(Modifier.weight(1f))
         Row(
@@ -127,6 +143,7 @@ fun CountAndSort(
         }
     }
 }
+
 @Composable
 fun VerifiedProductAnnounce() {
     Column(
@@ -202,5 +219,6 @@ fun PreviewHomeFilterBar() {
         stateList = stateList,
         onSortingClick = onSortingClick,
         onFilterClick = onFilterClick,
+        isLoading = true,
     )
 }

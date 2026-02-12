@@ -84,16 +84,19 @@ fun SearchResultScreen(
             sortTypeName = sortTypeName,
             stateList = stateList,
             onSortingClick = onSortingClick,
-            onFilterClick = onFilterClick
+            onFilterClick = onFilterClick,
+            isLoading = productList.loadState.refresh is LoadState.Loading,
         )
 
         when {
             productList.loadState.refresh is LoadState.Loading -> {
                 ProductListSkeleton()
             }
+
             productList.loadState.refresh is LoadState.NotLoading && productList.itemCount == 0 -> {
                 ProductListEmpty(stringResource(R.string.home_product_list_empty_title))
             }
+
             else -> {
                 ProductList(
                     uiModelList = productList,

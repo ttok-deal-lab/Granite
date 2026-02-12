@@ -43,6 +43,7 @@ fun HomeScreen(
             onNotificationClick = onNotificationClick,
         )
         HomeFilterBar(
+            isLoading = productUiModelList.loadState.refresh is LoadState.Loading,
             verifiedProductExist = verifiedProductExist,
             numberOfProduct = numberOfProduct,
             sortTypeName = stringResource(lastSelectedSortType.localizedText),

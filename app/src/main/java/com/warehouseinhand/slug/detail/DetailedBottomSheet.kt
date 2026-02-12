@@ -82,10 +82,10 @@ fun DetailedBottomSheet(detailBottomSheetType: DetailBottomSheetType, onDismiss:
                 )
             },
             content = {
-                when (val sheetType = detailBottomSheetType) {
+                when (detailBottomSheetType) {
                     is DetailBottomSheetType.InfoSheetType -> {
                         InfoBottomSheetContent(
-                            type = sheetType,
+                            type = detailBottomSheetType,
                             onDismissClicked = { requestHideBottomSheet() })
                     }
 
