@@ -63,6 +63,7 @@ class DetailedViewModel @Inject constructor(
 
                     _uiState.update {
                         it.copy(
+                            isLoading = false,
                             listOfLessees = lessees,
                             detailSimpleInformation = detailSimpleInformation,
                             auctionInfo = auctionInfo,
@@ -123,12 +124,14 @@ class DetailedViewModel @Inject constructor(
 }
 
 data class CourtSaleDetailUiState(
+    val isLoading: Boolean = true,
     val detailSimpleInformation: DetailSimpleInformationUiModel,
     val listOfLessees: List<LesseeInfo>,
     val auctionInfo: AuctionInfoUiModel,
 ) {
     companion object {
         val preview = CourtSaleDetailUiState(
+            isLoading = true,
             detailSimpleInformation = DetailSimpleInformationUiModel.preview,
             listOfLessees = LesseeInfo.lesseePreviewList,
             auctionInfo = AuctionInfoUiModel.preview

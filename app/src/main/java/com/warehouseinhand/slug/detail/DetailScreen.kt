@@ -1,5 +1,6 @@
 package com.warehouseinhand.slug.detail
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -66,73 +67,82 @@ fun DetailScreen(
         DetailTopBar(
             onBackButtonClicked,
             onShareClicked,
-            uiState.detailSimpleInformation.topTitle
+            uiState.detailSimpleInformation.topTitle,
+            isLoading = uiState.isLoading
         )
     }) { paddingValues ->
         Box(
             modifier = Modifier.padding(paddingValues)
         ) {
-            Column {
-                LazyColumn(
-                    modifier = Modifier
-                        .background(NeutralInverted),
-                    userScrollEnabled = userScrollEnabled
-                ) {
-                    item {
-                        DetailSimpleInformation(
-                            uiModel = uiState.detailSimpleInformation,
-                            likeClicked = likeClicked
-                        )
-                        HorizontalDivider(color = NeutralWeak, thickness = 10.dp)
-                    }
-                    stickyHeader {
-                        Box(
+            Crossfade(
+                targetState = uiState.isLoading,
+                label = "detailLoadingCrossfade"
+            ) { isLoading ->
+                if (isLoading) {
+                    DetailScreenSkeleton()
+                } else {
+                    Column {
+                        LazyColumn(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .background(color = NeutralInverted)
+                                .background(NeutralInverted),
+                            userScrollEnabled = userScrollEnabled
                         ) {
-                            DetailedTabRow(
-                                selectedRoute = selectedRoute,
-                                onTabClicked = {
-                                    if (selectedRoute != it) {
-                                        selectedRoute = it
-                                        navController.navigate(it)
-                                    }
-                                }
-                            )
-                        }
-                    }
-                    item {
-                        Box(
-                            modifier = Modifier
-                                .animateContentSize()
-                                .fillMaxWidth()
-                        ) {
-                            NavHost(
-                                navController = navController,
-                                startDestination = startDestination,
-                            ) {
-                                composable<DetailedRoute.AuctionInfo> {
-                                    AuctionInfoPage(
-                                        uiModel = uiState.auctionInfo,
-                                        requestBottomSheet = showBottomSheet,
-                                        onMapFocused = onMapFocused
+                            item {
+                                DetailSimpleInformation(
+                                    uiModel = uiState.detailSimpleInformation,
+                                    likeClicked = likeClicked
+                                )
+                                HorizontalDivider(color = NeutralWeak, thickness = 10.dp)
+                            }
+                            stickyHeader {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .background(color = NeutralInverted)
+                                ) {
+                                    DetailedTabRow(
+                                        selectedRoute = selectedRoute,
+                                        onTabClicked = {
+                                            if (selectedRoute != it) {
+                                                selectedRoute = it
+                                                navController.navigate(it)
+                                            }
+                                        }
                                     )
                                 }
-                                composable<DetailedRoute.TitleAnalysis> {
-                                    TitleAnalysisPage(uiState.listOfLessees)
-                                }
+                            }
+                            item {
+                                Box(
+                                    modifier = Modifier
+                                        .animateContentSize()
+                                        .fillMaxWidth()
+                                ) {
+                                    NavHost(
+                                        navController = navController,
+                                        startDestination = startDestination,
+                                    ) {
+                                        composable<DetailedRoute.AuctionInfo> {
+                                            AuctionInfoPage(
+                                                uiModel = uiState.auctionInfo,
+                                                requestBottomSheet = showBottomSheet,
+                                                onMapFocused = onMapFocused
+                                            )
+                                        }
+                                        composable<DetailedRoute.TitleAnalysis> {
+                                            TitleAnalysisPage(uiState.listOfLessees)
+                                        }
 //                        composable<DetailedRoute.BuildingInfo> {
 //                            BuildingInfoPage(
 //                                data = buildingInfoUiModel,
 //                                onMapFocused = onMapFocused
 //                            )
 //                        }
+                                    }
+                                }
                             }
                         }
                     }
                 }
-
             }
             DetailedBottomSheet(
                 detailBottomSheetType = selectedBottomSheetType,
