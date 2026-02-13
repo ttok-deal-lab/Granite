@@ -27,6 +27,9 @@ class SettingViewModel @Inject constructor(
     private val _isNeedToShowLogOutDialog: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val isNeedToShowLogOutDialog get() = _isNeedToShowLogOutDialog.asStateFlow()
 
+    private val _isNeedToShowWithdrawDialog: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val isNeedToShowWithdrawDialog get() = _isNeedToShowWithdrawDialog.asStateFlow()
+
     private val _isNeedToShowProgress = MutableStateFlow<Boolean>(false)
     val isNeedToShowProgress = _isNeedToShowProgress.asStateFlow()
 
@@ -35,6 +38,10 @@ class SettingViewModel @Inject constructor(
 
     fun changeLogoutDialogVisibility(needToShow: Boolean) {
         _isNeedToShowLogOutDialog.update { needToShow }
+    }
+
+    fun changeWithdrawDialogVisibility(needToShow: Boolean) {
+        _isNeedToShowWithdrawDialog.update { needToShow }
     }
 
     fun requestLogout(doAfterSuccess: () -> Unit) {//TODO : 해당작업들을 viewmodel이 하는게 맞나?
@@ -54,6 +61,25 @@ class SettingViewModel @Inject constructor(
             _isNeedToShowProgress.update { false }
         }
 
+    }
+
+    fun requestWithdraw(doAfterSuccess: () -> Unit) {
+        runCatching {
+            CoroutineScope(Dispatchers.IO).launch {
+                changeWithdrawDialogVisibility(false)
+                _isNeedToShowProgress.emit(true)
+                val userId = localUserDataRepository.getUserId().getOrThrow()
+                SlugFirebaseMessagingService().unregisterFcmToken()
+                SocialLoginModule.requestLogOut(appContext)
+                remoteUserDataRepository.deleteUser(userId)
+                localUserDataRepository.removeAllData()
+                _isNeedToShowProgress.update { false }
+            }
+        }.onSuccess {
+            doAfterSuccess()
+        }.onFailure {
+            _isNeedToShowProgress.update { false }
+        }
     }
 
 }

@@ -30,11 +30,18 @@ fun SettingScreen(
 ) {
     val context = LocalContext.current
     val dialogVisibility by settingViewModel.isNeedToShowLogOutDialog.collectAsStateWithLifecycle()
+    val withdrawDialogVisibility by settingViewModel.isNeedToShowWithdrawDialog.collectAsStateWithLifecycle()
 
     val isNeedToShowProgress by settingViewModel.isNeedToShowProgress.collectAsStateWithLifecycle()
 
     val onLogoutConfirmClicked: () -> Unit = {
         settingViewModel.requestLogout(doAfterSuccess = { moveToLoginWithBackStackClear(context) })
+    }
+    val onWithdrawConfirmClicked: () -> Unit = {
+        settingViewModel.requestWithdraw(doAfterSuccess = { moveToLoginWithBackStackClear(context) })
+    }
+    val onWithdrawDismissClicked: () -> Unit = {
+        settingViewModel.changeWithdrawDialogVisibility(false)
     }
     val navController = rememberNavController()
     val onLogoutDismissClicked: () -> Unit = {
@@ -67,6 +74,12 @@ fun SettingScreen(
                     dialogVisibility = dialogVisibility,
                     onLogOutConfirmClicked = onLogoutConfirmClicked,
                     onDismissRequest = onLogoutDismissClicked
+                )
+
+                WithdrawDialog(
+                    dialogVisibility = withdrawDialogVisibility,
+                    onWithdrawConfirmClicked = onWithdrawConfirmClicked,
+                    onDismissRequest = onWithdrawDismissClicked
                 )
             }
         )

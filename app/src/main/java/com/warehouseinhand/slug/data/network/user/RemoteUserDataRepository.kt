@@ -76,4 +76,7 @@ class RemoteUserDataRepository @Inject constructor(
     suspend fun requestLogout()
             : Result<String> = runCatching { privateUserService.logout() }
 
+    suspend fun deleteUser(userId: String): Result<String> =
+        runCatching { privateUserService.deleteUser(userId) }
+
 }
