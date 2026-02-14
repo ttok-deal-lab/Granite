@@ -10,6 +10,7 @@ import com.warehouseinhand.slug.login.LogInActivity
 import com.warehouseinhand.slug.mypage.recent.RecentItemsActivity
 import com.warehouseinhand.slug.search.SearchActivity
 import com.warehouseinhand.slug.setting.SettingActivity
+import androidx.core.net.toUri
 
 
 fun startDetailActivity(
@@ -18,11 +19,12 @@ fun startDetailActivity(
 ) {
     val toDetailedActivity = Intent(context, DetailActivity::class.java)
         .apply {
-            putExtra(PRODUCT_ID,id)
+            putExtra(PRODUCT_ID, id)
         }
     //TODO : putExtra로 id등 전달
     context.startActivity(toDetailedActivity)
 }
+
 const val PRODUCT_ID = "PRODUCT_ID"
 fun startSettingActivity(
     context: Context,
@@ -32,12 +34,14 @@ fun startSettingActivity(
     //TODO : putExtra로 id등 전달
     context.startActivity(toActivity)
 }
+
 fun startRecentItemsActivity(
     context: Context,
 ) {
     val toActivity = Intent(context, RecentItemsActivity::class.java)
     context.startActivity(toActivity)
 }
+
 fun startSearchActivity(
     context: Context,
 ) {
@@ -57,10 +61,21 @@ fun moveToLoginWithBackStackClear(context: Context, intentBlock: Intent.() -> Un
 }
 
 
-fun moveToStore(context: Context) =
+fun moveToStore(context: Context) {
     with(context) {
-        val intent = Intent(Intent.ACTION_VIEW)
-        intent.addCategory(Intent.CATEGORY_DEFAULT)
-        intent.data = Uri.parse("http://play.google.com/store/apps/details?id=com.warehouseinhand.slug")
-        startActivity(intent)
+        val intent = Intent(
+            Intent.ACTION_VIEW,
+            "market://details?id=${context.packageName}".toUri()
+        ).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        runCatching { startActivity(intent) }.onFailure {
+            startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    "https://play.google.com/store/apps/details?id=${context.packageName}".toUri()
+                )
+            )
+        }
     }
+}

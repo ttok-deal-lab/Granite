@@ -1,7 +1,9 @@
 package com.warehouseinhand.slug.login
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.Toast
@@ -17,6 +19,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.crashlytics.ktx.crashlytics
@@ -29,7 +33,9 @@ import com.warehouseinhand.slug.login.sns.sns.SocialLoginResultCallback
 import com.warehouseinhand.slug.main.MainActivity
 import com.warehouseinhand.slug.permission.PermissionChecker
 import com.warehouseinhand.slug.permission.PermissionRequestActivity
+import com.warehouseinhand.slug.ui.component.dialog.OneButtonAlertDialog
 import com.warehouseinhand.slug.ui.theme.SlugTheme
+import com.warehouseinhand.slug.util.moveToStore
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -45,12 +51,29 @@ class LogInActivity : ComponentActivity() {
         loginViewModel.requestLastLoginType()
         setContent {
             val lastLoginType by loginViewModel.lastLoginType.collectAsStateWithLifecycle()
+            val forceUpdateInfo by loginViewModel.forceUpdateInfo.collectAsStateWithLifecycle()
             SlugTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Box(modifier = Modifier.padding(innerPadding)) {
                         LoginPage(
                             onSocialLoginSelected = ::onSocialLoginSelected,
                             lastLoginType
+                        )
+                    }
+                }
+                forceUpdateInfo?.let { updateInfo ->
+                    Dialog(
+                        onDismissRequest = {},
+                        properties = DialogProperties(
+                            dismissOnBackPress = false,
+                            dismissOnClickOutside = false
+                        )
+                    ) {
+                        OneButtonAlertDialog(
+                            title = updateInfo.updateMsgTitle,
+                            description = updateInfo.updateMsgDescription,
+                            buttonText = "업데이트",
+                            onButtonClick = { moveToStore(this@LogInActivity) }
                         )
                     }
                 }
@@ -84,10 +107,15 @@ class LogInActivity : ComponentActivity() {
         if (!loginViewModel.isReadyToRemoveSplash.value)
             doInSplash()
     }
+
     private fun doInSplash() {
-        loginViewModel.checkTokenValidate(
-            doOnSuccess = {
-                moveToNextActivity()
+        loginViewModel.checkForceUpdate(
+            onUpdateNotRequired = {
+                loginViewModel.checkTokenValidate(
+                    doOnSuccess = {
+                        moveToNextActivity()
+                    }
+                )
             }
         )
     }
@@ -171,7 +199,7 @@ class LogInActivity : ComponentActivity() {
         loginViewModel.requestUserAuth(
             snsAccessToken = snsAccessToken, type = type,
             doAfterSuccess = {
-//                    Log.d("TESTTEST", "requestUserAuth onSuccess:!! ")
+                Log.d("TESTTEST", "requestUserAuth onSuccess:!! ")
                 moveToNextActivity()
             })
     }

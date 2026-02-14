@@ -135,6 +135,7 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.performance)
+    implementation("com.google.firebase:firebase-config")
 
     implementation(libs.firebase.auth)//SNS FOR APPLE
 

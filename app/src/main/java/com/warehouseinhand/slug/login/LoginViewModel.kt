@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.warehouseinhand.slug.data.local.device.LocalDeviceSettingDataRepository
 import com.warehouseinhand.slug.data.local.user.LocalUserDataRepository
+import com.warehouseinhand.slug.data.network.update.RemoteConfigRepository
+import com.warehouseinhand.slug.data.network.update.UpdateInfo
 import com.warehouseinhand.slug.data.network.user.RemoteUserDataRepository
 import com.warehouseinhand.slug.login.sns.SocialLoginType
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,6 +26,7 @@ class LoginViewModel @Inject constructor(
     private val localUserDataRepository: LocalUserDataRepository,
     private val localDeviceSettingDataRepository: LocalDeviceSettingDataRepository,
     private val remoteUserDataRepository: RemoteUserDataRepository,
+    private val remoteConfigRepository: RemoteConfigRepository,
 ) : ViewModel() {
 
     private val _lastLoginType = MutableStateFlow<SocialLoginType>(SocialLoginType.NEVER_LOGIN)
@@ -31,6 +34,9 @@ class LoginViewModel @Inject constructor(
 
     private val _isReadyToRemoveSplash = MutableStateFlow(false)
     val isReadyToRemoveSplash get() = _isReadyToRemoveSplash.asStateFlow()
+
+    private val _forceUpdateInfo = MutableStateFlow<UpdateInfo?>(null)
+    val forceUpdateInfo: StateFlow<UpdateInfo?> get() = _forceUpdateInfo.asStateFlow()
 
 
     fun requestLastLoginType() {//TODO : Lazy한 방법 적용
@@ -63,6 +69,23 @@ class LoginViewModel @Inject constructor(
             }.onFailure {
                 Log.e("TESTTESST", "requestUserAuth: FAIL" + it.localizedMessage)
             }
+        }
+    }
+
+    fun checkForceUpdate(onUpdateNotRequired: () -> Unit) {
+        viewModelScope.launch {
+            remoteConfigRepository.fetchUpdateInfo()
+                .onSuccess { updateInfo ->
+                    if (remoteConfigRepository.isForceUpdateRequired(updateInfo)) {
+                        _forceUpdateInfo.emit(updateInfo)
+                        _isReadyToRemoveSplash.emit(true)
+                    } else {
+                        onUpdateNotRequired()
+                    }
+                }
+                .onFailure {
+                    onUpdateNotRequired()
+                }
         }
     }
 
