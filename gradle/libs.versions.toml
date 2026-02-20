@@ -91,6 +91,7 @@ accompanist-webview = { group = "com.google.accompanist", name = "accompanist-we
 #Image
 landscapist-image = { group = "com.github.skydoves", name = "landscapist-image", version.ref = "landscapist" }
 landscapist-placeholder = { group = "com.github.skydoves", name = "landscapist-placeholder", version.ref = "landscapist" }
+landscapist-zoomable = { group = "com.github.skydoves", name = "landscapist-zoomable", version.ref = "landscapist" }
 
 
 #SNS

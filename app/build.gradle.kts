@@ -110,6 +110,7 @@ dependencies {
     //image
     implementation(libs.landscapist.image)
     implementation(libs.landscapist.placeholder)
+    implementation(libs.landscapist.zoomable)
 
 
     //Network
