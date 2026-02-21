@@ -19,8 +19,7 @@ class FavoriteProductsByCursorPagingSource(
                 it.toDomain().copy(isFavorite = true)
             } // DTO -> Domain
 
-            val nextKey =
-                if (cursor == "unknown") null else dto.nextCursor// null을 입력하면 더이상 받아오지 않음!
+            val nextKey = if (dto.nextCursor == "unknown") null else dto.nextCursor// null을 입력하면 더이상 받아오지 않음!
 
             LoadResult.Page(
                 data = domainItems,
