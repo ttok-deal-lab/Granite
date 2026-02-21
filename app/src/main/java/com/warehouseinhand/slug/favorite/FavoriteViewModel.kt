@@ -50,7 +50,7 @@ class FavoriteViewModel @Inject constructor(
     }
 
     fun refresh() {
-        viewModelScope.launch { paginator.loadInitial() }
+        viewModelScope.launch { paginator.refresh() }
     }
 
     fun loadMore() {

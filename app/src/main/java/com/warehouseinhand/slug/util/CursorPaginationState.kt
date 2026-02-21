@@ -8,6 +8,10 @@ data class CursorPaginationState<T>(
     val hasMore: Boolean = true,
     val error: Throwable? = null,
     val totalCount: Long = 0L,
+    val isRefreshing: Boolean = false,
 ) {
     val isEmpty: Boolean get() = items.isEmpty() && !isInitialLoading && error == null
+
+    fun hasSameData(page: CursorPage<T>): Boolean =
+        items == page.items && nextCursor == page.nextCursor && totalCount == page.totalCount
 }

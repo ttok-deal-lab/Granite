@@ -14,9 +14,7 @@ class CursorPaginator<T>(
     private val fetchPage: suspend (cursor: String?) -> CursorPage<T>,
 ) {
     suspend fun loadInitial() {
-        state.update {
-            CursorPaginationState(isInitialLoading = true)
-        }
+        state.update { CursorPaginationState(isInitialLoading = true) }
         try {
             val page = fetchPage(null)
             state.update {
@@ -28,9 +26,32 @@ class CursorPaginator<T>(
                 )
             }
         } catch (e: Exception) {
+            state.update { CursorPaginationState(error = e) }
+        }
+    }
+
+    suspend fun refresh() {
+        if (state.value.items.isEmpty()) {
+            loadInitial()
+            return
+        }
+        state.update { it.copy(isRefreshing = true) }
+        try {
+            val page = fetchPage(null)
             state.update {
-                CursorPaginationState(error = e)
+                if (it.hasSameData(page)) {
+                    it.copy(isRefreshing = false)
+                } else {
+                    CursorPaginationState(
+                        items = page.items,
+                        nextCursor = page.nextCursor,
+                        hasMore = page.nextCursor != null,
+                        totalCount = page.totalCount,
+                    )
+                }
             }
+        } catch (e: Exception) {
+            state.update { it.copy(isRefreshing = false, error = e) }
         }
     }
 
