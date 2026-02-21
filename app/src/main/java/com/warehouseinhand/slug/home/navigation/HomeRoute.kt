@@ -9,7 +9,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.warehouseinhand.slug.home.AuctionStatusFilterType
 import com.warehouseinhand.slug.home.BuildingFilterType
 import com.warehouseinhand.slug.home.FilterOption
@@ -39,7 +38,7 @@ internal fun HomeRoute(
     val mainLocation: Location.LocationMain by homeViewModel.selectedMainLocation.collectAsStateWithLifecycle()
     val subLocation: Location.LocationSub by homeViewModel.selectedSubLocation.collectAsStateWithLifecycle()
 
-    val productUiModelList = homeViewModel.productUiModelList.collectAsLazyPagingItems()
+    val paginationState by homeViewModel.paginationState.collectAsStateWithLifecycle()
     val stateList: List<FilterButtonState> by homeViewModel.stateList.collectAsStateWithLifecycle()
 
     val sectionName by
@@ -89,11 +88,12 @@ internal fun HomeRoute(
         verifiedProductExist = verifiedProductExist,
         numberOfProduct = numberOfProduct,
         stateList = stateList,
-        productUiModelList = productUiModelList,
+        paginationState = paginationState,
         onLocationSelectClick = onLocationSelectClick,
         onNotificationClick = onNotificationClick,
         onSortingClick = onSortingClick,
         onFilterClick = onFilterClick,
         onItemClicked = onItemClicked,
+        onLoadMore = { homeViewModel.loadMore() },
     )
 }

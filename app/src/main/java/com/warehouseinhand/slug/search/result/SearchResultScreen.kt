@@ -11,9 +11,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.warehouseinhand.slug.R
 import com.warehouseinhand.slug.home.BuildingFilterType
 import com.warehouseinhand.slug.home.AuctionStatusFilterType
@@ -29,6 +26,7 @@ import com.warehouseinhand.slug.search.SearchViewModel
 import com.warehouseinhand.slug.search.bottomsheet.SearchBottomSheetType
 import com.warehouseinhand.slug.ui.component.ProductListEmpty
 import com.warehouseinhand.slug.ui.theme.NeutralInverted
+import com.warehouseinhand.slug.util.CursorPaginationState
 
 @Composable
 fun SearchResultRoute(
@@ -39,16 +37,17 @@ fun SearchResultRoute(
     val numberOfProduct by viewModel.numberOfProduct.collectAsStateWithLifecycle()
     val stateList by viewModel.stateList.collectAsStateWithLifecycle()
     val selectedSortingType by viewModel.selectedSortingType.collectAsStateWithLifecycle()
-    val productList = viewModel.productList.collectAsLazyPagingItems()
+    val paginationState by viewModel.paginationState.collectAsStateWithLifecycle()
 
     SearchResultScreen(
         numberOfProduct = numberOfProduct,
         stateList = stateList,
         sortTypeName = stringResource(selectedSortingType.localizedText),
-        productList = productList,
+        paginationState = paginationState,
         onItemClick = { item ->
             onItemClick(item.id)
         },
+        onLoadMore = { viewModel.loadMore() },
         onFilterClick = { filterOption ->
             when (filterOption) {
                 ToggleFilterType.VERIFIED -> viewModel.changeVerifiedSelected()
@@ -68,8 +67,9 @@ fun SearchResultScreen(
     numberOfProduct: Long,
     stateList: List<FilterButtonState>,
     sortTypeName: String,
-    productList: LazyPagingItems<ProductItemUiModel>,
+    paginationState: CursorPaginationState<ProductItemUiModel>,
     onItemClick: (ProductItemUiModel) -> Unit,
+    onLoadMore: () -> Unit,
     onFilterClick: (FilterOption) -> Unit,
     onSortingClick: () -> Unit
 ) {
@@ -85,22 +85,24 @@ fun SearchResultScreen(
             stateList = stateList,
             onSortingClick = onSortingClick,
             onFilterClick = onFilterClick,
-            isLoading = productList.loadState.refresh is LoadState.Loading,
+            isLoading = paginationState.isInitialLoading,
         )
 
         when {
-            productList.loadState.refresh is LoadState.Loading -> {
+            paginationState.isInitialLoading -> {
                 ProductListSkeleton()
             }
 
-            productList.loadState.refresh is LoadState.NotLoading && productList.itemCount == 0 -> {
+            paginationState.isEmpty -> {
                 ProductListEmpty(stringResource(R.string.home_product_list_empty_title))
             }
 
             else -> {
                 ProductList(
-                    uiModelList = productList,
-                    onItemClicked = onItemClick
+                    uiModelList = paginationState.items,
+                    onItemClicked = onItemClick,
+                    onLoadMore = onLoadMore,
+                    isLoadingMore = paginationState.isLoadingMore,
                 )
             }
         }
@@ -115,8 +117,9 @@ fun PreviewSearchResultScreen() {
             numberOfProduct = 13894,
             stateList = FilterButtonState.defaultStateList,
             sortTypeName = "최신 등록순",
-            productList = ProductItemUiModel.pagingItems(),
+            paginationState = CursorPaginationState(items = ProductItemUiModel.testList),
             onItemClick = {},
+            onLoadMore = {},
             onFilterClick = {},
             onSortingClick = {},
         )

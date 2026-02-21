@@ -1,16 +1,8 @@
 package com.warehouseinhand.slug.home
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
-import androidx.paging.map
 import com.warehouseinhand.slug.data.local.recent.RecentItemRepository
-import com.warehouseinhand.slug.data.local.recent.RecentItemRepositoryImpl
-import com.warehouseinhand.slug.data.network.search.AuctionFailCount
-import com.warehouseinhand.slug.data.network.search.BuildType
-import com.warehouseinhand.slug.data.network.search.Region
 import com.warehouseinhand.slug.data.network.search.RemoteSearchRepository
 import com.warehouseinhand.slug.data.network.search.Sort
 import com.warehouseinhand.slug.data.network.search.VerificationStatus
@@ -21,17 +13,17 @@ import com.warehouseinhand.slug.home.bottomsheet.location.Location
 import com.warehouseinhand.slug.home.bottomsheet.location.Location.Companion.toRegion
 import com.warehouseinhand.slug.home.bottomsheet.sorting.SortingType
 import com.warehouseinhand.slug.home.component.FilterButtonState
+import com.warehouseinhand.slug.util.CursorPaginationState
+import com.warehouseinhand.slug.util.CursorPaginator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -52,27 +44,38 @@ class HomeViewModel @Inject constructor(
     private val _stateList: MutableStateFlow<List<FilterButtonState>> =
         MutableStateFlow(FilterButtonState.defaultStateList)
     val stateList get() = _stateList.asStateFlow()
+    private val _paginationState = MutableStateFlow(CursorPaginationState<ProductItemUiModel>())
+    val paginationState: StateFlow<CursorPaginationState<ProductItemUiModel>> = _paginationState.asStateFlow()
 
-    val productUiModelList: Flow<PagingData<ProductItemUiModel>> =
-        queryState
-            .debounce(250)                // 필터/슬라이더 연타 대비 (선택)
-            .distinctUntilChanged()       // 같은 query면 재생성 방지
-            .flatMapLatest { query ->
-                remoteSearchRepository.getProductListPaging(
-                    size = 20,
-                    query = query,
-                    onSizeReturn = { totalCount: Long ->
-                        viewModelScope.launch {
-                            _numberOfProduct.emit(totalCount)
-                        }
-                    })
-            }
-            .map { paging ->
-                paging.map { domain ->
-                    domain.toUiModel()
+    private val paginator = CursorPaginator(
+        state = _paginationState,
+        fetchPage = { cursor ->
+            val query = _queryState.value
+            val page = remoteSearchRepository.getProductListByCursorWithFavorites(cursor, query)
+            com.warehouseinhand.slug.util.CursorPage(
+                items = page.items.map { it.toUiModel() },
+                nextCursor = page.nextCursor,
+                totalCount = page.totalCount,
+            )
+        }
+    )
+
+    init {
+        viewModelScope.launch {
+            _queryState
+                .debounce(250)
+                .distinctUntilChanged()
+                .collectLatest {
+                    _numberOfProduct.emit(0L)
+                    paginator.loadInitial()
+                    _numberOfProduct.emit(_paginationState.value.totalCount)
                 }
-            }
-            .cachedIn(viewModelScope)
+        }
+    }
+
+    fun loadMore() {
+        viewModelScope.launch { paginator.loadMore() }
+    }
 
     private val _numberOfProduct: MutableStateFlow<Long> = MutableStateFlow(0L)
     val numberOfProduct = _numberOfProduct.asStateFlow()
@@ -158,7 +161,7 @@ class HomeViewModel @Inject constructor(
 
 
     }
-    
+
     fun addRecentItem(id: String) {
         CoroutineScope(Dispatchers.IO).launch {
             recentItemRepository.addRecentItem(id)
@@ -267,10 +270,10 @@ class HomeViewModel @Inject constructor(
 
 data class SearchQuery(
     val keyword: String = "unknown",
-    val region: Region = Region.ALL,
+    val region: com.warehouseinhand.slug.data.network.search.Region = com.warehouseinhand.slug.data.network.search.Region.ALL,
     val district: String = "unkwon",
-    val buildType: List<BuildType> = listOf(BuildType.ALL),
-    val auctionFailCount: List<AuctionFailCount> = listOf(AuctionFailCount.ALL),
+    val buildType: List<com.warehouseinhand.slug.data.network.search.BuildType> = listOf(com.warehouseinhand.slug.data.network.search.BuildType.ALL),
+    val auctionFailCount: List<com.warehouseinhand.slug.data.network.search.AuctionFailCount> = listOf(com.warehouseinhand.slug.data.network.search.AuctionFailCount.ALL),
     val verificationStatus: VerificationStatus = VerificationStatus.ALL,
     val minimumPrice: Long = -1,
     val maximumPrice: Long = -1,

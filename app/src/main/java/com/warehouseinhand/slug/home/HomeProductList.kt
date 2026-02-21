@@ -14,13 +14,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,9 +31,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.paging.PagingData
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.warehouseinhand.slug.R
 import com.warehouseinhand.slug.home.component.DDayChip
 import com.warehouseinhand.slug.ui.component.image.ImageProcessor
@@ -44,41 +43,22 @@ import com.warehouseinhand.slug.ui.theme.NeutralSubtler
 import com.warehouseinhand.slug.ui.theme.NeutralWeak
 import com.warehouseinhand.slug.ui.theme.Primary
 import com.warehouseinhand.slug.ui.theme.SlugTypographyStyle
+import com.warehouseinhand.slug.util.OnReachEnd
 import com.warehouseinhand.slug.util.blockingClickable
 import com.warehouseinhand.slug.util.numberToCurrency
-import kotlinx.coroutines.flow.MutableStateFlow
 
 //TODO : 공통컴포넌트화 고려
 @Composable
 fun ProductList(
-    uiModelList: LazyPagingItems<ProductItemUiModel>,
-    onItemClicked: (ProductItemUiModel) -> Unit
-) {
-    LazyColumn {
-        items(
-            count = uiModelList.itemCount,
-        ) { index ->
-            val item = uiModelList.get(index) ?: return@items
-            ProductItem(
-                uiModel = item,
-                onItemClicked = onItemClicked
-            )
-            Spacer(
-                Modifier
-                    .fillMaxWidth()
-                    .height(1.dp)
-                    .background(color = NeutralWeak)
-            )
-        }
-    }
-}
-
-@Composable
-fun ProductList(
     uiModelList: List<ProductItemUiModel>,
-    onItemClicked: (ProductItemUiModel) -> Unit
+    onItemClicked: (ProductItemUiModel) -> Unit,
+    onLoadMore: () -> Unit = {},
+    isLoadingMore: Boolean = false,
+    lazyListState: LazyListState = rememberLazyListState(),
 ) {
-    LazyColumn {
+    lazyListState.OnReachEnd { onLoadMore() }
+
+    LazyColumn(state = lazyListState) {
         items(
             items = uiModelList
         ) { item ->
@@ -93,6 +73,22 @@ fun ProductList(
                     .background(color = NeutralWeak)
             )
         }
+        if (isLoadingMore) {
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        color = Primary,
+                        strokeWidth = 2.dp
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -101,7 +97,7 @@ private fun ProductItem(
     uiModel: ProductItemUiModel,
     onItemClicked: (ProductItemUiModel) -> Unit
 ) {
-    val priceOfProductByCurrency = remember { numberToCurrency(uiModel.priceOfProduct) }
+    val priceOfProductByCurrency = numberToCurrency(uiModel.priceOfProduct)
     Row(
         modifier = Modifier
             .blockingClickable(onClick = { onItemClicked(uiModel) })
@@ -198,9 +194,7 @@ fun PreviewHomeProductList() {
     val onItemClicked: (ProductItemUiModel) -> Unit = { model ->
         Toast.makeText(currentContext, model.nameOfProduct, Toast.LENGTH_SHORT).show()
     }
-    val uiModelList = MutableStateFlow(PagingData.from(ProductItemUiModel.testList))
-        .collectAsLazyPagingItems()
     Surface {
-        ProductList(uiModelList, onItemClicked)
+        ProductList(ProductItemUiModel.testList, onItemClicked)
     }
 }

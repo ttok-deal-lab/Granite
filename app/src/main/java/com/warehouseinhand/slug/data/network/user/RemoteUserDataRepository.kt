@@ -1,15 +1,11 @@
 package com.warehouseinhand.slug.data.network.user
 
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
 import com.warehouseinhand.slug.data.network.MapperToDomain.Companion.toDomain
-import com.warehouseinhand.slug.data.network.search.DEFAULT_PAGING_SIZE
 import com.warehouseinhand.slug.domain.search.AuctionSearchItem
 import com.warehouseinhand.slug.domain.user.FavoriteStatus
 import com.warehouseinhand.slug.domain.user.SlugToken
 import com.warehouseinhand.slug.domain.user.UserProfile
-import kotlinx.coroutines.flow.Flow
+import com.warehouseinhand.slug.util.CursorPage
 import javax.inject.Inject
 
 class RemoteUserDataRepository @Inject constructor(
@@ -47,21 +43,21 @@ class RemoteUserDataRepository @Inject constructor(
             privateUserService.requestRemoveFavoriteProduct(userId = userId, productId = productId)
         }
 
-    fun getUserFavoriteProductList(userId: String, size: Int = DEFAULT_PAGING_SIZE): Flow<PagingData<AuctionSearchItem>> =
-        Pager(
-            config = PagingConfig(
-                pageSize = size,
-                initialLoadSize = size,
-                enablePlaceholders = false
-            ),
-            pagingSourceFactory = {
-                FavoriteProductsByCursorPagingSource(
-                    service = privateUserService,
-                    userId = userId,
-                )
-            }
-        ).flow
-
+    suspend fun getFavoriteProductsByCursor(
+        userId: String, cursor: String?, size: Int = 20
+    ): CursorPage<AuctionSearchItem> {
+        val dto = privateUserService.getUserFavoriteProductList(
+            userId = userId,
+            cursor = if (cursor.isNullOrBlank()) "unknown" else cursor,
+            size = size,
+        )
+        val domainItems = dto.items.map { it.toDomain() }
+        val nextKey = if (dto.nextCursor == "unknown") null else dto.nextCursor
+        return CursorPage(
+            items = domainItems,
+            nextCursor = nextKey,
+        )
+    }
 
     suspend fun getFavoriteStatusMap(
         userId: String,

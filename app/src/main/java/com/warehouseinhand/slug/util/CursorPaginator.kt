@@ -1,0 +1,67 @@
+package com.warehouseinhand.slug.util
+
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
+
+data class CursorPage<T>(
+    val items: List<T>,
+    val nextCursor: String?,
+    val totalCount: Long = 0L,
+)
+
+class CursorPaginator<T>(
+    private val state: MutableStateFlow<CursorPaginationState<T>>,
+    private val fetchPage: suspend (cursor: String?) -> CursorPage<T>,
+) {
+    suspend fun loadInitial() {
+        state.update {
+            CursorPaginationState(isInitialLoading = true)
+        }
+        try {
+            val page = fetchPage(null)
+            state.update {
+                CursorPaginationState(
+                    items = page.items,
+                    nextCursor = page.nextCursor,
+                    hasMore = page.nextCursor != null,
+                    totalCount = page.totalCount,
+                )
+            }
+        } catch (e: Exception) {
+            state.update {
+                CursorPaginationState(error = e)
+            }
+        }
+    }
+
+    suspend fun loadMore() {
+        val current = state.value
+        if (current.isLoadingMore || current.isInitialLoading || !current.hasMore) return
+
+        state.update { it.copy(isLoadingMore = true) }
+        try {
+            val page = fetchPage(current.nextCursor)
+            state.update {
+                it.copy(
+                    items = it.items + page.items,
+                    nextCursor = page.nextCursor,
+                    isLoadingMore = false,
+                    hasMore = page.nextCursor != null,
+                    totalCount = page.totalCount,
+                )
+            }
+        } catch (e: Exception) {
+            state.update { it.copy(isLoadingMore = false, error = e) }
+        }
+    }
+
+    fun removeItem(predicate: (T) -> Boolean) {
+        state.update {
+            val filtered = it.items.filterNot(predicate)
+            it.copy(
+                items = filtered,
+                totalCount = (it.totalCount - (it.items.size - filtered.size)).coerceAtLeast(0L),
+            )
+        }
+    }
+}

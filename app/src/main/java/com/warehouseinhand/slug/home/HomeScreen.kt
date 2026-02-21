@@ -10,12 +10,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices.PIXEL_7_PRO
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
 import com.warehouseinhand.slug.R
 import com.warehouseinhand.slug.home.bottomsheet.sorting.SortingType
 import com.warehouseinhand.slug.home.component.FilterButtonState
 import com.warehouseinhand.slug.ui.component.ProductListEmpty
+import com.warehouseinhand.slug.util.CursorPaginationState
 
 
 @Composable
@@ -23,11 +22,12 @@ fun HomeScreen(
     padding: PaddingValues, //TODO : 더 상위에서 처리할것
     lastSelectedSortType: SortingType,
     sectionName: String,
-    productUiModelList: LazyPagingItems<ProductItemUiModel>,
+    paginationState: CursorPaginationState<ProductItemUiModel>,
     stateList: List<FilterButtonState>,
     numberOfProduct: Long,
     verifiedProductExist: Boolean,
     onItemClicked: (ProductItemUiModel) -> Unit,
+    onLoadMore: () -> Unit,
     onSortingClick: () -> Unit,
     onFilterClick: (FilterOption) -> Unit,
     onNotificationClick: () -> Unit,
@@ -43,7 +43,7 @@ fun HomeScreen(
             onNotificationClick = onNotificationClick,
         )
         HomeFilterBar(
-            isLoading = productUiModelList.loadState.refresh is LoadState.Loading,
+            isLoading = paginationState.isInitialLoading,
             verifiedProductExist = verifiedProductExist,
             numberOfProduct = numberOfProduct,
             sortTypeName = stringResource(lastSelectedSortType.localizedText),
@@ -52,14 +52,19 @@ fun HomeScreen(
             onFilterClick = onFilterClick,
         )
         when {
-            productUiModelList.loadState.refresh is LoadState.Loading -> {
+            paginationState.isInitialLoading -> {
                 ProductListSkeleton()
             }
-            productUiModelList.loadState.refresh is LoadState.NotLoading && productUiModelList.itemCount == 0 -> {
+            paginationState.isEmpty -> {
                 ProductListEmpty(stringResource(R.string.home_product_list_empty_title))
             }
             else -> {
-                ProductList(productUiModelList, onItemClicked)
+                ProductList(
+                    uiModelList = paginationState.items,
+                    onItemClicked = onItemClicked,
+                    onLoadMore = onLoadMore,
+                    isLoadingMore = paginationState.isLoadingMore,
+                )
             }
         }
     }
@@ -102,7 +107,6 @@ fun PreviewHomeScreen() {
             filterOption = ToggleFilterType.FINISHED_PRODUCT,
         ),
     )
-    val productUiModelList = ProductItemUiModel.pagingItems()
 
     HomeScreen(
         padding = PaddingValues(),
@@ -116,7 +120,8 @@ fun PreviewHomeScreen() {
         numberOfProduct = numberOfProduct,
         onItemClicked = onItemClicked,
         stateList = stateList,
-        productUiModelList = productUiModelList,
-        onFilterClick = onFilterClick
+        paginationState = CursorPaginationState(items = ProductItemUiModel.testList),
+        onFilterClick = onFilterClick,
+        onLoadMore = {},
     )
 }

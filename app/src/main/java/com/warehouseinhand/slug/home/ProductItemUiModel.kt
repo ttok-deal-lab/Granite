@@ -1,8 +1,5 @@
 package com.warehouseinhand.slug.home
 
-import androidx.compose.runtime.Composable
-import androidx.paging.PagingData
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.warehouseinhand.slug.R
 import com.warehouseinhand.slug.domain.court.CourtSalesItem
 import com.warehouseinhand.slug.domain.court.SalesCategory
@@ -12,7 +9,6 @@ import com.warehouseinhand.slug.ui.component.image.ImageResource
 import com.warehouseinhand.slug.ui.component.label.SlugLabelStyle
 import com.warehouseinhand.slug.ui.component.label.SlugLabelUiModel
 import com.warehouseinhand.slug.util.calculateDaysLeft
-import kotlinx.coroutines.flow.MutableStateFlow
 
 data class ProductItemUiModel(
     val id: String,
@@ -305,8 +301,5 @@ data class ProductItemUiModel(
             )
         )
 
-        @Composable
-        fun pagingItems() = MutableStateFlow(PagingData.from(ProductItemUiModel.testList))
-            .collectAsLazyPagingItems()
     }
 }

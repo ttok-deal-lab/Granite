@@ -1,14 +1,9 @@
 package com.warehouseinhand.slug.search
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
-import androidx.paging.map
-import androidx.room.util.query
 import com.warehouseinhand.slug.data.local.search.RecentSearchRepository
 import com.warehouseinhand.slug.data.network.search.RemoteSearchRepository
 import com.warehouseinhand.slug.data.network.search.VerificationStatus
@@ -24,19 +19,18 @@ import com.warehouseinhand.slug.home.ToggleFilterType
 import com.warehouseinhand.slug.home.bottomsheet.sorting.SortingType
 import com.warehouseinhand.slug.home.component.FilterButtonState
 import com.warehouseinhand.slug.search.navigation.RouteSearchResult
+import com.warehouseinhand.slug.util.CursorPaginationState
+import com.warehouseinhand.slug.util.CursorPaginator
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -115,27 +109,38 @@ class SearchViewModel @Inject constructor(
         SearchQuery(keyword = route?.keyword ?: "unknown")
     )
 
-    val productList: Flow<PagingData<ProductItemUiModel>> =
-        _queryState
-            .debounce(250)
-            .distinctUntilChanged()
-            .flatMapLatest { query ->
-                remoteSearchRepository.getProductListPaging(
-                    size = 20,
-                    query = query,
-                    onSizeReturn = { totalCount ->
-                        viewModelScope.launch {
-                            _numberOfProduct.emit(totalCount)
-                        }
-                    }
-                )
-            }
-            .map { paging ->
-                paging.map { domain ->
-                    domain.toUiModel()
+    private val _paginationState = MutableStateFlow(CursorPaginationState<ProductItemUiModel>())
+    val paginationState: StateFlow<CursorPaginationState<ProductItemUiModel>> = _paginationState.asStateFlow()
+
+    private val paginator = CursorPaginator(
+        state = _paginationState,
+        fetchPage = { cursor ->
+            val query = _queryState.value
+            val page = remoteSearchRepository.getProductListByCursorWithFavorites(cursor, query)
+            com.warehouseinhand.slug.util.CursorPage(
+                items = page.items.map { it.toUiModel() },
+                nextCursor = page.nextCursor,
+                totalCount = page.totalCount,
+            )
+        }
+    )
+
+    init {
+        viewModelScope.launch {
+            _queryState
+                .debounce(250)
+                .distinctUntilChanged()
+                .collectLatest {
+                    _numberOfProduct.emit(0L)
+                    paginator.loadInitial()
+                    _numberOfProduct.emit(_paginationState.value.totalCount)
                 }
-            }
-            .cachedIn(viewModelScope)
+        }
+    }
+
+    fun loadMore() {
+        viewModelScope.launch { paginator.loadMore() }
+    }
 
     private var autoCompleteJob: Job? = null
 
@@ -161,6 +166,8 @@ class SearchViewModel @Inject constructor(
             refreshPagingByCurrentFilters()
         }
     }
+
+    private var lastJob: Job? = Job().apply { complete() }
 
     fun searchWithCheck(keyword: String, onHasResult: () -> Unit) {
         lastJob?.cancel()
@@ -327,30 +334,6 @@ class SearchViewModel @Inject constructor(
 
     private suspend fun addToRecentSearches(keyword: String) {
         recentSearchRepository.addRecentSearch(keyword)
-    }
-
-    private var lastJob: Job? = Job().apply { complete() }
-    private fun checkItemsExist() {
-        lastJob?.cancel()
-        lastJob = viewModelScope.launch {
-            remoteSearchRepository.getProductListByCursor(
-                nextCursor = "",
-                query = SearchQuery(keyword = _searchKeyword.value)
-            )
-                .onSuccess { it ->
-//                    lastestCursor = it.nextCursor
-
-//                    _productUiModelList.emit(
-//                        it.items.map { it.toUiModel() }
-//                    )
-//                    _numberOfProduct.emit(it.totalCount)
-                    Log.d("TESTTEST", "requestNewItemList: SUCCESS")
-                }.onFailure {
-                    Log.d("TESTTEST", "requestNewItemList: FAIL $it")
-
-                    //TODO
-                }
-        }
     }
 
     private fun fetchAutoComplete(keyword: String) {
