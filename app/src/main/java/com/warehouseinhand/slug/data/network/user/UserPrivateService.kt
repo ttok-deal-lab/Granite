@@ -24,7 +24,7 @@ interface UserPrivateService {
     suspend fun getUserFavoriteProductList(
         @Path(USER_ID) userId: String,
         @Query("type") type: String = "product",
-        @Query("cursor") cursor: String = "unknown",
+        @Query("cursor") cursor: String? = "unknown",
         @Query("size") size: Int = 20,
     ): FavoriteSalesCursorResponseDTO
 

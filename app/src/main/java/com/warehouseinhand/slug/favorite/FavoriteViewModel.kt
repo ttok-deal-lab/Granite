@@ -43,26 +43,4 @@ class FavoriteViewModel @Inject constructor(
                 }
             }
             .cachedIn(viewModelScope)
-
-
-//    fun requestFavoriteList(){
-//        networkWithProgress {
-//            //TODO : getList!
-//            delay(500)
-//            _favoriteUiModelList.emit(ProductItemUiModel.testList)
-//        }
-//    }
-
-    private val _isNeedToShowProgress: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val isNeedToShowProgress get() = _isNeedToShowProgress.asStateFlow()
-
-    private fun networkWithProgress(doWithAsyncBlock: suspend () -> Unit) {
-        viewModelScope.launch {
-            _isNeedToShowProgress.emit(true)
-
-            doWithAsyncBlock.invoke()
-
-            _isNeedToShowProgress.emit(false)
-        }
-    }
 }

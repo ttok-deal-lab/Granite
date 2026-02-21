@@ -13,11 +13,10 @@ class FavoriteProductsByCursorPagingSource(
         try {
             val cursor = params.key
 
-            val dto =
-                service.getUserFavoriteProductList(userId = userId, cursor = cursor ?: "unknown")
+            val dto = service.getUserFavoriteProductList(userId = userId, cursor = cursor)
 
             val domainItems = dto.items.map {
-                it.toDomain()
+                it.toDomain().copy(isFavorite = true)
             } // DTO -> Domain
 
             val nextKey =
