@@ -22,7 +22,8 @@ private val LightColorScheme = lightColorScheme(
     secondary = Secondary,
     tertiary = Secondary,
     surface = NeutralInverted,
-    background = NeutralInverted
+    background = NeutralInverted,
+    surfaceContainerLow = NeutralInverted,
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
