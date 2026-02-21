@@ -42,7 +42,7 @@ class ProductsByCursorPagingSource(
                 item.copy(isFavorite = favoriteMap[item.id] ?: false)
             }
 
-            val nextKey = if (cursor == "unknown") null else searchResponseDTO.nextCursor// null을 입력하면 더이상 받아오지 않음!
+            val nextKey = if (searchResponseDTO.nextCursor == "unknown") null else searchResponseDTO.nextCursor// null을 입력하면 더이상 받아오지 않음!
 
             LoadResult.Page(
                 data = itemsWithFavorite,

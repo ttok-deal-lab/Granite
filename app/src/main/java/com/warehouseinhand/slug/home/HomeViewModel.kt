@@ -68,8 +68,8 @@ class HomeViewModel @Inject constructor(
                     })
             }
             .map { paging ->
-                paging.map {
-                    domain -> domain.toUiModel()
+                paging.map { domain ->
+                    domain.toUiModel()
                 }
             }
             .cachedIn(viewModelScope)
@@ -158,33 +158,7 @@ class HomeViewModel @Inject constructor(
 
 
     }
-
-//    private var lastestCursor: String? = ""
-
-    private var lastJob: Job? = Job().apply { complete() }
-    private fun requestNewItemList() {
-        //debounce 어떻게? 목록 그냥 요청은 계속 받아야하나, 필터변경시에는 force 처리해야하는데?
-        //TODO : REQUEST API to new item List
-        //TODO : viewmodel에서 커서를 가지는게 맞나?
-        lastJob?.cancel()
-        lastJob = viewModelScope.launch {
-            remoteSearchRepository.getProductListByCursor(nextCursor = "", queryState.value)
-                .onSuccess { it ->
-//                    lastestCursor = it.nextCursor
-
-//                    _productUiModelList.emit(
-//                        it.items.map { it.toUiModel() }
-//                    )
-//                    _numberOfProduct.emit(it.totalCount)
-                    Log.d("TESTTEST", "requestNewItemList: SUCCESS")
-                }.onFailure {
-                    Log.d("TESTTEST", "requestNewItemList: FAIL $it")
-
-                    //TODO
-                }
-        }
-    }
-
+    
     fun addRecentItem(id: String) {
         CoroutineScope(Dispatchers.IO).launch {
             recentItemRepository.addRecentItem(id)
@@ -238,7 +212,6 @@ class HomeViewModel @Inject constructor(
     fun changeFinishedSelected() {
         isFinishedProductFilterSelected = !isFinishedProductFilterSelected
         updateFilterState()
-        requestNewItemList()
         refreshPagingByCurrentFilters()
     }
 
@@ -248,7 +221,6 @@ class HomeViewModel @Inject constructor(
             AuctionStatusFilterType.entries.filter { list.contains(it) }
         }
         updateFilterState()
-        requestNewItemList()
         refreshPagingByCurrentFilters()
     }
 
@@ -258,27 +230,23 @@ class HomeViewModel @Inject constructor(
             BuildingFilterType.entries.filter { list.contains(it) }
         }
         updateFilterState()
-        requestNewItemList()
         refreshPagingByCurrentFilters()
     }
 
     fun changeVerifiedSelected() {
         isVerifiedFilterSelected = !isVerifiedFilterSelected
         updateFilterState()
-        requestNewItemList()
         refreshPagingByCurrentFilters()
     }
 
     fun changePriceRange(price: Price) {
         _priceRange.update { price }
         updateFilterState()
-        requestNewItemList()
         refreshPagingByCurrentFilters()
     }
 
     fun requestChangeSortingType(type: SortingType) {
         _selectedSortingType.value = type
-        requestNewItemList()
         refreshPagingByCurrentFilters()
     }
 
@@ -291,7 +259,6 @@ class HomeViewModel @Inject constructor(
         _selectedSubLocation.update { subLocation }
 
         //TODO : filter초기화
-        requestNewItemList()
         refreshPagingByCurrentFilters()
     }
     //HOME location
