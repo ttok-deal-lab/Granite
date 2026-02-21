@@ -18,7 +18,7 @@ class ProductsByCursorPagingSource(
         try {
             val cursor = params.key
 
-            val dto = service.search(
+            val searchResponseDTO = service.search(
                 keyword = query.keyword,
                 region = query.region,
                 district = query.district,
@@ -31,9 +31,9 @@ class ProductsByCursorPagingSource(
                 sort = query.sort,
             )
 
-            onSizeReturn(dto.searchHitCount)
+            onSizeReturn(searchResponseDTO.searchHitCount)
 
-            val domainItems = dto.auctionItemResponses.map { it.toDomain() } // DTO -> Domain
+            val domainItems = searchResponseDTO.auctionItemResponses.map { it.toDomain() } // DTO -> Domain
 
             val ids = domainItems.map { it.id }
             val favoriteMap = getFavoriteStatusUseCase(ids).getOrElse { emptyMap() }
@@ -42,7 +42,7 @@ class ProductsByCursorPagingSource(
                 item.copy(isFavorite = favoriteMap[item.id] ?: false)
             }
 
-            val nextKey = if (cursor == "unknown") null else dto.nextCursor// null을 입력하면 더이상 받아오지 않음!
+            val nextKey = if (cursor == "unknown") null else searchResponseDTO.nextCursor// null을 입력하면 더이상 받아오지 않음!
 
             LoadResult.Page(
                 data = itemsWithFavorite,

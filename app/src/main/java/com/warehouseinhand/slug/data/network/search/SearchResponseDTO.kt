@@ -3,7 +3,6 @@ package com.warehouseinhand.slug.data.network.search
 import com.google.gson.annotations.SerializedName
 import com.warehouseinhand.slug.data.network.MapperToDomain
 import com.warehouseinhand.slug.data.network.MapperToDomain.Companion.toDomain
-import com.warehouseinhand.slug.data.network.search.SalesPictureDTO
 import com.warehouseinhand.slug.domain.search.AuctionSearchItem
 import com.warehouseinhand.slug.domain.search.SearchResultPage
 

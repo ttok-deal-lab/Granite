@@ -1,6 +1,7 @@
 package com.warehouseinhand.slug.detail
 
 import com.warehouseinhand.slug.R
+import com.warehouseinhand.slug.ui.component.SlugText
 import com.warehouseinhand.slug.ui.component.image.ImageResource
 import com.warehouseinhand.slug.ui.component.label.SlugLabelBackground
 import com.warehouseinhand.slug.ui.component.label.SlugLabelStyle
@@ -38,13 +39,13 @@ data class DetailSimpleInformationUiModel(
                 typeDisplayName = "아파트",
                 size = "공급 110.52㎡ (33평)",
                 labelModels = listOf(
-                    SlugLabelUiModel(SlugLabelStyle.GradientBackground.Verified , "인증매물"),
-                    SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State , "유찰 2회"),
+                    SlugLabelUiModel(SlugLabelStyle.GradientBackground.Verified , SlugText.Text("인증매물")),
+                    SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State , SlugText.Text("유찰 2회")),
                     SlugLabelUiModel(SlugLabelStyle.Dynamic(
                         background = SlugLabelBackground.Solid(CriticalWeak),
                         textColor = Critical
-                    ) , "매각 D-2"),
-                    SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State , "매각 D-4"),
+                    ) , SlugText.Text("매각 D-2")),
+                    SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State , SlugText.Text("매각 D-4")),
                 ),
                 lowestPrice = 183_200_000L,
                 appraisalPrice = 230_000_000L,

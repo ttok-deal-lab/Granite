@@ -15,6 +15,7 @@ import com.warehouseinhand.slug.detail.subpage.auction.CourtInfoUiModel
 import com.warehouseinhand.slug.detail.subpage.auction.RegistryInfoUiModel
 import com.warehouseinhand.slug.domain.sales.CourtSaleDetail
 import com.warehouseinhand.slug.domain.user.GetFavoriteStatusUseCase
+import com.warehouseinhand.slug.ui.component.SlugText
 import com.warehouseinhand.slug.ui.component.image.ImageResource
 import com.warehouseinhand.slug.ui.component.label.SlugLabelBackground
 import com.warehouseinhand.slug.ui.component.label.SlugLabelStyle
@@ -239,13 +240,13 @@ private fun CourtSaleDetail.labelModels(): List<SlugLabelUiModel> {
 
     //인증 매물
     if (verified)
-        chips += SlugLabelUiModel(SlugLabelStyle.GradientBackground.Verified, "인증매물")
+        chips += SlugLabelUiModel(SlugLabelStyle.GradientBackground.Verified, SlugText.Text("인증매물"))
     //유찰 횟수
     if (failBidCount > 0)
-        chips += SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State, "유찰 ${failBidCount}회")
+        chips += SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State, SlugText.Text("유찰 ${failBidCount}회"))
     // 매각 여부
     if (isSoldOut) {
-        chips += SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State, "매각완료")
+        chips += SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State, SlugText.Text("매각완료"))
     }
     // 매각 기한
     val leftDay: Int = getDaysLeftFromSalesDateTime(salesDateTime)
@@ -255,17 +256,17 @@ private fun CourtSaleDetail.labelModels(): List<SlugLabelUiModel> {
             SlugLabelStyle.Dynamic(
                 background = SlugLabelBackground.Solid(CriticalWeak),
                 textColor = Critical
-            ), "매각 D-$leftDay"
+            ), SlugText.Text("매각 D-$leftDay")
         )
     } else if (leftDay > 2) {
         SlugLabelUiModel(
             labelStyle = SlugLabelStyle.BuildingInfo.State,
-            text = "매각 D-$leftDay"
+            text =SlugText.Text( "매각 D-$leftDay")
         )
     } else {
         SlugLabelUiModel(
             labelStyle = SlugLabelStyle.BuildingInfo.State,
-            text = "매각 D+${leftDay * -1}"
+            text = SlugText.Text("매각 D+${leftDay * -1}")
         )
     }
 

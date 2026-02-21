@@ -62,6 +62,14 @@
     <string name="filter_building_house" translatable="false">주택</string>
     <string name="filter_building_other" translatable="false">기타</string>
 
+
+    <string name="building_type_apartment" translatable="false">아파트</string>
+    <string name="building_type_villa" translatable="false">빌라(다세대,연립)</string>
+    <string name="building_type_officetel" translatable="false">오피스텔</string>
+    <string name="building_type_commercial_house" translatable="false">상가주택</string>
+    <string name="building_type_house" translatable="false">주택</string>
+    <string name="building_type_other" translatable="false">기타</string>
+
     <string name="filter_auction_status" translatable="false">경매상태</string>
     <string name="filter_auction_status_new" translatable="false">신건</string>
     <string name="filter_auction_status_date_changing" translatable="false">기일변경중</string>

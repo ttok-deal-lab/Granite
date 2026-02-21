@@ -7,6 +7,7 @@ import com.warehouseinhand.slug.R
 import com.warehouseinhand.slug.domain.court.CourtSalesItem
 import com.warehouseinhand.slug.domain.court.SalesCategory
 import com.warehouseinhand.slug.domain.search.AuctionSearchItem
+import com.warehouseinhand.slug.ui.component.SlugText
 import com.warehouseinhand.slug.ui.component.image.ImageResource
 import com.warehouseinhand.slug.ui.component.label.SlugLabelStyle
 import com.warehouseinhand.slug.ui.component.label.SlugLabelUiModel
@@ -50,6 +51,7 @@ data class ProductItemUiModel(
                 infoChipList = buildInfoChips()
             )
         }
+
         private fun CourtSalesItem.buildInfoChips(): List<SlugLabelUiModel> {
             val chips = mutableListOf<SlugLabelUiModel>()
 
@@ -58,14 +60,14 @@ data class ProductItemUiModel(
                 soldOut -> {
                     chips += SlugLabelUiModel(
                         labelStyle = SlugLabelStyle.BuildingInfo.State,
-                        text = "매각완료"
+                        text = SlugText.Text("매각완료")
                     )
                 }
 
                 failBidCount > 0 -> {
                     chips += SlugLabelUiModel(
                         labelStyle = SlugLabelStyle.BuildingInfo.State,
-                        text = "유찰 ${failBidCount}회"
+                        text = SlugText.Text("유찰 ${failBidCount}회")
                     )
                 }
             }
@@ -81,16 +83,37 @@ data class ProductItemUiModel(
         private fun SalesCategory.toLabelUiModel(): SlugLabelUiModel =
             when (this) {
                 SalesCategory.APARTMENT ->
-                    SlugLabelUiModel(SlugLabelStyle.BuildingInfo.Apartment, "아파트")
+                    SlugLabelUiModel(
+                        SlugLabelStyle.BuildingInfo.BuildingType,
+                        SlugText.Id(R.string.building_type_apartment)
+                    )
 
                 SalesCategory.VILLA ->
-                    SlugLabelUiModel(SlugLabelStyle.BuildingInfo.Villa, "빌라")
+                    SlugLabelUiModel(
+                        SlugLabelStyle.BuildingInfo.BuildingType,
+                        SlugText.Id(R.string.building_type_villa)
+                    )
 
                 SalesCategory.OFFICETEL ->
-                    SlugLabelUiModel(SlugLabelStyle.BuildingInfo.Officetel, "오피스텔")
+                    SlugLabelUiModel(
+                        SlugLabelStyle.BuildingInfo.BuildingType,
+                        SlugText.Id(R.string.building_type_officetel)
+                    )
+
+                SalesCategory.HOUSING ->
+                    SlugLabelUiModel(
+                        SlugLabelStyle.BuildingInfo.BuildingType,
+                        SlugText.Id(R.string.building_type_house)
+                    )
+
+                SalesCategory.SHOP_HOUSE ->
+                    SlugLabelUiModel(
+                        SlugLabelStyle.BuildingInfo.BuildingType,
+                        SlugText.Id(R.string.building_type_commercial_house)
+                    )
 
                 else ->
-                    SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State, name)
+                    SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State, SlugText.Text(name))
             }
 
 
@@ -122,23 +145,42 @@ data class ProductItemUiModel(
 
             // 1. 인증 매물
             if (verified) {
-                chips += SlugLabelUiModel(SlugLabelStyle.GradientBackground.Verified, "인증매물")
+                chips += SlugLabelUiModel(
+                    SlugLabelStyle.GradientBackground.Verified,
+                    SlugText.Text("인증매물")
+                )
             }
 
             // 2. 매각 상태
             if (soldOut) {
-                chips += SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State, "매각완료")
+                chips += SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State, SlugText.Text("매각완료"))
             } else if (failBidCount > 0) {
-                chips += SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State, "유찰 ${failBidCount}회")
+                chips += SlugLabelUiModel(
+                    SlugLabelStyle.BuildingInfo.State,
+                    SlugText.Text("유찰 ${failBidCount}회")
+                )
             }
 
             // 3. 건물 카테고리 (대표 1개)
             salesCategories.firstOrNull()?.let { category ->
-                chips += SlugLabelUiModel(SlugLabelStyle.BuildingInfo.Apartment, category)
+                chips += SlugLabelUiModel(
+                    SlugLabelStyle.BuildingInfo.BuildingType,
+                    getStringFromCategory(category)
+                )
                 // 실제로는 category → 스타일 매핑 함수로 분리 권장
             }
             return chips
         }
+
+        fun getStringFromCategory(text: String): SlugText =
+            when (text) {
+                "VILLA" -> SlugText.Id(R.string.building_type_villa)
+                "APARTMENT" -> SlugText.Id(R.string.building_type_apartment)
+                "OFFICETEL" -> SlugText.Id(R.string.building_type_officetel)
+                "SHOP_HOUSE" -> SlugText.Id(R.string.building_type_commercial_house)
+                "HOUSING" -> SlugText.Id(R.string.building_type_house)
+                else -> SlugText.Text(text)
+            }
 
 
         val testList = listOf(
@@ -152,8 +194,11 @@ data class ProductItemUiModel(
                 isFavorite = true,
                 favoritePersons = 100,
                 infoChipList = listOf(
-                    SlugLabelUiModel(SlugLabelStyle.BuildingInfo.Apartment, "아파트"),
-                    SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State, "유찰 2회")
+                    SlugLabelUiModel(
+                        SlugLabelStyle.BuildingInfo.BuildingType,
+                        SlugText.Text("아파트")
+                    ),
+                    SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State, SlugText.Text("유찰 2회"))
                 )
             ),
             ProductItemUiModel(
@@ -166,8 +211,11 @@ data class ProductItemUiModel(
                 isFavorite = false,
                 favoritePersons = 0,
                 infoChipList = listOf(
-                    SlugLabelUiModel(SlugLabelStyle.BuildingInfo.Apartment, "아파트"),
-                    SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State, "유찰 2회")
+                    SlugLabelUiModel(
+                        SlugLabelStyle.BuildingInfo.BuildingType,
+                        SlugText.Text("아파트")
+                    ),
+                    SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State, SlugText.Text("유찰 2회"))
                 )
             ),
             ProductItemUiModel(
@@ -180,8 +228,11 @@ data class ProductItemUiModel(
                 isFavorite = true,
                 favoritePersons = 234,
                 infoChipList = listOf(
-                    SlugLabelUiModel(SlugLabelStyle.BuildingInfo.Apartment, "아파트"),
-                    SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State, "유찰 2회")
+                    SlugLabelUiModel(
+                        SlugLabelStyle.BuildingInfo.BuildingType,
+                        SlugText.Text("아파트")
+                    ),
+                    SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State, SlugText.Text("유찰 2회"))
                 )
             ),
             ProductItemUiModel(
@@ -194,8 +245,11 @@ data class ProductItemUiModel(
                 isFavorite = false,
                 favoritePersons = 78,
                 infoChipList = listOf(
-                    SlugLabelUiModel(SlugLabelStyle.BuildingInfo.Apartment, "아파트"),
-                    SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State, "유찰 3회")
+                    SlugLabelUiModel(
+                        SlugLabelStyle.BuildingInfo.BuildingType,
+                        SlugText.Text("아파트")
+                    ),
+                    SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State, SlugText.Text("유찰 3회"))
                 )
             ),
             ProductItemUiModel(
@@ -208,8 +262,11 @@ data class ProductItemUiModel(
                 isFavorite = true,
                 favoritePersons = 156,
                 infoChipList = listOf(
-                    SlugLabelUiModel(SlugLabelStyle.BuildingInfo.Apartment, "아파트"),
-                    SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State, "유찰 2회")
+                    SlugLabelUiModel(
+                        SlugLabelStyle.BuildingInfo.BuildingType,
+                        SlugText.Text("아파트")
+                    ),
+                    SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State, SlugText.Text("유찰 2회"))
                 )
             ),
             ProductItemUiModel(
@@ -222,8 +279,11 @@ data class ProductItemUiModel(
                 isFavorite = true,
                 favoritePersons = 156,
                 infoChipList = listOf(
-                    SlugLabelUiModel(SlugLabelStyle.BuildingInfo.Apartment, "아파트"),
-                    SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State, "유찰 3회")
+                    SlugLabelUiModel(
+                        SlugLabelStyle.BuildingInfo.BuildingType,
+                        SlugText.Text("아파트")
+                    ),
+                    SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State, SlugText.Text("유찰 3회"))
                 )
             ),
             ProductItemUiModel(
@@ -236,8 +296,11 @@ data class ProductItemUiModel(
                 isFavorite = true,
                 favoritePersons = 156,
                 infoChipList = listOf(
-                    SlugLabelUiModel(SlugLabelStyle.BuildingInfo.Apartment, "아파트"),
-                    SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State, "유찰 2회")
+                    SlugLabelUiModel(
+                        SlugLabelStyle.BuildingInfo.BuildingType,
+                        SlugText.Text("아파트")
+                    ),
+                    SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State, SlugText.Text("유찰 2회"))
                 )
             )
         )

@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,6 +22,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.warehouseinhand.slug.R
+import com.warehouseinhand.slug.ui.component.SlugText
 import com.warehouseinhand.slug.ui.component.image.ImageProcessor
 import com.warehouseinhand.slug.ui.component.image.ImageResource
 import com.warehouseinhand.slug.ui.theme.NeutralLight
@@ -98,7 +98,7 @@ private fun SlugLabel(
         verticalAlignment = Alignment.CenterVertically
     ) {
         frontSlot()
-        Text(text = uiModel.text, color = uiModel.labelStyle.textColor, style = textStyle)
+        Text(text = uiModel.text(), color = uiModel.labelStyle.textColor, style = textStyle)
         backSlot()
     }
 }
@@ -120,22 +120,7 @@ sealed class SlugLabelStyle(
     abstract val textColor: Color
 
     sealed class BuildingInfo : SlugLabelStyle() {
-        data object Apartment : BuildingInfo() {
-            override val background = SlugLabelBackground.Solid(PrimaryLight)
-            override val textColor = Primary
-        }
-
-        data object Villa : BuildingInfo() {
-            override val background = SlugLabelBackground.Solid(PrimaryLight)
-            override val textColor = Primary
-        }
-
-        data object Officetel : BuildingInfo() {
-            override val background = SlugLabelBackground.Solid(PrimaryLight)
-            override val textColor = Primary
-        }
-
-        data object Dagagu : BuildingInfo() {
+        data object BuildingType : BuildingInfo() {
             override val background = SlugLabelBackground.Solid(PrimaryLight)
             override val textColor = Primary
         }
@@ -143,10 +128,6 @@ sealed class SlugLabelStyle(
         data object State : BuildingInfo() {
             override val background = SlugLabelBackground.Solid(NeutralWeak)
             override val textColor = NeutralSubtler
-        }
-
-        companion object {
-            val entries = listOf<BuildingInfo>(Apartment, Villa, Officetel, Dagagu, State)
         }
     }
 
@@ -190,17 +171,17 @@ sealed class SlugLabelBackground() {
 
 data class SlugLabelUiModel(
     val labelStyle: SlugLabelStyle,
-    val text: String,
+    val text: SlugText,
 )
 
 
 @Composable
 @Preview
 fun PreviewSlugLabel() {
-    val text: String = "아파트"
+    val text = SlugText.Text("아파트")
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         listOf(
-            SlugLabelStyle.BuildingInfo.Apartment,
+            SlugLabelStyle.BuildingInfo.BuildingType,
             SlugLabelStyle.GradientBackground.Verified
         ).forEach { it ->
             Column {
@@ -228,7 +209,7 @@ fun PreviewSlugLabel() {
         SlugLabelLarge(
             SlugLabelUiModel(
                 labelStyle = SlugLabelStyle.GradientBackground.Verified,
-                text = "인증매물"
+                text = SlugText.Text("인증매물")
             ),
             frontSlot = {
                 ImageProcessor(

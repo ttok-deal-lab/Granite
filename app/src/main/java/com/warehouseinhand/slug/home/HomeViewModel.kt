@@ -74,42 +74,6 @@ class HomeViewModel @Inject constructor(
             }
             .cachedIn(viewModelScope)
 
-//    val productUiModelList: Flow<PagingData<ProductItemUiModel>> =
-//        remoteSearchRepository.getProductListPaging(
-//            query = SearchQuery(),
-//            onSizeReturn = { totalCount: Long ->
-//                viewModelScope.launch {
-//                    _numberOfProduct.emit(totalCount)
-//                }
-//            })
-//            .map { paging ->
-//                paging.map { domain ->
-//                    domain.toUiModel()
-//                }
-//            }
-//            .cachedIn(viewModelScope)
-
-
-    //1
-//    private val _productUiModelList: MutableStateFlow<List<ProductItemUiModel>> =
-//        MutableStateFlow(emptyList())
-//    val productUiModelList: StateFlow<List<ProductItemUiModel>> =
-//        _productUiModelList
-//            .stateIn(
-//                scope = viewModelScope,
-//                started = SharingStarted.WhileSubscribed(5_000),
-//                initialValue = emptyList()
-//            )
-    //2
-//    val productUiModelList: StateFlow<List<ProductItemUiModel>> =
-//        _productUiModelList
-//            .onStart { requestNewItemList() }
-//            .stateIn(
-//                scope = viewModelScope,
-//                started = SharingStarted.WhileSubscribed(5_000),
-//                initialValue = emptyList()
-//            )
-
     private val _numberOfProduct: MutableStateFlow<Long> = MutableStateFlow(0L)
     val numberOfProduct = _numberOfProduct.asStateFlow()
 
