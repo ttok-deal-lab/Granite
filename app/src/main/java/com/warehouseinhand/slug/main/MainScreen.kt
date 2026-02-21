@@ -1,6 +1,5 @@
 package com.warehouseinhand.slug.main
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,6 +27,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.warehouseinhand.slug.favorite.favoriteNavGraph
 import com.warehouseinhand.slug.home.bottomsheet.HomeBottomSheetContent
@@ -45,9 +45,13 @@ fun MainScreen(
 ) {
 
     val navController = rememberNavController()
-    var selectedItem: BottomBarItemUiModel by remember { mutableStateOf(BottomBarItemUiModel.HOME) }
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val selectedItem = navBackStackEntry?.destination?.route?.let { currentRoute ->
+        BottomBarItemUiModel.entries.find { item ->
+            currentRoute == item.route::class.qualifiedName
+        }
+    } ?: BottomBarItemUiModel.HOME
     val onClick: (BottomBarItemUiModel) -> Unit = {
-        selectedItem = it
         navController.navigate(it.route)
     }
     val bottomSheetType by mainViewModel.isNeedToShowBottomSheet.collectAsStateWithLifecycle(
