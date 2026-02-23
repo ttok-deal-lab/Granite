@@ -47,7 +47,8 @@ class HomeViewModel @Inject constructor(
         MutableStateFlow(FilterButtonState.defaultStateList)
     val stateList get() = _stateList.asStateFlow()
     private val _paginationState = MutableStateFlow(CursorPaginationState<ProductItemUiModel>())
-    val paginationState: StateFlow<CursorPaginationState<ProductItemUiModel>> = _paginationState.asStateFlow()
+    val paginationState: StateFlow<CursorPaginationState<ProductItemUiModel>> =
+        _paginationState.asStateFlow()
 
     private val paginator = CursorPaginator(
         state = _paginationState,
@@ -88,6 +89,9 @@ class HomeViewModel @Inject constructor(
 
     private val _tempProductSize: MutableStateFlow<Long> = MutableStateFlow(0L)
     val tempProductSize get() = _tempProductSize.asStateFlow()
+
+    private val _isTempCountLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val isTempCountLoading: StateFlow<Boolean> = _isTempCountLoading.asStateFlow()
 
 
     private var isFinishedProductFilterSelected = false
@@ -284,6 +288,7 @@ class HomeViewModel @Inject constructor(
                 if (price.start == MIN_PRICE && price.end == MAX_PRICE) -1L to -1L
                 else price.start to price.end
             }
+
             is Price.Above -> price.value to -1L
             is Price.Below -> -1L to price.value
         }
@@ -293,19 +298,24 @@ class HomeViewModel @Inject constructor(
     private fun fetchTempCount(query: SearchQuery) {
         _tempCountJob?.cancel()
         _tempCountJob = viewModelScope.launch {
+            _isTempCountLoading.value = true
             delay(300)
             remoteSearchRepository.getProductListByCursor("", query)
                 .onSuccess { _tempProductSize.emit(it.totalCount) }
+            _isTempCountLoading.value = false
         }
     }
 
     fun fetchTempCountFromTotal() {
-        viewModelScope.launch { _tempProductSize.emit(_numberOfProduct.value) }
+        viewModelScope.launch {
+            _tempProductSize.emit(_numberOfProduct.value)
+        }
     }
 
 
     fun clearTempQuery() {
         _tempCountJob?.cancel()
+        _isTempCountLoading.value = false
         viewModelScope.launch { _tempProductSize.emit(0L) }
     }
 }
@@ -316,7 +326,9 @@ data class SearchQuery(
     val region: com.warehouseinhand.slug.data.network.search.Region = com.warehouseinhand.slug.data.network.search.Region.ALL,
     val district: String = "unkwon",
     val buildType: List<com.warehouseinhand.slug.data.network.search.BuildType> = listOf(com.warehouseinhand.slug.data.network.search.BuildType.ALL),
-    val auctionFailCount: List<com.warehouseinhand.slug.data.network.search.AuctionFailCount> = listOf(com.warehouseinhand.slug.data.network.search.AuctionFailCount.ALL),
+    val auctionFailCount: List<com.warehouseinhand.slug.data.network.search.AuctionFailCount> = listOf(
+        com.warehouseinhand.slug.data.network.search.AuctionFailCount.ALL
+    ),
     val verificationStatus: VerificationStatus = VerificationStatus.ALL,
     val minimumPrice: Long = -1,
     val maximumPrice: Long = -1,

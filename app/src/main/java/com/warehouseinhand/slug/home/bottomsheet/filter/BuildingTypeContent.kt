@@ -22,6 +22,7 @@ fun BuildingFilterContent(
     val selectedOptions: List<BuildingFilterType> by homeViewModel.buildingFilterSelectedList.collectAsStateWithLifecycle() //from viewModel
     val options = BuildingFilterType.entries
     val valueOfItem by homeViewModel.tempProductSize.collectAsStateWithLifecycle()
+    val isLoading by homeViewModel.isTempCountLoading.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) { homeViewModel.fetchTempCountFromTotal() }
 
@@ -35,6 +36,7 @@ fun BuildingFilterContent(
             requestHideBottomSheet()
         },
         onSelectionChanged = { homeViewModel.updateTempBuildingFilter(it) },
+        isLoading = isLoading,
     )
 }
 

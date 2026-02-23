@@ -39,7 +39,7 @@ import androidx.lifecycle.lifecycleScope
 import com.warehouseinhand.slug.R
 import com.warehouseinhand.slug.main.MainActivity
 import com.warehouseinhand.slug.permission.PermissionDataModel.Companion.REQUEST_MAX_LIMIT
-import com.warehouseinhand.slug.ui.component.button.basic.BasicButton
+import com.warehouseinhand.slug.ui.component.button.basic.BasicTextButton
 import com.warehouseinhand.slug.ui.theme.NeutralSubtler
 import com.warehouseinhand.slug.ui.theme.Neutral
 import com.warehouseinhand.slug.ui.theme.NeutralLight
@@ -130,7 +130,7 @@ class PermissionRequestActivity : ComponentActivity() {
                     }
                 }
 
-                BasicButton(
+                BasicTextButton(
                     modifier = Modifier.padding(20.dp),
                     buttonText = stringResource(
                         id = when {

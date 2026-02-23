@@ -35,7 +35,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.warehouseinhand.slug.R
-import com.warehouseinhand.slug.ui.component.button.basic.BasicButton
+import com.warehouseinhand.slug.ui.component.button.basic.BasicTextButton
 import com.warehouseinhand.slug.ui.component.button.basic.BasicButtonSizeType
 import com.warehouseinhand.slug.ui.component.image.ImageProcessor
 import com.warehouseinhand.slug.ui.component.image.ImageResource
@@ -152,7 +152,7 @@ private fun InfoBottomSheetContent(
             }
         }
         Box(Modifier.padding(vertical = 16.dp)) {
-            BasicButton(
+            BasicTextButton(
                 buttonText = stringResource(R.string.detailed_bottom_confirm),
                 sizeType = BasicButtonSizeType.LARGE,
                 onButtonClick = { onDismissClicked() }

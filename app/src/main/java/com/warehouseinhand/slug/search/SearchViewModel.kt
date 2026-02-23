@@ -105,6 +105,9 @@ class SearchViewModel @Inject constructor(
     private val _tempProductSize: MutableStateFlow<Long> = MutableStateFlow(0L)
     val tempProductSize get() = _tempProductSize.asStateFlow()
 
+    private val _isTempCountLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val isTempCountLoading: StateFlow<Boolean> = _isTempCountLoading.asStateFlow()
+
     private var _tempCountJob: Job? = null
 
     private val _queryState = MutableStateFlow(
@@ -375,9 +378,11 @@ class SearchViewModel @Inject constructor(
     private fun fetchTempCount(query: SearchQuery) {
         _tempCountJob?.cancel()
         _tempCountJob = viewModelScope.launch {
+            _isTempCountLoading.value = true
             delay(300)
             remoteSearchRepository.getProductListByCursor("", query)
                 .onSuccess { _tempProductSize.emit(it.totalCount) }
+            _isTempCountLoading.value = false
         }
     }
 
@@ -387,6 +392,7 @@ class SearchViewModel @Inject constructor(
 
     fun clearTempQuery() {
         _tempCountJob?.cancel()
+        _isTempCountLoading.value = false
         viewModelScope.launch { _tempProductSize.emit(0L) }
     }
 }

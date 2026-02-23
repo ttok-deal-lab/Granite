@@ -7,6 +7,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -36,12 +37,12 @@ import com.warehouseinhand.slug.util.blockingClickable
 @Composable
 internal fun BasicButton(
     modifier: Modifier = Modifier,
-    buttonText: String,
     onButtonClick: () -> Unit,
     isDisabled: Boolean = false,
     buttonStyle: BasicButtonStyle = BasicButtonStyle.Fill.PRIMARY,
     sizeType: BasicButtonSizeType = BasicButtonSizeType.LARGE,
-    fillWide: Boolean = true
+    fillWide: Boolean = true,
+    content: @Composable BoxScope.(currentSize: BasicButtonSize, currentColor: ButtonColor) -> Unit
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
@@ -52,8 +53,6 @@ internal fun BasicButton(
     }
 
     val currentColor = buttonStyle.getColors().byState(buttonState)
-
-
     val currentSize = sizeType.getSizes()
     val backgroundShape = RoundedCornerShape(currentSize.radius)
     Box(
@@ -77,17 +76,40 @@ internal fun BasicButton(
             },
         contentAlignment = Alignment.Center,
     ) {
-        Text(
-            text = buttonText,
-            style = currentSize.textStyle,
-            color = currentColor.text
-        )
+        content(currentSize, currentColor)
     }
 }
 
 @Composable
+internal fun BasicTextButton(
+    modifier: Modifier = Modifier,
+    buttonText: String,
+    onButtonClick: () -> Unit,
+    isDisabled: Boolean = false,
+    buttonStyle: BasicButtonStyle = BasicButtonStyle.Fill.PRIMARY,
+    sizeType: BasicButtonSizeType = BasicButtonSizeType.LARGE,
+    fillWide: Boolean = true
+) {
+    BasicButton(
+        modifier = modifier,
+        onButtonClick = onButtonClick,
+        isDisabled = isDisabled,
+        buttonStyle = buttonStyle,
+        sizeType = sizeType,
+        fillWide = fillWide,
+        content = { currentSize, currentColor ->
+            Text(
+                text = buttonText,
+                style = currentSize.textStyle,
+                color = currentColor.text
+            )
+        }
+    )
+}
+
+@Composable
 @Preview(heightDp = 1250)
-fun PreviewBasicPrimaryButton() {
+fun PreviewBasicPrimaryTextButton() {
     val context = LocalContext.current
     val toastIt: (String) -> Unit = {
         Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
@@ -105,7 +127,7 @@ fun PreviewBasicPrimaryButton() {
                     BasicButtonSizeType.entries.forEach { size ->
                         Row {
                             Box(Modifier.weight(1f)) {
-                                BasicButton(
+                                BasicTextButton(
                                     buttonText = "Button",
                                     buttonStyle = it,
                                     sizeType = size,
@@ -116,7 +138,7 @@ fun PreviewBasicPrimaryButton() {
                             }
                             Spacer(Modifier.width(8.dp))
                             Box(Modifier.weight(1f)) {
-                                BasicButton(
+                                BasicTextButton(
                                     buttonText = "Button",
                                     buttonStyle = it,
                                     sizeType = size,
@@ -133,7 +155,7 @@ fun PreviewBasicPrimaryButton() {
                     BasicButtonSizeType.entries.forEach { size ->
                         Row {
                             Box(Modifier.weight(1f)) {
-                                BasicButton(
+                                BasicTextButton(
                                     buttonText = "Button",
                                     buttonStyle = it,
                                     fillWide = false,
@@ -144,7 +166,7 @@ fun PreviewBasicPrimaryButton() {
                             }
                             Spacer(Modifier.width(8.dp))
                             Box(Modifier.weight(1f)) {
-                                BasicButton(
+                                BasicTextButton(
                                     buttonText = "Button",
                                     buttonStyle = it,
                                     fillWide = false,

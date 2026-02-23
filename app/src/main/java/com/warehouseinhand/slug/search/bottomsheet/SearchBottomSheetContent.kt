@@ -49,6 +49,7 @@ fun SearchBottomSheetContent(
         SearchBottomSheetType.BuildingType -> {
             val selectedOptions by searchViewModel.buildingFilterSelectedList.collectAsStateWithLifecycle()
             val valueOfItem by searchViewModel.tempProductSize.collectAsStateWithLifecycle()
+            val isLoading by searchViewModel.isTempCountLoading.collectAsStateWithLifecycle()
 
             LaunchedEffect(Unit) { searchViewModel.fetchTempCountFromTotal() }
 
@@ -62,12 +63,14 @@ fun SearchBottomSheetContent(
                     requestHideBottomSheet()
                 },
                 onSelectionChanged = { searchViewModel.updateTempBuildingFilter(it) },
+                isLoading = isLoading,
             )
         }
 
         SearchBottomSheetType.AuctionState -> {
             val selectedOptions by searchViewModel.auctionStateFilterSelectedList.collectAsStateWithLifecycle()
             val valueOfItem by searchViewModel.tempProductSize.collectAsStateWithLifecycle()
+            val isLoading by searchViewModel.isTempCountLoading.collectAsStateWithLifecycle()
 
             LaunchedEffect(Unit) { searchViewModel.fetchTempCountFromTotal() }
 
@@ -81,6 +84,7 @@ fun SearchBottomSheetContent(
                     requestHideBottomSheet()
                 },
                 onSelectionChanged = { searchViewModel.updateTempAuctionFilter(it) },
+                isLoading = isLoading,
             )
         }
 
@@ -90,6 +94,7 @@ fun SearchBottomSheetContent(
             val maxValue by searchViewModel.maxPrice.collectAsStateWithLifecycle()
             val lastPrice by searchViewModel.priceRange.collectAsStateWithLifecycle()
             var price: Price by remember { mutableStateOf(lastPrice) }
+            val isLoading by searchViewModel.isTempCountLoading.collectAsStateWithLifecycle()
 
             LaunchedEffect(Unit) { searchViewModel.fetchTempCountFromTotal() }
 
@@ -117,7 +122,8 @@ fun SearchBottomSheetContent(
                 onConfirmClicked = {
                     searchViewModel.changePriceRange(price)
                     requestHideBottomSheet()
-                }
+                },
+                isLoading = isLoading,
             )
         }
     }

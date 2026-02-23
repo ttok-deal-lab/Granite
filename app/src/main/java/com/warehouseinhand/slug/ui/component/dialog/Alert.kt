@@ -21,7 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.warehouseinhand.slug.ui.component.button.basic.BasicButton
+import com.warehouseinhand.slug.ui.component.button.basic.BasicTextButton
 import com.warehouseinhand.slug.ui.component.button.basic.BasicButtonStyle
 import com.warehouseinhand.slug.ui.theme.NeutralInverted
 import com.warehouseinhand.slug.ui.theme.NeutralSubtler
@@ -63,7 +63,7 @@ fun OneButtonAlertDialog(
         title = title,
         description = description,
         buttonSpace = {
-            BasicButton(
+            BasicTextButton(
                 buttonText = buttonText,
                 onButtonClick = onButtonClick
             )
@@ -90,14 +90,14 @@ fun DoubleButtonAlertDialog(
             ) {
                 Box(Modifier.weight(1f)) {
 
-                    BasicButton(
+                    BasicTextButton(
                         buttonText = leftButtonText,
                         onButtonClick = onLeftButtonClick,
                         buttonStyle = BasicButtonStyle.Fill.SECONDARY
                     )
                 }
                 Box(Modifier.weight(1f)) {
-                    BasicButton(
+                    BasicTextButton(
                         buttonText = rightButtonText,
                         onButtonClick = onRightButtonClick,
                         buttonStyle = BasicButtonStyle.Fill.PRIMARY

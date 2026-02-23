@@ -9,6 +9,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.absoluteOffset
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -48,6 +53,7 @@ fun PriceRangeFilterContent(
     val maxValue by homeViewModel.maxPrice.collectAsStateWithLifecycle()
     val lastPrice by homeViewModel.priceRange.collectAsStateWithLifecycle()
     var price: Price by remember { mutableStateOf(lastPrice) }
+    val isLoading by homeViewModel.isTempCountLoading.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) { homeViewModel.fetchTempCountFromTotal() }
 
@@ -77,7 +83,8 @@ fun PriceRangeFilterContent(
         maxValue = maxValue,
         price = price,
         onRangeChanged = ::onRangeChanged,
-        onConfirmClicked = onConfirmClicked
+        onConfirmClicked = onConfirmClicked,
+        isLoading = isLoading,
     )
 
 }
@@ -91,6 +98,7 @@ fun <T : Price> PriceRangeFilter(
     price: T,
     onRangeChanged: (Pair<Long, Long>) -> Unit,
     onConfirmClicked: () -> Unit,
+    isLoading: Boolean = false,
 ) {
     val endString = "${numberToCurrency(maxValue)} 이상"//TODO i18n
     val startString = "${numberToCurrency(minValue)}원"//TODO i18n
@@ -174,10 +182,30 @@ fun <T : Price> PriceRangeFilter(
         Box(Modifier.padding(vertical = 16.dp)) {
             BasicButton(
                 modifier = elementDefaultModifier,
-                buttonText = buttonText,
                 buttonStyle = BasicButtonStyle.Fill.PRIMARY,
                 sizeType = BasicButtonSizeType.LARGE,
-                onButtonClick = onConfirmClicked
+                onButtonClick = onConfirmClicked,
+                content = { currentSize, currentColor ->
+                    Row(
+                        modifier = Modifier.absoluteOffset(x = if (isLoading) (-12).dp else 0.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        if (isLoading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(16.dp),
+                                strokeWidth = 2.dp,
+                                color = currentColor.text
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                        }
+                        Text(
+                            text = buttonText,
+                            style = currentSize.textStyle,
+                            color = currentColor.text
+                        )
+                    }
+                }
             )
         }
     }

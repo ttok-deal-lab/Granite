@@ -23,6 +23,7 @@ fun AuctionStateFilterContent(
 
     val options = AuctionStatusFilterType.entries
     val valueOfItem by homeViewModel.tempProductSize.collectAsStateWithLifecycle()
+    val isLoading by homeViewModel.isTempCountLoading.collectAsStateWithLifecycle()
     LaunchedEffect(Unit) { homeViewModel.fetchTempCountFromTotal() }
 
     FilterContent(
@@ -35,6 +36,7 @@ fun AuctionStateFilterContent(
             requestHideBottomSheet()
         },
         onSelectionChanged = { homeViewModel.updateTempAuctionFilter(it) },
+        isLoading = isLoading,
     )
 }
 

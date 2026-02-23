@@ -24,7 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.warehouseinhand.slug.R
 import com.warehouseinhand.slug.setting.SettingTopBar
-import com.warehouseinhand.slug.ui.component.button.basic.BasicButton
+import com.warehouseinhand.slug.ui.component.button.basic.BasicTextButton
 import com.warehouseinhand.slug.ui.component.image.ImageProcessor
 import com.warehouseinhand.slug.ui.component.image.ImageResource
 import com.warehouseinhand.slug.ui.theme.Neutral
@@ -105,7 +105,7 @@ fun WithdrawPage(onBackClick: () -> Unit, onWithDrawClick: () -> Unit) {
             }
             Spacer(modifier = Modifier.weight(1f))
             Box(modifier = Modifier.padding(20.dp)) {
-                BasicButton(
+                BasicTextButton(
                     isDisabled = !isAllChecked,
                     buttonText = withDrawButtonText,
                     onButtonClick = onWithDrawClick
