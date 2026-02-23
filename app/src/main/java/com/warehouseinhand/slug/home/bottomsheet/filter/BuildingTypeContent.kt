@@ -1,6 +1,8 @@
 package com.warehouseinhand.slug.home.bottomsheet.filter
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,7 +21,9 @@ fun BuildingFilterContent(
     val filterName = stringResource(R.string.filter_header_building)
     val selectedOptions: List<BuildingFilterType> by homeViewModel.buildingFilterSelectedList.collectAsStateWithLifecycle() //from viewModel
     val options = BuildingFilterType.entries
-    val valueOfItem = 1_200
+    val valueOfItem by homeViewModel.tempProductSize.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) { homeViewModel.fetchTempCountFromTotal() }
 
     FilterContent(
         filterName = filterName,
@@ -30,6 +34,7 @@ fun BuildingFilterContent(
             homeViewModel.changeBuildingFilterSelectList(list)
             requestHideBottomSheet()
         },
+        onSelectionChanged = { homeViewModel.updateTempBuildingFilter(it) },
     )
 }
 

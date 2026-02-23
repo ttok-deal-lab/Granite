@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,6 +49,8 @@ fun PriceRangeFilterContent(
     val lastPrice by homeViewModel.priceRange.collectAsStateWithLifecycle()
     var price: Price by remember { mutableStateOf(lastPrice) }
 
+    LaunchedEffect(Unit) { homeViewModel.fetchTempCountFromTotal() }
+
     fun onRangeChanged(value: Pair<Long, Long>) {
         val result = when {
             value.first == minValue && value.second != maxValue ->
@@ -59,6 +63,7 @@ fun PriceRangeFilterContent(
                 Price.Range(value.first, value.second)
         }
         price = result
+        homeViewModel.updateTempPriceRange(result)
     }
 
     val onConfirmClicked = {

@@ -1,12 +1,15 @@
 package com.warehouseinhand.slug.search.bottomsheet
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewModelScope
 import com.warehouseinhand.slug.R
 import com.warehouseinhand.slug.home.AuctionStatusFilterType
 import com.warehouseinhand.slug.home.BuildingFilterType
@@ -15,6 +18,7 @@ import com.warehouseinhand.slug.home.bottomsheet.filter.FilterContent
 import com.warehouseinhand.slug.home.bottomsheet.filter.PriceRangeFilter
 import com.warehouseinhand.slug.home.bottomsheet.sorting.SortingTypeItemList
 import com.warehouseinhand.slug.search.SearchViewModel
+import kotlinx.coroutines.launch
 
 sealed interface SearchBottomSheetType {
     object ListSorting : SearchBottomSheetType
@@ -45,6 +49,9 @@ fun SearchBottomSheetContent(
         SearchBottomSheetType.BuildingType -> {
             val selectedOptions by searchViewModel.buildingFilterSelectedList.collectAsStateWithLifecycle()
             val valueOfItem by searchViewModel.tempProductSize.collectAsStateWithLifecycle()
+
+            LaunchedEffect(Unit) { searchViewModel.fetchTempCountFromTotal() }
+
             FilterContent(
                 filterName = stringResource(R.string.filter_header_building),
                 selectedOptions = selectedOptions,
@@ -54,12 +61,16 @@ fun SearchBottomSheetContent(
                     searchViewModel.changeBuildingFilterSelectList(list)
                     requestHideBottomSheet()
                 },
+                onSelectionChanged = { searchViewModel.updateTempBuildingFilter(it) },
             )
         }
 
         SearchBottomSheetType.AuctionState -> {
             val selectedOptions by searchViewModel.auctionStateFilterSelectedList.collectAsStateWithLifecycle()
             val valueOfItem by searchViewModel.tempProductSize.collectAsStateWithLifecycle()
+
+            LaunchedEffect(Unit) { searchViewModel.fetchTempCountFromTotal() }
+
             FilterContent(
                 filterName = stringResource(R.string.filter_header_auction_status),
                 selectedOptions = selectedOptions,
@@ -69,6 +80,7 @@ fun SearchBottomSheetContent(
                     searchViewModel.changeAuctionFilterSelectList(list)
                     requestHideBottomSheet()
                 },
+                onSelectionChanged = { searchViewModel.updateTempAuctionFilter(it) },
             )
         }
 
@@ -78,6 +90,8 @@ fun SearchBottomSheetContent(
             val maxValue by searchViewModel.maxPrice.collectAsStateWithLifecycle()
             val lastPrice by searchViewModel.priceRange.collectAsStateWithLifecycle()
             var price: Price by remember { mutableStateOf(lastPrice) }
+
+            LaunchedEffect(Unit) { searchViewModel.fetchTempCountFromTotal() }
 
             fun onRangeChanged(value: Pair<Long, Long>) {
                 val result = when {
@@ -91,6 +105,7 @@ fun SearchBottomSheetContent(
                         Price.Range(value.first, value.second)
                 }
                 price = result
+                searchViewModel.updateTempPriceRange(result)
             }
 
             PriceRangeFilter(

@@ -41,6 +41,7 @@ internal fun <T : FilterOption> FilterContent(
     options: List<T>,
     onConfirmClicked: (List<T>) -> Unit,
     buttonText: String,
+    onSelectionChanged: (List<T>) -> Unit = {},
 ) {
     val selectedStateList = remember { selectedOptions.toMutableStateList() }
     val onChipClicked = remember {
@@ -49,10 +50,14 @@ internal fun <T : FilterOption> FilterContent(
                 selectedStateList.remove(option)
             else
                 selectedStateList.add(option)
+            onSelectionChanged(selectedStateList.toList())
         }
     }
     val onRedoClick: () -> Unit = remember {
-        { selectedStateList.clear() }
+        {
+            selectedStateList.clear()
+            onSelectionChanged(emptyList())
+        }
     }
 
     Column {

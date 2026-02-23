@@ -105,12 +105,15 @@ class SearchViewModel @Inject constructor(
     private val _tempProductSize: MutableStateFlow<Long> = MutableStateFlow(0L)
     val tempProductSize get() = _tempProductSize.asStateFlow()
 
+    private var _tempCountJob: Job? = null
+
     private val _queryState = MutableStateFlow(
         SearchQuery(keyword = route?.keyword ?: "unknown")
     )
 
     private val _paginationState = MutableStateFlow(CursorPaginationState<ProductItemUiModel>())
-    val paginationState: StateFlow<CursorPaginationState<ProductItemUiModel>> = _paginationState.asStateFlow()
+    val paginationState: StateFlow<CursorPaginationState<ProductItemUiModel>> =
+        _paginationState.asStateFlow()
 
     private val paginator = CursorPaginator(
         state = _paginationState,
@@ -133,7 +136,9 @@ class SearchViewModel @Inject constructor(
                 .collectLatest {
                     _numberOfProduct.emit(0L)
                     paginator.loadInitial()
-                    _numberOfProduct.emit(_paginationState.value.totalCount)
+                    val totalCount = _paginationState.value.totalCount
+                    _numberOfProduct.emit(totalCount)
+                    _tempProductSize.emit(totalCount)
                 }
         }
     }
@@ -344,5 +349,44 @@ class SearchViewModel @Inject constructor(
             "서울시 서초구", "서일빌라", "서촌 아이파크", "서초레미안"
         ).filter { it.contains(keyword, ignoreCase = true) }
         _autoCompleteResults.update { dummyResults }
+    }
+
+    fun updateTempBuildingFilter(tempList: List<BuildingFilterType>) {
+        fetchTempCount(_queryState.value.copy(buildType = tempList.toBuildType()))
+    }
+
+    fun updateTempAuctionFilter(tempList: List<AuctionStatusFilterType>) {
+        fetchTempCount(_queryState.value.copy(auctionFailCount = tempList.toAuctionFailCount()))
+    }
+
+    fun updateTempPriceRange(price: Price) {
+        val (min, max) = when (price) {
+            is Price.Range -> {
+                if (price.start == MIN_PRICE && price.end == MAX_PRICE) -1L to -1L
+                else price.start to price.end
+            }
+
+            is Price.Above -> price.value to -1L
+            is Price.Below -> -1L to price.value
+        }
+        fetchTempCount(_queryState.value.copy(minimumPrice = min, maximumPrice = max))
+    }
+
+    private fun fetchTempCount(query: SearchQuery) {
+        _tempCountJob?.cancel()
+        _tempCountJob = viewModelScope.launch {
+            delay(300)
+            remoteSearchRepository.getProductListByCursor("", query)
+                .onSuccess { _tempProductSize.emit(it.totalCount) }
+        }
+    }
+
+    fun fetchTempCountFromTotal() {
+        viewModelScope.launch { _tempProductSize.emit(_numberOfProduct.value) }
+    }
+
+    fun clearTempQuery() {
+        _tempCountJob?.cancel()
+        viewModelScope.launch { _tempProductSize.emit(0L) }
     }
 }

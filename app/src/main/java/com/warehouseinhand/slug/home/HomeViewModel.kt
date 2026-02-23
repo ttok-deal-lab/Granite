@@ -18,6 +18,8 @@ import com.warehouseinhand.slug.util.CursorPaginator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -35,7 +37,7 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _queryState = MutableStateFlow(SearchQuery())
-    val queryState = _queryState.asStateFlow()
+//    val queryState = _queryState.asStateFlow()
 
     private val _selectedSortingType: MutableStateFlow<SortingType> =
         MutableStateFlow(SortingType.NEWEST)
@@ -60,6 +62,8 @@ class HomeViewModel @Inject constructor(
         }
     )
 
+    private var _tempCountJob: Job? = null
+
     init {
         viewModelScope.launch {
             _queryState
@@ -68,7 +72,9 @@ class HomeViewModel @Inject constructor(
                 .collectLatest {
                     _numberOfProduct.emit(0L)
                     paginator.loadInitial()
-                    _numberOfProduct.emit(_paginationState.value.totalCount)
+                    val totalCount = _paginationState.value.totalCount
+                    _numberOfProduct.emit(totalCount)
+                    _tempProductSize.emit(totalCount)
                 }
         }
     }
@@ -158,8 +164,6 @@ class HomeViewModel @Inject constructor(
                 ),
             )
         }
-
-
     }
 
     fun addRecentItem(id: String) {
@@ -265,6 +269,45 @@ class HomeViewModel @Inject constructor(
         refreshPagingByCurrentFilters()
     }
     //HOME location
+
+    fun updateTempBuildingFilter(tempList: List<BuildingFilterType>) {
+        fetchTempCount(_queryState.value.copy(buildType = tempList.toBuildType()))
+    }
+
+    fun updateTempAuctionFilter(tempList: List<AuctionStatusFilterType>) {
+        fetchTempCount(_queryState.value.copy(auctionFailCount = tempList.toAuctionFailCount()))
+    }
+
+    fun updateTempPriceRange(price: Price) {
+        val (min, max) = when (price) {
+            is Price.Range -> {
+                if (price.start == MIN_PRICE && price.end == MAX_PRICE) -1L to -1L
+                else price.start to price.end
+            }
+            is Price.Above -> price.value to -1L
+            is Price.Below -> -1L to price.value
+        }
+        fetchTempCount(_queryState.value.copy(minimumPrice = min, maximumPrice = max))
+    }
+
+    private fun fetchTempCount(query: SearchQuery) {
+        _tempCountJob?.cancel()
+        _tempCountJob = viewModelScope.launch {
+            delay(300)
+            remoteSearchRepository.getProductListByCursor("", query)
+                .onSuccess { _tempProductSize.emit(it.totalCount) }
+        }
+    }
+
+    fun fetchTempCountFromTotal() {
+        viewModelScope.launch { _tempProductSize.emit(_numberOfProduct.value) }
+    }
+
+
+    fun clearTempQuery() {
+        _tempCountJob?.cancel()
+        viewModelScope.launch { _tempProductSize.emit(0L) }
+    }
 }
 
 

@@ -1,6 +1,8 @@
 package com.warehouseinhand.slug.home.bottomsheet.filter
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,6 +23,7 @@ fun AuctionStateFilterContent(
 
     val options = AuctionStatusFilterType.entries
     val valueOfItem by homeViewModel.tempProductSize.collectAsStateWithLifecycle()
+    LaunchedEffect(Unit) { homeViewModel.fetchTempCountFromTotal() }
 
     FilterContent(
         filterName = filterName,
@@ -30,7 +33,8 @@ fun AuctionStateFilterContent(
         onConfirmClicked = { list ->
             homeViewModel.changeAuctionFilterSelectList(list)
             requestHideBottomSheet()
-        }
+        },
+        onSelectionChanged = { homeViewModel.updateTempAuctionFilter(it) },
     )
 }
 
