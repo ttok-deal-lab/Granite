@@ -82,7 +82,7 @@ private fun TermsPage(url: String) {
 
 private const val TERMS_LIST = "TERMS_LIST"
 private const val TERMS_SERVICE = "TERMS_SERVICE"
-private const val TERMS_USER_INFO = "TERMS_SERVICE"
+private const val TERMS_USER_INFO = "TERMS_USER_INFO"
 private const val SERVICE_URL =
     "https://acoustic-bovid-71a.notion.site/v1-2ba5ff9f915c80f4b458ef4d48083820"
 private const val USER_URL =
