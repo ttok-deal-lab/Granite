@@ -1,6 +1,5 @@
 package com.warehouseinhand.slug.data.local.user
 
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.longPreferencesKey
@@ -40,7 +39,6 @@ class LocalUserDataRepository @Inject constructor(
             SlugToken(
                 accessToken = userDataStore.getStoredData(key = ACCESS_TOKEN).getOrThrow(),
             )
-//                .also { Log.d("TESTTEST", "getUserSlugToken: ${it.accessToken}") }
         }
 
     suspend fun getUserAccessToken(): Result<String> =

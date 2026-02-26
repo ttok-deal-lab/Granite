@@ -1,6 +1,5 @@
 package com.warehouseinhand.slug.ui.component.maps
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -50,9 +49,6 @@ private fun KakaoMap(
                         // 지도 생명 주기 콜백: 지도 로딩 중 에러가 발생했을 때 호출
                         override fun onMapError(exception: Exception?) {
                             // TODO : error callback 처리
-                            Log.d("TESTTEST", "onMapError: $exception")
-//                            makeToast(context = context, message = "지도를 불러오는 중 알 수 없는 에러가 발생했습니다.\n onMapError: $exception")
-
                         }
                     },
                     object : KakaoMapReadyCallback() {

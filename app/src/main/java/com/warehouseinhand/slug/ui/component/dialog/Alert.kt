@@ -1,6 +1,5 @@
 package com.warehouseinhand.slug.ui.component.dialog
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -117,7 +116,6 @@ fun PreviewAlertDialogOneButton() {
 
     val context = LocalContext.current
     val toastIt: (String) -> Unit = {
-        Log.d("TESTTEST", it)
         Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
     }
     Column(

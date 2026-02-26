@@ -1,6 +1,5 @@
 package com.warehouseinhand.slug.data.local.recent
 
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.emptyPreferences
@@ -40,15 +39,11 @@ internal class RecentItemsDataStoreManager @Inject constructor(
                 ?.let { Json.decodeFromString<List<String>>(it) }
                 ?: emptyList()
 
-            Log.d("TESTTEST", "addRecentItem: $id")
             buildList {
                 add(id)                                        // 새 아이템을 앞에
                 addAll(currentList.filter { it != id })        // 중복 제거
             }
                 .take(maxSize)                                 // MAX 초과 시 trim
-                .also {
-                    Log.d("TESTTEST", "addRecentItem: list ${it.joinToString(separator = ", ")}")
-                }
                 .let { Json.encodeToString(value = it) }
         }
     }

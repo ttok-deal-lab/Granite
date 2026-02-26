@@ -3,7 +3,6 @@ package com.warehouseinhand.slug.login
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.Toast
@@ -157,13 +156,6 @@ class LogInActivity : ComponentActivity() {
 
     private val socialLoginResultCallback = object : SocialLoginResultCallback {
         override fun onSuccess(token: String, email: String, type: SocialLoginType) {
-//            Log.d("TESTTEST", "onSuccess: ${type.name} Login")
-//            Log.d(
-//                "TESTTEST", """
-//                    |onSuccess: email - $email
-//                    |onSuccess: token - $token
-//                    |""".trimMargin()
-//            )
             SlugFirebaseMessagingService().registerFcmToken()
             if (email.isNotEmpty()) {
                 Firebase.crashlytics.setUserId(email)
@@ -189,7 +181,6 @@ class LogInActivity : ComponentActivity() {
                 }
             }
 //            val customException = Exception("${type.name} : ${exception.localizedMessage}")
-//            Log.d("TESTTEST", "onFailure ${exception.message}")
 //            Logger.fe(customException)//TODO : log 처리
         }
     }
@@ -199,7 +190,6 @@ class LogInActivity : ComponentActivity() {
         loginViewModel.requestUserAuth(
             snsAccessToken = snsAccessToken, type = type,
             doAfterSuccess = {
-                Log.d("TESTTEST", "requestUserAuth onSuccess:!! ")
                 moveToNextActivity()
             })
     }
