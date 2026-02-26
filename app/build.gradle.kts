@@ -27,7 +27,6 @@ android {
         versionName = "0.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "BASE_URL", "\"https://REDACTED_BASE_URL/\"")
     }
 
     buildTypes {
@@ -76,6 +75,7 @@ fun VariantDimension.addBuildConfigField(name: String, propertyKey: String = nam
 
 fun VariantDimension.sharedAppKeys() {
     manifestPlaceholders["KAKAO_APP_KEY"] = getApiKey("KAKAO_APP_KEY_MANIFEST")
+    addBuildConfigField("BASE_URL")
     addBuildConfigField("KAKAO_APP_KEY", "KAKAO_APP_KEY")
     addBuildConfigField("APPLE_CLIENT_ID", "APPLE_CLIENT_ID")
     addBuildConfigField("GOOGLE_APP_KEY", "GOOGLE_APP_KEY")
