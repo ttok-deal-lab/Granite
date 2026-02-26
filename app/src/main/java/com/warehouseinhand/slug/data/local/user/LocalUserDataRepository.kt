@@ -39,9 +39,8 @@ class LocalUserDataRepository @Inject constructor(
         kotlin.runCatching {
             SlugToken(
                 accessToken = userDataStore.getStoredData(key = ACCESS_TOKEN).getOrThrow(),
-            ).also {
-                Log.d("TESTTEST", "getUserSlugToken: ${it.accessToken}")
-            }
+            )
+//                .also { Log.d("TESTTEST", "getUserSlugToken: ${it.accessToken}") }
         }
 
     suspend fun getUserAccessToken(): Result<String> =
