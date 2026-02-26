@@ -104,8 +104,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.androidx.navigation.compose)
 
-    //accompanist
-    implementation(libs.accompanist.webview)
     //image
     implementation(libs.landscapist.image)
     implementation(libs.landscapist.placeholder)
