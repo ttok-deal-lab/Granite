@@ -7,7 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
 import android.os.Build
-import android.util.Log
+
 import androidx.core.app.NotificationCompat
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
@@ -20,7 +20,6 @@ import kotlin.coroutines.suspendCoroutine
 class SlugFirebaseMessagingService : FirebaseMessagingService() {
     override fun onNewToken(token: String) {
         super.onNewToken(token)
-        Log.d(TAG,"Refreshed token: $token")
         // TODO: send your new token to the server
     }
 
@@ -29,14 +28,12 @@ class SlugFirebaseMessagingService : FirebaseMessagingService() {
 
         // Check if message contains a data payload. : 데이터 메시지
         if (remoteMessage.data.isNotEmpty()) {
-            Log.d(TAG,"Message data payload: ${remoteMessage.data}")
             val body = remoteMessage.data["body"]
             requestNotification(body = body)
         }
 
         // Check if message contains a notification payload. : 알림 메시지
         remoteMessage.notification?.let {
-            Log.d(TAG,"Message Notification Body: ${it.body}")
             val body = remoteMessage.notification!!.body
             requestNotification(body = body)
         }
