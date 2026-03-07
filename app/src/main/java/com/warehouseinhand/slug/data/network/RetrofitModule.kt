@@ -8,6 +8,9 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -17,6 +20,7 @@ import okhttp3.Request
 import okhttp3.Response
 import okhttp3.ResponseBody.Companion.toResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
+import android.util.Log
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Qualifier
 import javax.inject.Singleton
@@ -44,7 +48,8 @@ internal object RetrofitModule {
             .addInterceptor { chain ->
                 interceptorForTokenAndError(
                     chain,
-                    localUserDataRepository::getUserSlugToken
+                    localUserDataRepository::getUserSlugToken,
+                    localUserDataRepository::setUserAccessToken
                 )
             }
             .retryOnConnectionFailure(false)
@@ -70,6 +75,7 @@ internal object RetrofitModule {
     private fun interceptorForTokenAndError(
         chain: Interceptor.Chain,
         getToken: suspend () -> Result<SlugToken>,
+        saveAccessToken: suspend (String) -> Result<Unit>,
     ): Response {
 //        chain.request().logByNetworkModel(networkConfigModel = networkConfigModel)
         val userToken = runBlocking { getToken().getOrNull() }//TODO 수정되어야함
@@ -112,11 +118,18 @@ internal object RetrofitModule {
         val originalPath = chain.request().url.encodedPath
         var currentResponse = responseWithAccess(chain, userToken.accessToken)
 
-        //REFRESH TODO: 리프래시 구현이후 진행
-//        if (currentResponse.isNeedToRefresh) {
-//            currentResponse.closeQuietly()
-//            currentResponse = responseWithRefreshed(chain, networkConfigModel)
-//        }
+        // 서버가 응답 헤더에 새 토큰을 내려주면 로컬에 갱신
+        currentResponse.header("Authorization")?.let { newAuth ->
+            val newToken = newAuth
+                .removePrefix("Bearer ").removePrefix("bearer ")
+                .trim()
+            if (newToken.isNotEmpty() && newToken != userToken.accessToken) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    saveAccessToken(newToken)
+                        .onFailure { Log.e("RetrofitModule", "토큰 갱신 저장 실패", it) }
+                }
+            }
+        }
 
         // Successful Response
         if (currentResponse.isSuccessful) {
