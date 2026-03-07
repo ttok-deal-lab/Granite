@@ -1,5 +1,7 @@
 package com.warehouseinhand.slug.domain.sales
 
+import com.warehouseinhand.slug.domain.court.Court
+
 data class CourtSaleDetail(
     val id: Long,
     val salesNumber: String,
@@ -36,6 +38,7 @@ data class CourtSaleDetail(
     val appraisalDocuments: List<AppraisalDocument>,
     val nearbySalesStats: List<NearbySalesStat>,
     val rightsAnalysis: List<RightsAnalysis>,
+    val court: Court?,
 )
 
 data class SalesDetail(

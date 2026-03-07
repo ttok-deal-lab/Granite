@@ -14,6 +14,7 @@ import com.warehouseinhand.slug.domain.sales.SalesBuilding
 import com.warehouseinhand.slug.domain.sales.SalesDetail
 import com.warehouseinhand.slug.domain.sales.SalesItemDetail
 import com.warehouseinhand.slug.domain.sales.SalesPicture
+import com.warehouseinhand.slug.domain.court.Court
 
 data class CourtSaleDetailResponseDTO(
     @SerializedName("id")
@@ -124,6 +125,9 @@ data class CourtSaleDetailResponseDTO(
 
     @SerializedName("rightsAnalysis")
     val rightsAnalysis: List<RightsAnalysisDTO>,
+
+    @SerializedName("court")
+    val court: CourtDTO?,
 ) : MapperToDomain<CourtSaleDetail> {
     override fun toDomain(): CourtSaleDetail =
         CourtSaleDetail(
@@ -162,6 +166,7 @@ data class CourtSaleDetailResponseDTO(
             appraisalDocuments = appraisalDocuments.map { it.toDomain() },
             nearbySalesStats = nearbySalesStats.map { it.toDomain() },
             rightsAnalysis = rightsAnalysis.map { it.toDomain() },
+            court = court?.toDomain(),
         )
 }
 

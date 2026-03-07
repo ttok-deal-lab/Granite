@@ -58,6 +58,7 @@ fun CourtInfo(uiModel: CourtInfoUiModel, onMapFocused: (Boolean) -> Unit) {
 data class CourtInfoUiModel(
     val courtName: String,
     val courtTeam: String,
+    val courtAddress: String,
     val saleDate: String,
     val bidTime: String,
     val openingTime: String,
@@ -68,6 +69,7 @@ data class CourtInfoUiModel(
         val preview = CourtInfoUiModel(
             courtName = "성남지원",
             courtTeam = "경매 2개",
+            courtAddress = "서울특별시 서초구 서초중앙로 157",
             saleDate = "2025.05.05",
             bidTime = "10:00 - 11:10",
             openingTime = "11:30",

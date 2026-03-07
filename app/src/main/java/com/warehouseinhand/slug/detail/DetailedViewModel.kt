@@ -157,7 +157,7 @@ private fun CourtSaleDetail.toCHeckCardList(): List<AuctionCardUiModel> = listOf
         DetailBottomSheetType.InfoSheetType.TypeOfAuction
     ),
     AuctionCardUiModel(
-        name = "임차인", value = "1차 MVP 논의 필요", isCritical = true,
+        name = "임차인", value = "대항력 있음", isCritical = true,
         DetailBottomSheetType.InfoSheetType.Lessee
     ),
     AuctionCardUiModel(
@@ -187,13 +187,14 @@ private fun CourtSaleDetail.toAuctionHistoryUiModel(): AuctionHistoryUiModel =
 
 private fun CourtSaleDetail.toCourtInfoUiModel(): CourtInfoUiModel =
     CourtInfoUiModel(
-        courtName = courtCode,
+        courtName = court?.name ?: courtCode,
         courtTeam = courtTeam,
+        courtAddress = court?.address ?: "",
         saleDate = salesDateTime.extractDateFromDateAndTime(),
         bidTime = salesDetails.first().timeStamp.extractTimeHHmm(),
         openingTime = " TODO 논의 필요",
-        lat = 37.453145,
-        lng = 127.159211
+        lat = court?.latitude ?: 0.0,
+        lng = court?.longitude ?: 0.0,
     )
 
 private fun CourtSaleDetail.toLesseesRaw(): List<LesseeInfo> =

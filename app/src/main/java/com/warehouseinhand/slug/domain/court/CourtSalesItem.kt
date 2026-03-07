@@ -11,4 +11,5 @@ data class CourtSalesItem(
     val failBidCount: Int,
     val zzimCount: Long,
     val soldOut: Boolean,
+    val court: Court? = null,
 )

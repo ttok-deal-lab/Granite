@@ -53,7 +53,10 @@ data class CourtSalesCursorItemDTO(
     val zzimCount: Int,
 
     @SerializedName("soldOut")
-    val soldOut: Boolean
+    val soldOut: Boolean,
+
+    @SerializedName("court")
+    val court: CourtDTO?,
 ): MapperToDomain<CourtSalesSummary> {
     override fun toDomain(): CourtSalesSummary = CourtSalesSummary(
         id = id,
@@ -66,6 +69,7 @@ data class CourtSalesCursorItemDTO(
         failBidCount = failBidCount,
         zzimCount = zzimCount,
         soldOut = soldOut,
-        isFavorite = null
+        isFavorite = null,
+        court = court?.toDomain()
     )
 }

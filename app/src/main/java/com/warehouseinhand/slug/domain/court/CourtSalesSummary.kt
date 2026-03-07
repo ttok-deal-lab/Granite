@@ -25,5 +25,7 @@ data class CourtSalesSummary(
     val soldOut: Boolean,
 
     /** "내가 찜했는지"는 보통 서버/로컬 조합이라 Domain에서 optional로 둠 */
-    val isFavorite: Boolean? = null
+    val isFavorite: Boolean? = null,
+
+    val court: Court? = null,
 )

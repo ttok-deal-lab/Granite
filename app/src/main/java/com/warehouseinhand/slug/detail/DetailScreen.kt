@@ -195,7 +195,7 @@ private fun PreviewDetailPage() {
 
     SlugTheme {
         DetailScreen(
-            uiState = CourtSaleDetailUiState.preview,
+            uiState = CourtSaleDetailUiState.preview.copy(isLoading = false),
             onBackButtonClicked = {},
             likeClicked = {},
         )

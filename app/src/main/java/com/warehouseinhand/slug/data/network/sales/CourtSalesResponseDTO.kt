@@ -34,7 +34,10 @@ data class CourtSalesResponseDTO(
     val zzimCount: Long,
 
     @SerializedName("soldOut")
-    val soldOut: Boolean
+    val soldOut: Boolean,
+
+    @SerializedName("court")
+    val court: CourtDTO?,
 ) : MapperToDomain<CourtSalesItem> {
 
     override fun toDomain(): CourtSalesItem = CourtSalesItem(
@@ -47,6 +50,7 @@ data class CourtSalesResponseDTO(
         salesPicture = salesPicture,
         failBidCount = failBidCount,
         zzimCount = zzimCount,
-        soldOut = soldOut
+        soldOut = soldOut,
+        court = court?.toDomain()
     )
 }
