@@ -30,6 +30,9 @@ class RemoteSearchRepository @Inject constructor(
             ).toDomain()
         }
 
+    suspend fun searchAutoComplete(keyword: String): Result<List<String>> =
+        runCatching { searchService.searchAutoComplete(keyword) }
+
     suspend fun getProductListByCursorWithFavorites(
         nextCursor: String?,
         query: SearchQuery

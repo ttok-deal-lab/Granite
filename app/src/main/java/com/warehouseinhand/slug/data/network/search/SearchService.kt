@@ -1,6 +1,7 @@
 package com.warehouseinhand.slug.data.network.search
 
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface SearchService {
@@ -18,6 +19,11 @@ interface SearchService {
         @Query("nextCursor") nextCursor: String? = "unknown",
         @Query("sort") sort: Sort? = Sort.LATEST_REGISTERED,
     ): SearchResponseDTO
+
+    @GET("$CONTEXT/$VERSION/$SEARCH/{keyword}")
+    suspend fun searchAutoComplete(
+        @Path("keyword") keyword: String,
+    ): List<String>
 
     companion object {
         private const val CONTEXT: String = "api/sherbet-api/api"

@@ -344,14 +344,10 @@ class SearchViewModel @Inject constructor(
         recentSearchRepository.addRecentSearch(keyword)
     }
 
-    private fun fetchAutoComplete(keyword: String) {
-        // TODO: API에서 자동완성 결과 가져오기
-        // 임시로 더미 데이터 사용
-        val dummyResults = listOf(
-            "서울시", "서울시 강동구", "서울시 관악구", "서울시 영등포구",
-            "서울시 서초구", "서일빌라", "서촌 아이파크", "서초레미안"
-        ).filter { it.contains(keyword, ignoreCase = true) }
-        _autoCompleteResults.update { dummyResults }
+    private suspend fun fetchAutoComplete(keyword: String) {
+        remoteSearchRepository.searchAutoComplete(keyword)
+            .onSuccess { results -> _autoCompleteResults.update { results } }
+            .onFailure { _autoCompleteResults.update { emptyList() } }
     }
 
     fun updateTempBuildingFilter(tempList: List<BuildingFilterType>) {
