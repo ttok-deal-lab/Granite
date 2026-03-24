@@ -158,12 +158,12 @@ private fun Round(index: Int, round: AuctionRound) {
                 style = SlugTypographyStyle.BodySmallBold,
                 color = NeutralSubtler
             )
-            Spacer(Modifier.weight(1f))
-            //TODO 이동이 필요한 Ui 같음 확인 필요!
-            ImageProcessor(
-                modifier = Modifier.size(16.dp),
-                imageResource = ImageResource.Id(R.drawable.arrow_right_16_16)
-            )
+//            Spacer(Modifier.weight(1f))
+//            //TODO 이동이 필요한 Ui 같음 확인 필요!
+//            ImageProcessor(
+//                modifier = Modifier.size(16.dp),
+//                imageResource = ImageResource.Id(R.drawable.arrow_right_16_16)
+//            )
         }
         Row(
             modifier = Modifier.fillMaxWidth(),
