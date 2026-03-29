@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.warehouseinhand.slug.data.local.search.RecentSearchRepository
 import com.warehouseinhand.slug.data.network.search.RemoteSearchRepository
+import com.warehouseinhand.slug.data.network.search.SoldOutStatus
 import com.warehouseinhand.slug.data.network.search.VerificationStatus
 import com.warehouseinhand.slug.home.AuctionStatusFilterType
 import com.warehouseinhand.slug.home.AuctionStatusFilterType.Companion.toAuctionFailCount
@@ -328,12 +329,14 @@ class SearchViewModel @Inject constructor(
         }
 
         val sort = selectedSortingType.value.toSort()
+        val soldOutStatus = if (isFinishedProductFilterSelected) SoldOutStatus.SOLD_OUT else SoldOutStatus.ALL
 
         return SearchQuery(
             keyword = _searchKeyword.value.ifBlank { "unknown" },
             buildType = buildType,
             auctionFailCount = auctionFailCount,
             verificationStatus = verificationStatus,
+            soldOutStatus = soldOutStatus,
             minimumPrice = minPrice,
             maximumPrice = maxPrice,
             sort = sort

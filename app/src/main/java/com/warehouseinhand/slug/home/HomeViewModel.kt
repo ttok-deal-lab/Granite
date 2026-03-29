@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.warehouseinhand.slug.data.local.recent.RecentItemRepository
 import com.warehouseinhand.slug.data.network.search.RemoteSearchRepository
+import com.warehouseinhand.slug.data.network.search.SoldOutStatus
 import com.warehouseinhand.slug.data.network.search.Sort
 import com.warehouseinhand.slug.data.network.search.VerificationStatus
 import com.warehouseinhand.slug.home.AuctionStatusFilterType.Companion.toAuctionFailCount
@@ -202,6 +203,7 @@ class HomeViewModel @Inject constructor(
         }
 
         val sort = selectedSortingType.value.toSort()
+        val soldOutStatus = if (isFinishedProductFilterSelected) SoldOutStatus.SOLD_OUT else SoldOutStatus.ALL
 
         // 지역 예시 (네 Location enum에 맞춰서 변환 함수 만들면 됨)
         val region = selectedMainLocation.value.toRegion()
@@ -214,6 +216,7 @@ class HomeViewModel @Inject constructor(
             buildType = buildType,
             auctionFailCount = auctionFailCount,
             verificationStatus = verificationStatus,
+            soldOutStatus = soldOutStatus,
             minimumPrice = minPrice,
             maximumPrice = maxPrice,
             sort = sort
@@ -332,5 +335,6 @@ data class SearchQuery(
     val verificationStatus: VerificationStatus = VerificationStatus.ALL,
     val minimumPrice: Long = -1,
     val maximumPrice: Long = -1,
+    val soldOutStatus: SoldOutStatus = SoldOutStatus.ALL,
     val sort: Sort = Sort.LATEST_REGISTERED,
 )

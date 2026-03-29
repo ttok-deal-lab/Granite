@@ -17,6 +17,7 @@ interface SearchService {
         @Query("minimumPrice") minimumPrice: Long? = -1,
         @Query("maximumPrice") maximumPrice: Long? = -1,
         @Query("nextCursor") nextCursor: String? = "unknown",
+        @Query("soldOutStatus") soldOutStatus: String = "ALL",
         @Query("sort") sort: Sort? = Sort.LATEST_REGISTERED,
     ): SearchResponseDTO
 

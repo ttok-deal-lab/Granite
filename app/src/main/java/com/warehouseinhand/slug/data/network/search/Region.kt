@@ -23,6 +23,10 @@ enum class VerificationStatus {
     VERIFIED, NOT_VERIFIED
 }
 
+enum class SoldOutStatus {
+    ALL, SOLD_OUT, NOT_SOLD_OUT
+}
+
 enum class Sort {
     LATEST_REGISTERED,
     MOST_INTERESTED,
