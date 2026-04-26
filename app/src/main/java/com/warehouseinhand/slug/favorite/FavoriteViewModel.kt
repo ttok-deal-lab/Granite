@@ -32,6 +32,7 @@ class FavoriteViewModel @Inject constructor(
 
     private val paginator = CursorPaginator(
         state = _paginationState,
+        itemKey = { it.id },
         fetchPage = { cursor ->
             val page = remoteUserDataRepository.getFavoriteProductsByCursor(
                 userId = userId,

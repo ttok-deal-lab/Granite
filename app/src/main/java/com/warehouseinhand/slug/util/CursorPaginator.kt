@@ -12,6 +12,7 @@ data class CursorPage<T>(
 class CursorPaginator<T>(
     private val state: MutableStateFlow<CursorPaginationState<T>>,
     private val fetchPage: suspend (cursor: String?) -> CursorPage<T>,
+    private val itemKey: ((T) -> Any)? = null,
 ) {
     suspend fun loadInitial() {
         state.update { CursorPaginationState(isInitialLoading = true) }
@@ -39,7 +40,12 @@ class CursorPaginator<T>(
         try {
             val page = fetchPage(null)
             state.update {
-                if (it.hasSameData(page)) {
+                val isSame = if (itemKey != null) {
+                    it.items.map(itemKey) == page.items.map(itemKey)
+                } else {
+                    it.hasSameData(page)
+                }
+                if (isSame) {
                     it.copy(isRefreshing = false)
                 } else {
                     CursorPaginationState(

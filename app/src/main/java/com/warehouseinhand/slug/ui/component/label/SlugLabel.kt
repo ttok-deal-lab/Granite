@@ -119,6 +119,18 @@ sealed class SlugLabelStyle(
     abstract val background: SlugLabelBackground
     abstract val textColor: Color
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is SlugLabelStyle) return false
+        return background == other.background && textColor == other.textColor
+    }
+
+    override fun hashCode(): Int {
+        var result = background.hashCode()
+        result = 31 * result + textColor.hashCode()
+        return result
+    }
+
     sealed class BuildingInfo : SlugLabelStyle() {
         data object BuildingType : BuildingInfo() {
             override val background = SlugLabelBackground.Solid(PrimaryLight)
