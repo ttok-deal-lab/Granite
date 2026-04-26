@@ -41,7 +41,8 @@ internal object RetrofitModule {
     @Provides
     @WithAccessToken
     fun provideOkHttpClientWithAccessToken(
-        localUserDataRepository: LocalUserDataRepository
+        localUserDataRepository: LocalUserDataRepository,
+        authEventBus: AuthEventBus,
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(interceptor = getLoggingInterceptor())
@@ -49,7 +50,8 @@ internal object RetrofitModule {
                 interceptorForTokenAndError(
                     chain,
                     localUserDataRepository::getUserSlugToken,
-                    localUserDataRepository::setUserAccessToken
+                    localUserDataRepository::setUserAccessToken,
+                    authEventBus::notifySessionExpired,
                 )
             }
             .retryOnConnectionFailure(false)
@@ -76,6 +78,7 @@ internal object RetrofitModule {
         chain: Interceptor.Chain,
         getToken: suspend () -> Result<SlugToken>,
         saveAccessToken: suspend (String) -> Result<Unit>,
+        onSessionExpired: () -> Unit,
     ): Response {
 //        chain.request().logByNetworkModel(networkConfigModel = networkConfigModel)
         val userToken = runBlocking { getToken().getOrNull() }//TODO 수정되어야함
@@ -138,6 +141,11 @@ internal object RetrofitModule {
 //                response = currentResponse,
 //                log = networkConfigModel::setNetWorkLogByFireBase
 //            )
+        }
+
+        // 인증 만료(401/403) — 세션 만료 이벤트 발행
+        if (currentResponse.isNeedToRefresh) {
+            onSessionExpired()
         }
 
         // proceed ERROR
