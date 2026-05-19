@@ -101,7 +101,7 @@ fun <T : Price> PriceRangeFilter(
     isLoading: Boolean = false,
 ) {
     val endString = "${numberToCurrency(maxValue)} 이상"//TODO i18n
-    val startString = "${numberToCurrency(minValue)}원"//TODO i18n
+    val startString = "${numberToCurrency(minValue)}"//TODO i18n
     val buttonText = "${valueOfItem}개 매물보기"
 
     val rangeString = when {
