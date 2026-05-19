@@ -127,6 +127,8 @@ APPLE_CLIENT_ID="..."
 GOOGLE_APP_KEY="..."
 NAVER_CLIENT_ID="..."
 NAVER_CLIENT_SECRET="..."
+
+BASE_URL = "..."
 ```
 
 ### 빌드 & 실행
