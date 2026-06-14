@@ -35,7 +35,7 @@ enum class BuildingFilterType(@StringRes val stringId: Int) : FilterOption {
     OFFICETEL(R.string.filter_building_officetel),
     COMMERCIAL_HOUSE(R.string.filter_building_commercial_house),
     HOUSE(R.string.filter_building_house),
-//    OTHER(R.string.filter_building_other),
+    OTHER(R.string.filter_building_other),
     ;
 
     @Composable
@@ -53,6 +53,7 @@ enum class BuildingFilterType(@StringRes val stringId: Int) : FilterOption {
                     OFFICETEL -> BuildType.OFFICETEL
                     COMMERCIAL_HOUSE -> BuildType.COMMERCIAL
                     HOUSE -> BuildType.HOUSE
+                    else -> BuildType.OTHER
                 }
             }.ifEmpty { listOf(BuildType.ALL) }
     }
@@ -60,7 +61,8 @@ enum class BuildingFilterType(@StringRes val stringId: Int) : FilterOption {
 
 enum class AuctionStatusFilterType(@StringRes val stringId: Int) : FilterOption {
     NEW(R.string.filter_auction_status_new),
-//    DATE_CHANGING(R.string.filter_auction_status_date_changing),
+
+    //    DATE_CHANGING(R.string.filter_auction_status_date_changing),
     FAILED1(R.string.filter_auction_status_failed1),
     FAILED2(R.string.filter_auction_status_failed2),
     FAILED_ABOVE3(R.string.filter_auction_status_failed_above3), ;
@@ -70,14 +72,17 @@ enum class AuctionStatusFilterType(@StringRes val stringId: Int) : FilterOption 
 
     @Composable
     override fun getEmptyDisplayText() = stringResource(R.string.filter_auction_status)
-    companion object{
+
+    companion object {
         fun List<AuctionStatusFilterType>.toAuctionFailCount(): List<AuctionFailCount> =
-            map { when(it){
-                NEW -> AuctionFailCount.FIRST_AUCTION
-                FAILED1 -> AuctionFailCount.SECOND_AUCTION
-                FAILED2 -> AuctionFailCount.THIRD_AUCTION
-                FAILED_ABOVE3 -> AuctionFailCount.MULTIPLE_AUCTION
-            } }.ifEmpty { listOf(AuctionFailCount.ALL) }
+            map {
+                when (it) {
+                    NEW -> AuctionFailCount.FIRST_AUCTION
+                    FAILED1 -> AuctionFailCount.SECOND_AUCTION
+                    FAILED2 -> AuctionFailCount.THIRD_AUCTION
+                    FAILED_ABOVE3 -> AuctionFailCount.MULTIPLE_AUCTION
+                }
+            }.ifEmpty { listOf(AuctionFailCount.ALL) }
 
     }
 }

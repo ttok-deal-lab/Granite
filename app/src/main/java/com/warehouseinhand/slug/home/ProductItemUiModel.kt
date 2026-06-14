@@ -175,7 +175,9 @@ data class ProductItemUiModel(
                 "OFFICETEL" -> SlugText.Id(R.string.building_type_officetel)
                 "SHOP_HOUSE" -> SlugText.Id(R.string.building_type_commercial_house)
                 "HOUSING" -> SlugText.Id(R.string.building_type_house)
-                else -> SlugText.Text(text)
+                else -> SlugText.Id(R.string.building_type_other)
+                //논의에 따라 정해지지 않았던 타입들은 전부 기타로 처리하기로함. 2026/05/24
+//                else -> SlugText.Text(text)
             }
 
 

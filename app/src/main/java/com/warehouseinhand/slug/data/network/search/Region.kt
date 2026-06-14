@@ -10,7 +10,7 @@ enum class Region {
 
 enum class BuildType {
     ALL,
-    APARTMENT, VILLA, OFFICETEL, HOUSE, COMMERCIAL, LAND
+    APARTMENT, VILLA, OFFICETEL, HOUSE, COMMERCIAL, OTHER
 }
 
 enum class AuctionFailCount {
