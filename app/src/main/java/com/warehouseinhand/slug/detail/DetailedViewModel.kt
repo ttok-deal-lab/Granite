@@ -178,7 +178,7 @@ private fun CourtSaleDetail.toAuctionHistoryUiModel(): AuctionHistoryUiModel =
                     round = it.size - index,
                     date = detail.timeStamp.extractDateFromDateAndTime(),
                     minSalePrice = detail.leastSalesPrice,
-                    result = AuctionResult.fromDisplayName(detail.result),
+                    result = AuctionResult.fromServer(detail.result),
                 )
             }
         }

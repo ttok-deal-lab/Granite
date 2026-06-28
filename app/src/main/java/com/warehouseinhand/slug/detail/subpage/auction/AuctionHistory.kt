@@ -205,17 +205,25 @@ private fun Round(index: Int, round: AuctionRound) {
 
 
 // 결과 상태 (색상 토큰은 프로젝트의 Theme 컬러 사용 가정)
+// enum 상수명 == 서버 result 코드. displayName == 사용자 노출 한글 라벨.
 //TODO : i18n
 enum class AuctionResult(val displayName: String, val color: Color, val tooltipText: String) {
-    PROCEEDING(
+
+    // [기일 진행]
+    PLANNED(
+        displayName = "예정",
+        color = Primary,
+        tooltipText = "경매 기일이 잡혀 입찰이 예정된 상태"
+    ),
+    PREPARING_SALE(
+        displayName = "매각준비",
+        color = Primary,
+        tooltipText = "매각을 위한 사전 절차가 진행 중인 상태"
+    ),
+    IN_PROGRESS(
         displayName = "진행",
         color = Primary,
         tooltipText = "경매 기일에 입찰이 진행 중이거나 예정된 상태"
-    ),
-    CHANGED(
-        displayName = "변경",
-        color = NeutralSubtler,
-        tooltipText = "법원 사정 등으로 경매 일정(기일)이 변경된 상태"
     ),
     FAILED(
         displayName = "유찰",
@@ -227,26 +235,90 @@ enum class AuctionResult(val displayName: String, val color: Color, val tooltipT
         color = NeutralSubtler,
         tooltipText = "입찰 경쟁을 통해 낙찰자가 결정되어 매각이 완료된 상태 (매수인 및 낙찰가 포함)"
     ),
-    APPROVED(
-        displayName = "허가",
+
+    // [매각 허가 / 불허가]
+    BEST_BID_APPROVED(
+        displayName = "최고가매각허가결정",
         color = NeutralSubtler,
         tooltipText = "법원이 매각허가결정을 내려 소유권 이전 절차가 진행되는 상태"
     ),
-    WITHDRAWN(
-        displayName = "취하",
+    SECONDARY_BID_APPROVED(
+        displayName = "차순위매각허가결정",
         color = NeutralSubtler,
-        tooltipText = "채권자의 신청 또는 채무자의 변제로 경매절차가 중단된 상태"
+        tooltipText = "법원이 차순위 매수신고인에게 매각허가결정을 내린 상태"
     ),
-    REJECTED(
-        displayName = "불허가",
+    BEST_BID_REJECTED(
+        displayName = "최고가매각불허가결정",
         color = Critical,
         tooltipText = "이의제기 등으로 법원이 매각허가를 불허한 상태"
     ),
-    ENDED(
-        displayName = "종료",
-        color = NeutralSubtler,
-        tooltipText = "매각허가결정이 확정되면서 경매절차가 종료된 상태"
+    SECONDARY_BID_REJECTED(
+        displayName = "차순위매각불허가결정",
+        color = Critical,
+        tooltipText = "이의제기 등으로 법원이 차순위 매수신고인에 대한 매각허가를 불허한 상태"
     ),
+    BEST_BID_APPROVAL_CANCELLED(
+        displayName = "최고가매각허가취소결정",
+        color = Critical,
+        tooltipText = "법원이 최고가 매수인에 대한 매각허가결정을 취소한 상태"
+    ),
+    SECONDARY_BID_APPROVAL_CANCELLED(
+        displayName = "차순위매각허가취소결정",
+        color = Critical,
+        tooltipText = "법원이 차순위 매수신고인에 대한 매각허가결정을 취소한 상태"
+    ),
+
+    // [대금 납부]
+    PAYMENT_COMPLETED(
+        displayName = "납부",
+        color = NeutralSubtler,
+        tooltipText = "매수인이 정해진 기한 내 매각대금을 완납한 상태"
+    ),
+    PAYMENT_MISSED(
+        displayName = "미납",
+        color = Critical,
+        tooltipText = "매수인이 기한 내 매각대금을 납부하지 않은 상태"
+    ),
+    LATE_PAYMENT(
+        displayName = "기한후납부",
+        color = NeutralSubtler,
+        tooltipText = "매수인이 지정된 기한 이후 매각대금을 납부한 상태"
+    ),
+    OFFSET_APPROVED(
+        displayName = "상계허가",
+        color = NeutralSubtler,
+        tooltipText = "채권자인 매수인이 배당받을 금액과 매각대금의 상계를 법원이 허가한 상태"
+    ),
+
+    // [일정 변경]
+    MODIFIED(
+        displayName = "변경",
+        color = NeutralSubtler,
+        tooltipText = "법원 사정 등으로 경매 일정(기일)이 변경된 상태"
+    ),
+    DEADLINE_CHANGED(
+        displayName = "기한변경",
+        color = NeutralSubtler,
+        tooltipText = "법원 사정 등으로 대금 납부 등 기한이 변경된 상태"
+    ),
+    TO_BE_SPECIFIED(
+        displayName = "추후지정",
+        color = NeutralSubtler,
+        tooltipText = "다음 기일이 아직 정해지지 않아 추후 지정될 예정인 상태"
+    ),
+
+    // [배당 / 종결]
+    DISTRIBUTION_COMPLETED(
+        displayName = "배당종결",
+        color = NeutralSubtler,
+        tooltipText = "매각대금이 채권자에게 배당되어 경매절차가 종결된 상태"
+    ),
+    DISTRIBUTION_UNAVAILABLE(
+        displayName = "배당불가",
+        color = Critical,
+        tooltipText = "배당 요건을 충족하지 못해 배당을 진행할 수 없는 상태"
+    ),
+
     INVALID(
         displayName = "INVALID",
         color = Critical,
@@ -256,8 +328,22 @@ enum class AuctionResult(val displayName: String, val color: Color, val tooltipT
     ;
 
     companion object {
-        fun fromDisplayName(displayName: String): AuctionResult =
-            entries.find { it.displayName == displayName } ?: INVALID
+        /**
+         * 서버 result 값을 매핑한다.
+         * 1순위: enum 코드명(PLANNED, SOLD, BEST_BID_APPROVED ...) 일치
+         * 2순위: 한글 표시명(레거시 호환) 일치
+         * 매칭 실패 시 INVALID
+         */
+        fun fromServer(raw: String): AuctionResult =
+            entries.find { it.name == raw }
+                ?: entries.find { it.displayName == raw }
+                ?: INVALID
+
+        @Deprecated(
+            "Use fromServer (서버가 코드값으로 내려줌)",
+            ReplaceWith("AuctionResult.fromServer(displayName)")
+        )
+        fun fromDisplayName(displayName: String): AuctionResult = fromServer(displayName)
     }
 }
 
@@ -281,52 +367,70 @@ data class AuctionHistoryUiModel(
             appraisalDate = "2023.12.27",
             rounds = listOf(
                 AuctionRound(
+                    round = 11,
+                    date = "2025.05.12",
+                    minSalePrice = 419_000_000,
+                    result = AuctionResult.PLANNED
+                ),
+                AuctionRound(
+                    round = 10,
+                    date = "2025.05.12",
+                    minSalePrice = 419_000_000,
+                    result = AuctionResult.IN_PROGRESS
+                ),
+                AuctionRound(
+                    round = 9,
+                    date = "2025.05.12",
+                    minSalePrice = 419_000_000,
+                    result = AuctionResult.MODIFIED
+                ),
+                AuctionRound(
                     round = 8,
-                    date = "2025.05.12",
-                    minSalePrice = 419_000_000,
-                    result = AuctionResult.PROCEEDING
-                ),
-                AuctionRound(
-                    round = 7,
-                    date = "2025.05.12",
-                    minSalePrice = 419_000_000,
-                    result = AuctionResult.CHANGED
-                ),
-                AuctionRound(
-                    round = 6,
                     date = "2025.05.12",
                     minSalePrice = 419_000_000,
                     result = AuctionResult.FAILED
                 ),
                 AuctionRound(
-                    round = 5,
+                    round = 7,
                     date = "2025.05.12",
                     minSalePrice = 419_000_000,
                     result = AuctionResult.SOLD
                 ),
                 AuctionRound(
+                    round = 6,
+                    date = "2025.05.12",
+                    minSalePrice = 419_000_000,
+                    result = AuctionResult.BEST_BID_APPROVED
+                ),
+                AuctionRound(
+                    round = 5,
+                    date = "2025.05.12",
+                    minSalePrice = 419_000_000,
+                    result = AuctionResult.BEST_BID_REJECTED
+                ),
+                AuctionRound(
                     round = 4,
                     date = "2025.05.12",
                     minSalePrice = 419_000_000,
-                    result = AuctionResult.APPROVED
+                    result = AuctionResult.PAYMENT_COMPLETED
                 ),
                 AuctionRound(
                     round = 3,
                     date = "2025.05.12",
                     minSalePrice = 419_000_000,
-                    result = AuctionResult.WITHDRAWN
+                    result = AuctionResult.PAYMENT_MISSED
                 ),
                 AuctionRound(
                     round = 2,
                     date = "2025.05.12",
                     minSalePrice = 419_000_000,
-                    result = AuctionResult.REJECTED
+                    result = AuctionResult.DISTRIBUTION_COMPLETED
                 ),
                 AuctionRound(
                     round = 1,
                     date = "2025.05.12",
                     minSalePrice = 419_000_000,
-                    result = AuctionResult.ENDED
+                    result = AuctionResult.DISTRIBUTION_UNAVAILABLE
                 )
             )
         )
@@ -339,7 +443,7 @@ data class AuctionHistoryUiModel(
                     round = 1,
                     date = "2025.05.12",
                     minSalePrice = 419_000_000,
-                    result = AuctionResult.ENDED
+                    result = AuctionResult.DISTRIBUTION_COMPLETED
                 )
             )
         )
