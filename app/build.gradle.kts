@@ -16,11 +16,11 @@ plugins {
 }
 //TODO : AGP 9.0에 대응하게 수정할 것
 android {
-    namespace = "com.warehouseinhand.slug"
+    namespace = "com.estateslug.slug"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.warehouseinhand.slug"
+        applicationId = "com.estateslug.slug"
         minSdk = 28
         targetSdk = 36
         versionCode = 1

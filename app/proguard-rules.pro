@@ -21,7 +21,7 @@
 #-renamesourcefileattribute SourceFile
 
 #차후 모듈별 변경 필요.
--keep class com.warehouseinhand.slug.data.**.*DTO { *; }
+-keep class com.estateslug.slug.data.**.*DTO { *; }
 
 #Google Login
 -if class androidx.credentials.CredentialManager

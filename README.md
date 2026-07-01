@@ -64,7 +64,7 @@
 ### 프로젝트 구조
 
 ```
-app/src/main/java/com/warehouseinhand/slug/
+app/src/main/java/com/estateslug/slug/
 ├── data/                # 데이터 레이어
 │   ├── local/           #   Room DB, DataStore
 │   └── network/         #   Retrofit API, Repository, RemoteConfig
