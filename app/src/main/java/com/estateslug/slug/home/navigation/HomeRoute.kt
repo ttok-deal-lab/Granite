@@ -54,7 +54,7 @@ internal fun HomeRoute(
     val currentContext = LocalContext.current
     val onItemClicked: (ProductItemUiModel) -> Unit = { model ->
         //TODO :API연결 이후 재확인
-        homeViewModel.addRecentItem(model.id)
+        // 최근 본 목록 추가는 상세 화면 진입(데이터 로드 성공) 시점에서 처리 (딥링크 진입도 커버)
         startDetailActivity(currentContext, model.id)
 
 //        Toast.makeText(currentContext, model.nameOfProduct, Toast.LENGTH_SHORT).show()

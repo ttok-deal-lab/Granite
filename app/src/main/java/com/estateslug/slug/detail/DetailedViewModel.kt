@@ -1,6 +1,7 @@
 package com.estateslug.slug.detail
 
 import androidx.lifecycle.ViewModel
+import com.estateslug.slug.data.local.recent.RecentItemRepository
 import com.estateslug.slug.data.local.user.LocalUserDataRepository
 import com.estateslug.slug.data.network.sales.RemoteSalesDataRepository
 import com.estateslug.slug.data.network.user.RemoteUserDataRepository
@@ -43,7 +44,8 @@ class DetailedViewModel @Inject constructor(
     private val remoteSalesDataRepository: RemoteSalesDataRepository,
     private val userDataRepository: RemoteUserDataRepository,
     private val localUserDataRepository: LocalUserDataRepository,
-    private val getFavoriteStatusUseCase: GetFavoriteStatusUseCase
+    private val getFavoriteStatusUseCase: GetFavoriteStatusUseCase,
+    private val recentItemRepository: RecentItemRepository,
 ) : ViewModel() {
     private val _uiState: MutableStateFlow<CourtSaleDetailUiState> =
         MutableStateFlow(CourtSaleDetailUiState.preview)
@@ -53,6 +55,10 @@ class DetailedViewModel @Inject constructor(
         CoroutineScope(Dispatchers.IO).launch {
             remoteSalesDataRepository.getCourtSaleDetail(id)
                 .onSuccess { detail ->
+
+                    // 상세 데이터가 정상적으로 내려온 경우에만 최근 본 목록에 추가
+                    // (기존: 홈 아이템 클릭 시점 → 변경: 상세 진입/딥링크 진입 모두 커버)
+                    recentItemRepository.addRecentItem(id)
 
                     val favoriteStatus = getFavoriteStatusUseCase(id)
                         .getOrDefault(false)

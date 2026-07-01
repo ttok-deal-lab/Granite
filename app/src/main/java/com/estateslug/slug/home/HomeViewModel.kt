@@ -2,7 +2,6 @@ package com.estateslug.slug.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.estateslug.slug.data.local.recent.RecentItemRepository
 import com.estateslug.slug.data.network.search.RemoteSearchRepository
 import com.estateslug.slug.data.network.search.SoldOutStatus
 import com.estateslug.slug.data.network.search.Sort
@@ -34,7 +33,6 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val remoteSearchRepository: RemoteSearchRepository,
-    private val recentItemRepository: RecentItemRepository,
 ) : ViewModel() {
 
     private val _queryState = MutableStateFlow(SearchQuery())
@@ -168,12 +166,6 @@ class HomeViewModel @Inject constructor(
                     filterOption = ToggleFilterType.FINISHED_PRODUCT,
                 ),
             )
-        }
-    }
-
-    fun addRecentItem(id: String) {
-        CoroutineScope(Dispatchers.IO).launch {
-            recentItemRepository.addRecentItem(id)
         }
     }
 
