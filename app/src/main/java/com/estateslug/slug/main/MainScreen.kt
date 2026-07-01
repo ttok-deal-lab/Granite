@@ -41,6 +41,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
+    startItem: BottomBarItemUiModel = BottomBarItemUiModel.HOME,
     mainViewModel: MainViewModel = hiltViewModel(viewModelStoreOwner = LocalContext.current as ViewModelStoreOwner)
 ) {
 
@@ -78,7 +79,7 @@ fun MainScreen(
             MainNavHost(
                 padding = paddingValues,
                 navController = navController,
-                startDestination = RouteHome,
+                startDestination = startItem.route,
             )
             if (isBottomSheetShowing)
                 ModalBottomSheet(

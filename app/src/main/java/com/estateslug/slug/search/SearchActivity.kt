@@ -18,6 +18,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,6 +32,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.estateslug.slug.deeplink.DeepLinkKeys
 import com.estateslug.slug.search.bottomsheet.SearchBottomSheetContent
 import com.estateslug.slug.search.bottomsheet.SearchBottomSheetType
 import com.estateslug.slug.search.component.SearchTopBar
@@ -49,10 +51,23 @@ class SearchActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val initialKeyword = intent?.getStringExtra(DeepLinkKeys.SEARCH_KEYWORD).orEmpty()
         setContent {
             val searchViewModel: SearchViewModel = hiltViewModel()
             SlugTheme {
                 val navController = rememberNavController()
+
+                // 딥링크로 검색어가 넘어온 경우 결과 화면까지 바로 진입
+                LaunchedEffect(Unit) {
+                    if (initialKeyword.isNotBlank()) {
+                        searchViewModel.updateSearchKeyword(initialKeyword)
+                        searchViewModel.searchWithCheck(initialKeyword) {
+                            navController.navigate(RouteSearchResult(initialKeyword)) {
+                                popUpTo<RouteSearchBridge> { inclusive = false }
+                            }
+                        }
+                    }
+                }
 
                 var isBottomSheetShowing by remember { mutableStateOf(false) }
                 var bottomSheetType by remember {

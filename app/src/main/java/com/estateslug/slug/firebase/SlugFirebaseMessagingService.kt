@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
+import android.net.Uri
 import android.os.Build
 
 import androidx.core.app.NotificationCompat
@@ -13,6 +14,8 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.estateslug.slug.deeplink.DeepLinkKeys
+import com.estateslug.slug.deeplink.DeepLinkRouterActivity
 import com.estateslug.slug.main.MainActivity
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -26,25 +29,35 @@ class SlugFirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
 
+        // 화면 이동용 딥링크(https://link.estateslug.com/...) — data payload의 "link"
+        val link = remoteMessage.data[DeepLinkKeys.FCM_LINK]
+
         // Check if message contains a data payload. : 데이터 메시지
         if (remoteMessage.data.isNotEmpty()) {
             val body = remoteMessage.data["body"]
-            requestNotification(body = body)
+            requestNotification(body = body, link = link)
         }
 
         // Check if message contains a notification payload. : 알림 메시지
         remoteMessage.notification?.let {
             val body = remoteMessage.notification!!.body
-            requestNotification(body = body)
+            requestNotification(body = body, link = link)
         }
     }
 
-    private fun requestNotification(body: String?) {
+    private fun requestNotification(body: String?, link: String? = null) {
         val id = System.currentTimeMillis().toInt()
 
-        // notification 클릭 시 이동하는 액티비티
-        val notiIntent = Intent(this, MainActivity::class.java)
-        notiIntent.putExtra("ExtraFragment", "Notification")
+        // notification 클릭 시 이동: 딥링크가 있으면 라우터로, 없으면 메인으로
+        val notiIntent = if (!link.isNullOrBlank()) {
+            Intent(this, DeepLinkRouterActivity::class.java).apply {
+                action = Intent.ACTION_VIEW
+                data = Uri.parse(link)
+            }
+        } else {
+            Intent(this, MainActivity::class.java)
+                .putExtra("ExtraFragment", "Notification")
+        }
 
         notiIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent = PendingIntent.getActivity(

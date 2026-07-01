@@ -3,6 +3,7 @@ package com.estateslug.slug.login
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.Toast
@@ -29,6 +30,8 @@ import com.estateslug.slug.login.sns.SocialLoginType
 import com.estateslug.slug.login.sns.google.DisabledSignInPromptsException
 import com.estateslug.slug.login.sns.sns.SocialLoginModule
 import com.estateslug.slug.login.sns.sns.SocialLoginResultCallback
+import com.estateslug.slug.deeplink.DeepLinkKeys
+import com.estateslug.slug.deeplink.DeepLinkRouterActivity
 import com.estateslug.slug.main.MainActivity
 import com.estateslug.slug.permission.PermissionChecker
 import com.estateslug.slug.permission.PermissionRequestActivity
@@ -197,8 +200,17 @@ class LogInActivity : ComponentActivity() {
     private fun moveToNextActivity() {
         val isisAllOfEssentialAllowed = PermissionChecker.isAllOfEssentialAllowed(this)
         if (isisAllOfEssentialAllowed) {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+            // 딥링크로 진입해 로그인한 경우 원 목적지(라우터)로 이어보냄
+            val pending = intent?.getStringExtra(DeepLinkKeys.PENDING_DEEPLINK)
+            val nextIntent = if (!pending.isNullOrBlank()) {
+                Intent(this, DeepLinkRouterActivity::class.java).apply {
+                    action = Intent.ACTION_VIEW
+                    data = Uri.parse(pending)
+                }
+            } else {
+                Intent(this, MainActivity::class.java)
+            }
+            startActivity(nextIntent)
         } else {
             moveToPermissionCheck()
         }
