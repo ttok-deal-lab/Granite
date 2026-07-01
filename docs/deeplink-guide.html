@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Granite 딥링크 가이드 (Phase 1)</title>
+<style>
+  :root{
+    --bg:#ffffff; --surface:#f7f9fa; --surface2:#ffffff; --border:#e7edf0;
+    --text:#1c2023; --muted:#5e696e; --faint:#8b969b;
+    --accent:#0470c2; --accent-bg:#e6f1fb;
+    --warn:#8a6d00; --warn-bg:#fff8e6;
+    --ok:#287c5b; --ok-bg:#e6fff5; --mono:#0c447c;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#16191b; --surface:#1f2427; --surface2:#232a2d; --border:#2c3438;
+      --text:#e7edf0; --muted:#aeb7bc; --faint:#7a858a;
+      --accent:#66baff; --accent-bg:#12314a;
+      --warn:#ffd98a; --warn-bg:#3a3320;
+      --ok:#86dfbf; --ok-bg:#193a2f; --mono:#9fd0ff;
+    }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans KR",sans-serif;
+    line-height:1.65;font-size:15px}
+  .wrap{max-width:860px;margin:0 auto;padding:40px 24px 80px}
+  header{border-bottom:2px solid var(--border);padding-bottom:20px;margin-bottom:8px}
+  h1{font-size:26px;font-weight:600;margin:0 0 6px}
+  .sub{color:var(--muted);font-size:14px}
+  h2{font-size:19px;font-weight:600;margin:38px 0 12px;padding-top:4px}
+  p{margin:.5rem 0}
+  code{font-family:"SF Mono",Menlo,Consolas,monospace;font-size:13px;
+    background:var(--surface);padding:1.5px 6px;border-radius:5px;color:var(--mono);word-break:break-all}
+  pre{background:var(--surface);border:.5px solid var(--border);border-radius:10px;
+    padding:16px 18px;overflow-x:auto;margin:.6rem 0;
+    font-family:"SF Mono",Menlo,Consolas,monospace;font-size:12.5px;line-height:1.6;color:var(--text)}
+  pre code{background:none;padding:0;color:inherit}
+  .flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:8px 0}
+  .fbox{flex:1;min-width:120px;background:var(--surface);border-radius:10px;padding:12px 14px}
+  .fbox .k{font-size:11px;color:var(--faint);margin-bottom:3px}
+  .fbox .v{font-size:13.5px;font-weight:600}
+  .fbox .k, .fbox .v{white-space:normal}
+  .arw{color:var(--faint);font-weight:700}
+  table{width:100%;border-collapse:collapse;margin:.4rem 0;font-size:13.5px}
+  th,td{text-align:left;padding:9px 12px;border-bottom:.5px solid var(--border);vertical-align:top}
+  th{color:var(--muted);font-weight:600;font-size:12.5px}
+  td.t{white-space:nowrap;font-weight:600}
+  .u{color:var(--accent)}
+  .ph{color:var(--warn)}
+  .callout{border-radius:10px;padding:12px 16px;margin:12px 0;font-size:13.5px}
+  .warn{background:var(--warn-bg);color:var(--warn)}
+  ul.clean{list-style:none;padding:0;margin:.4rem 0}
+  ul.clean li{padding:7px 0;border-bottom:.5px solid var(--border)}
+  ul.clean li:last-child{border-bottom:none}
+  ul.clean li b{font-weight:600}
+  .badge{display:inline-block;font-size:11px;padding:1px 8px;border-radius:6px;margin-left:6px;font-weight:600}
+  .badge.n{background:var(--ok-bg);color:var(--ok)}
+  .badge.m{background:var(--accent-bg);color:var(--accent)}
+  .files{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px;margin:.4rem 0}
+  .fi{background:var(--surface2);border:.5px solid var(--border);border-radius:10px;padding:11px 13px}
+  .fi .p{font-family:"SF Mono",Menlo,monospace;font-size:12px;color:var(--muted)}
+  .fi .d{font-size:12.5px;margin-top:3px}
+  footer{margin-top:48px;padding-top:16px;border-top:.5px solid var(--border);color:var(--faint);font-size:12.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Granite 딥링크 가이드</h1>
+    <div class="sub">Phase 1 · 중앙 라우터 방식 &nbsp;|&nbsp; host: <code>link.estateslug.com</code> &nbsp;|&nbsp; package: <code>com.estateslug.slug</code></div>
+  </header>
+
+  <h2>동작 흐름</h2>
+  <div class="flow">
+    <div class="fbox"><div class="k">진입</div><div class="v">App Links (https)<br>+ FCM 푸시</div></div>
+    <div class="arw">→</div>
+    <div class="fbox"><div class="k">라우터</div><div class="v">DeepLinkRouterActivity</div></div>
+    <div class="arw">→</div>
+    <div class="fbox"><div class="k">해석 · 게이팅</div><div class="v">Resolver + 로그인 확인</div></div>
+    <div class="arw">→</div>
+    <div class="fbox"><div class="k">목적지</div><div class="v">상세 · 검색 · 탭<br>(백스택 합성)</div></div>
+  </div>
+  <p>미인증 유저는 로그인 후 원래 목적지로 복귀하고, 딥링크 진입 시 뒤로가기는 항상 홈으로 돌아갑니다.</p>
+
+  <h2>링크 구성 — App Links (외부 웹 → 앱)</h2>
+  <table>
+    <thead><tr><th style="width:110px">목적지</th><th>URL</th></tr></thead>
+    <tbody>
+      <tr><td class="t">매물 상세</td><td><code><span class="u">https://link.estateslug.com/sales/</span><span class="ph">{id}</span></code></td></tr>
+      <tr><td class="t">검색 결과</td><td><code><span class="u">https://link.estateslug.com/search?keyword=</span><span class="ph">{검색어}</span></code></td></tr>
+      <tr><td class="t">홈 탭</td><td><code class="u">https://link.estateslug.com/home</code></td></tr>
+      <tr><td class="t">관심 탭</td><td><code class="u">https://link.estateslug.com/favorite</code></td></tr>
+      <tr><td class="t">마이 탭</td><td><code class="u">https://link.estateslug.com/mypage</code></td></tr>
+    </tbody>
+  </table>
+
+  <h2>링크 구성 — FCM 푸시 payload</h2>
+  <p>같은 URL을 <code>data.link</code>에 담아 보냅니다.</p>
+<pre><code>{
+  "data": {
+    "link": "https://link.estateslug.com/sales/12345",
+    "body": "관심 매물의 입찰 기일이 3일 남았어요"
+  }
+}</code></pre>
+  <div class="callout warn"><b>⚠ data-only로 보내야 합니다.</b> <code>"notification"</code> 키를 함께 넣으면 앱이 백그라운드일 때 시스템 트레이가 알림을 처리해 <code>onMessageReceived</code>가 호출되지 않고 <code>link</code>가 무시됩니다 → 딥링크 라우팅 실패.</div>
+
+  <h2>링크 규칙</h2>
+  <ul class="clean">
+    <li><b>host 고정</b> — <code>link.estateslug.com</code> 외 host의 https 링크는 홈으로 폴백</li>
+    <li><b>경로 소문자</b> — <code>/sales</code>, <code>/search</code>, <code>/home</code>, <code>/favorite</code>, <code>/mypage</code></li>
+    <li><b>검색어 인코딩</b> — <code>keyword</code>는 URL 인코딩 (공백 → <code>%20</code>)</li>
+    <li><b>안전 폴백</b> — 알 수 없는 경로·형식은 홈으로 (앱이 죽지 않음)</li>
+    <li><b>인증 게이팅</b> — 미로그인 진입 시 로그인 후 원 목적지로 복귀</li>
+  </ul>
+
+  <h2>adb 테스트 명령</h2>
+  <p>assetlinks.json이 아직 없어도 <b>라우터 컴포넌트를 직접 지정</b>하면 확실히 열립니다 (FCM이 타는 경로와 동일).</p>
+<pre><code># 매물 상세 (id=12345)
+adb shell am start -n com.estateslug.slug/.deeplink.DeepLinkRouterActivity \
+  -a android.intent.action.VIEW \
+  -d "https://link.estateslug.com/sales/12345"
+
+# 검색 결과 (keyword=아파트, URL 인코딩)
+adb shell am start -n com.estateslug.slug/.deeplink.DeepLinkRouterActivity \
+  -a android.intent.action.VIEW \
+  -d "https://link.estateslug.com/search?keyword=%EC%95%84%ED%8C%8C%ED%8A%B8"
+
+# 관심 탭
+adb shell am start -n com.estateslug.slug/.deeplink.DeepLinkRouterActivity \
+  -a android.intent.action.VIEW \
+  -d "https://link.estateslug.com/favorite"</code></pre>
+
+  <p>assetlinks.json 호스팅 후 <b>실제 App Links 검증까지</b> 확인할 때 (컴포넌트 없이 패키지만 지정 → OS가 intent-filter로 해석):</p>
+<pre><code>adb shell am start -a android.intent.action.VIEW \
+  -d "https://link.estateslug.com/sales/12345" com.estateslug.slug
+
+# App Links 검증 상태 확인 / 재검증 (Android 12+)
+adb shell pm get-app-links com.estateslug.slug
+adb shell pm verify-app-links --re-verify com.estateslug.slug</code></pre>
+  <div class="callout warn"><b>Tip.</b> URL에 <code>?</code>가 있으면 셸이 글롭으로 해석할 수 있으니 반드시 큰따옴표로 감싸세요. 그래도 안 되면 <code>\?</code>로 이스케이프합니다. 앱을 백그라운드로 내린 뒤 실행하면 백스택(뒤로가기 → 홈) 동작도 검증됩니다.</div>
+
+  <h2>구현 파일</h2>
+  <div class="files">
+    <div class="fi"><div class="p">deeplink/DeepLink.kt<span class="badge n">신규</span></div><div class="d">Resolver · Destination · 키 상수</div></div>
+    <div class="fi"><div class="p">deeplink/DeepLinkRouterActivity.kt<span class="badge n">신규</span></div><div class="d">단일 진입점 · 인증 게이팅 · 백스택</div></div>
+    <div class="fi"><div class="p">main/MainActivity · MainScreen<span class="badge m">수정</span></div><div class="d">START_TAB → 초기 탭 진입</div></div>
+    <div class="fi"><div class="p">search/SearchActivity<span class="badge m">수정</span></div><div class="d">SEARCH_KEYWORD → 결과 화면 진입</div></div>
+    <div class="fi"><div class="p">firebase/SlugFirebaseMessagingService<span class="badge m">수정</span></div><div class="d">푸시 link → 라우터 dispatch</div></div>
+    <div class="fi"><div class="p">login/LogInActivity<span class="badge m">수정</span></div><div class="d">로그인 후 목적지 이어보내기</div></div>
+    <div class="fi"><div class="p">AndroidManifest.xml<span class="badge m">수정</span></div><div class="d">라우터 등록 + App Links filter</div></div>
+  </div>
+
+  <h2>배포 전 필요 조건 (코드 밖 · 서버/인프라)</h2>
+  <ul class="clean">
+    <li><b>assetlinks.json 호스팅</b> — <code>https://link.estateslug.com/.well-known/assetlinks.json</code>에 패키지 <code>com.estateslug.slug</code> + 서명 SHA-256 등록해야 외부 https 링크가 앱으로 자동 오픈(autoVerify). 없으면 브라우저로 감. <i>(FCM 내부 라우팅은 이것 없이도 동작)</i></li>
+    <li><b>서버 푸시 data-only 발송</b> — 위 payload 형식 준수</li>
+    <li><b>Firebase 새 앱 등록</b> — 정식 <code>google-services.json</code> 재발급, Google/Kakao/Naver OAuth 콘솔에 새 패키지 재등록 (패키지 리네임 후속)</li>
+    <li><b>디바이스 실측</b> — 탭 시작점 · 검색 진입 · 백스택 런타임 동작 확인 (빌드는 통과)</li>
+  </ul>
+
+  <h2>후속 (Phase 3 · 기록)</h2>
+  <p>추후 단일 Activity + 단일 NavHost로 통합하고 <code>navDeepLink(uriPattern)</code> 방식으로 수렴 예정. 그때 라우터는 <code>navController.handleDeepLink</code>로 축소되며, <code>DeepLinkResolver</code>/<code>DeepLinkDestination</code>은 그대로 재사용한다.</p>
+
+  <footer>Granite · 딥링크 Phase 1 · 문서 생성일 2026-07-01</footer>
+
+</div>
+</body>
+</html>
