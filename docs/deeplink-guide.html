@@ -97,6 +97,32 @@
     </tbody>
   </table>
 
+  <h2>링크 구성 — 커스텀 스킴 (estateSlug://)</h2>
+  <p>도메인 없이 동작하는 앱 전용 스킴입니다. 커스텀 스킴은 <b>host 자리가 라우트</b>가 됩니다 (<code>estateSlug://home/</code>의 <code>home</code>). App Links와 동일한 목적지로 매핑됩니다.</p>
+  <table>
+    <thead><tr><th style="width:110px">목적지</th><th>URI</th></tr></thead>
+    <tbody>
+      <tr><td class="t">매물 상세</td><td><code><span class="u">estateSlug://sales/</span><span class="ph">{id}</span></code></td></tr>
+      <tr><td class="t">검색 결과</td><td><code><span class="u">estateSlug://search?keyword=</span><span class="ph">{검색어}</span></code></td></tr>
+      <tr><td class="t">홈 탭</td><td><code class="u">estateSlug://home/</code></td></tr>
+      <tr><td class="t">관심 탭</td><td><code class="u">estateSlug://favorite/</code></td></tr>
+      <tr><td class="t">마이 탭</td><td><code class="u">estateSlug://mypage/</code></td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:13px;color:var(--muted)">스킴 표기는 <code>estateSlug</code>·<code>estateslug</code> 모두 동작(매니페스트에 두 표기 선언 + 리졸버 대소문자 무시). assetlinks 없이도 즉시 동작하지만, 브라우저 주소창 직접 입력으로는 열리지 않으며(a 태그·앱·QR 경유는 가능) 미설치 유저에겐 아무 동작도 하지 않는 것이 커스텀 스킴의 한계 — 외부 공유용은 App Links 권장.</p>
+
+  <h2>링크 구성 — 카카오톡 공유 (KakaoLink)</h2>
+  <p>공유 템플릿의 <code>androidExecutionParams</code>에 <code>route</code> 파라미터를 담는 계약입니다. 카카오톡이 앱을 실행할 때 URI는 <code>kakao{APP_KEY}://kakaolink?route=...</code> 형태가 되고, 라우터가 <code>route</code> 값을 그대로 라우트 토큰으로 해석합니다.</p>
+  <table>
+    <thead><tr><th style="width:110px">목적지</th><th>executionParams</th></tr></thead>
+    <tbody>
+      <tr><td class="t">매물 상세</td><td><code>route=<span class="ph">sales/{id}</span></code> &nbsp;<span style="color:var(--faint);font-size:12px">(현재 ShareKaKao가 발신하는 형태)</span></td></tr>
+      <tr><td class="t">검색 결과</td><td><code>route=search&amp;keyword=<span class="ph">{검색어}</span></code></td></tr>
+      <tr><td class="t">탭</td><td><code>route=home</code> · <code>route=favorite</code> · <code>route=mypage</code></td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:13px;color:var(--muted)">앱 미설치 유저는 템플릿의 <code>webUrl</code>(https://link.estateslug.com/...)로 폴백. 송신부는 <code>util/ShareKaKao.kt</code>, 수신 매핑은 <code>DeepLinkResolver</code>의 <code>KAKAO_ROUTE_PARAM</code> 참고.</p>
+
   <h2>링크 구성 — FCM 푸시 payload</h2>
   <p>같은 URL을 <code>data.link</code>에 담아 보냅니다.</p>
 <pre><code>{
@@ -117,7 +143,12 @@
   </ul>
 
   <h2>adb 테스트 명령</h2>
-  <p>assetlinks.json이 아직 없어도 <b>라우터 컴포넌트를 직접 지정</b>하면 확실히 열립니다 (FCM이 타는 경로와 동일).</p>
+  <p><b>커스텀 스킴</b>은 컴포넌트 지정 없이 바로 동작합니다 (에뮬레이터 검증 완료):</p>
+<pre><code># 홈 탭 / 매물 상세 / 검색 — estateSlug·estateslug 표기 모두 동작
+adb shell am start -a android.intent.action.VIEW -d "estateSlug://home/"
+adb shell am start -a android.intent.action.VIEW -d "estateSlug://sales/16400"
+adb shell am start -a android.intent.action.VIEW -d "estateslug://search?keyword=%EC%95%84%ED%8C%8C%ED%8A%B8"</code></pre>
+  <p>https(App Links)는 assetlinks.json이 아직 없어도 <b>라우터 컴포넌트를 직접 지정</b>하면 확실히 열립니다 (FCM이 타는 경로와 동일).</p>
 <pre><code># 매물 상세 (id=12345)
 adb shell am start -n com.estateslug.slug/.deeplink.DeepLinkRouterActivity \
   -a android.intent.action.VIEW \
