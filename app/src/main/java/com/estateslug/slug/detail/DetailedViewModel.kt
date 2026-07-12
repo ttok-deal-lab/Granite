@@ -71,6 +71,7 @@ class DetailedViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             isLoading = false,
+                            productId = id,
                             listOfLessees = lessees,
                             detailSimpleInformation = detailSimpleInformation,
                             auctionInfo = auctionInfo,
@@ -81,16 +82,16 @@ class DetailedViewModel @Inject constructor(
     }
 
     var lastFavoriteJob: Job = Job().apply { complete() }
-    fun onLikeChangeRequest(productId: String) {
+    fun onLikeChangeRequest() {
         val isFavorite = _uiState.value.detailSimpleInformation.isFavorite
         lastFavoriteJob.cancel()
         lastFavoriteJob = CoroutineScope(Dispatchers.IO).launch {
             val userId: String? = localUserDataRepository.getUserId().getOrNull()
             userId ?: return@launch //TODO 수정되어야함!
             if (isFavorite)
-                removeFavorite(userId, productId)
+                removeFavorite(userId, uiState.value.productId)
             else
-                addFavorite(userId, productId)
+                addFavorite(userId, uiState.value.productId)
         }
     }
 
@@ -132,6 +133,7 @@ class DetailedViewModel @Inject constructor(
 
 data class CourtSaleDetailUiState(
     val isLoading: Boolean = true,
+    val productId: String = "",
     val detailSimpleInformation: DetailSimpleInformationUiModel,
     val listOfLessees: List<LesseeInfo>,
     val auctionInfo: AuctionInfoUiModel,
@@ -250,7 +252,10 @@ private fun CourtSaleDetail.labelModels(): List<SlugLabelUiModel> {
         chips += SlugLabelUiModel(SlugLabelStyle.GradientBackground.Verified, SlugText.Text("인증매물"))
     //유찰 횟수
     if (failBidCount > 0)
-        chips += SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State, SlugText.Text("유찰 ${failBidCount}회"))
+        chips += SlugLabelUiModel(
+            SlugLabelStyle.BuildingInfo.State,
+            SlugText.Text("유찰 ${failBidCount}회")
+        )
     // 매각 여부
     if (isSoldOut) {
         chips += SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State, SlugText.Text("매각완료"))
@@ -268,7 +273,7 @@ private fun CourtSaleDetail.labelModels(): List<SlugLabelUiModel> {
     } else if (leftDay > 2) {
         SlugLabelUiModel(
             labelStyle = SlugLabelStyle.BuildingInfo.State,
-            text =SlugText.Text( "매각 D-$leftDay")
+            text = SlugText.Text("매각 D-$leftDay")
         )
     } else {
         SlugLabelUiModel(

@@ -93,9 +93,16 @@ sealed interface DetailBottomSheetType {
 //        }
     }
 
-    object Share : DetailBottomSheetType
+    data class ItemShare(val item: ShareItem) : DetailBottomSheetType
 
     object EMPTY : DetailBottomSheetType
 }
+
+data class ShareItem(
+    val id: String,
+    val nameOfProduct: String,
+    val caseNumber: String,
+    val imageUrl: String,
+)
 
 data class InfoSheetData(val name: String, val description: String, val isCritical: Boolean = false)

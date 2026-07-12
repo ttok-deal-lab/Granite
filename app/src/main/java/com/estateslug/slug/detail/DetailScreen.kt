@@ -54,7 +54,16 @@ fun DetailScreen(
     }
 
     val onShareClicked: () -> Unit = {
-        selectedBottomSheetType = DetailBottomSheetType.Share
+        val information = uiState.detailSimpleInformation
+        selectedBottomSheetType =
+            DetailBottomSheetType.ItemShare(
+                ShareItem(
+                    id = uiState.productId,
+                    nameOfProduct = information.nameOfProduct,
+                    caseNumber = information.numberOfProduct,
+                    imageUrl = "",// TODO : MVP0 수정되어야함!
+                )
+            )
     }
 
 

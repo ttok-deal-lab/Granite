@@ -26,10 +26,15 @@ firebaseCrashlyticsGradle = "3.0.2"
 
 #SNS
 naverLogin = "5.10.0"
-kakaoLogin = "2.20.1"
+#kakaoLogin = "2.23.2"
 googleLogin = "1.3.0"
 googleIdentity = "1.1.1"
 
+#KaKao-All
+kakaoAll= "2.23.2"
+
+#Share
+#kakaoShare = "2.23.2"
 #MAP
 kakaoMaps = "2.12.18"
 
@@ -87,14 +92,18 @@ landscapist-zoomable = { group = "com.github.skydoves", name = "landscapist-zoom
 
 #SNS
 naver-login = { group = "com.navercorp.nid", name = "oauth", version.ref = "naverLogin" } #java 8
-kakao-login = { group = "com.kakao.sdk", name = "v2-user", version.ref = "kakaoLogin" }
-
 google-credentials-play-services-auth = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "googleLogin" }
 google-credentials = { group = "androidx.credentials", name = "credentials", version.ref = "googleLogin" }
 google-googleid = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleIdentity" }
+#kakao-login = { group = "com.kakao.sdk", name = "v2-user", version.ref = "kakaoLogin" }
 
+#KakaoShare
+#kakao-share = { group = "com.kakao.sdk", name = "v2-share", version.ref = "kakaoShare" }
 #MAP
 kakao-maps = { group = "com.kakao.maps.open", name = "android", version.ref = "kakaoMaps" }
+
+#Kakao
+kakao-all = { group = "com.kakao.sdk", name = "v2-all", version.ref = "kakaoAll" }
 
 
 #DI - hilt

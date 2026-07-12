@@ -139,14 +139,16 @@ dependencies {
 
     //SNS
     implementation(libs.naver.login)
-    implementation(libs.kakao.login)
-
     implementation(libs.google.googleid)
     implementation(libs.google.credentials)
     implementation(libs.google.credentials.play.services.auth)
-
-    //Map sdk
+    implementation(libs.kakao.all)
+//    implementation(libs.kakao.login)
+    //Share
+//    implementation(libs.kakao.share)
+//    Map sdk
     implementation(libs.kakao.maps)
+
 
     //hilt
     implementation(libs.hilt.navigation.compose)

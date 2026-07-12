@@ -30,13 +30,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.estateslug.slug.R
-import com.estateslug.slug.ui.component.button.basic.BasicTextButton
 import com.estateslug.slug.ui.component.button.basic.BasicButtonSizeType
+import com.estateslug.slug.ui.component.button.basic.BasicTextButton
 import com.estateslug.slug.ui.component.image.ImageProcessor
 import com.estateslug.slug.ui.component.image.ImageResource
 import com.estateslug.slug.ui.theme.Black200
@@ -50,6 +51,7 @@ import com.estateslug.slug.ui.theme.NeutralLight
 import com.estateslug.slug.ui.theme.Primary
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 import com.estateslug.slug.util.blockingClickable
+import com.estateslug.slug.util.shareKakao
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -93,8 +95,9 @@ fun DetailedBottomSheet(detailBottomSheetType: DetailBottomSheetType, onDismiss:
 
                     }
 
-                    DetailBottomSheetType.Share -> {
-                        ShareBottomSheetContent()
+                    is DetailBottomSheetType.ItemShare -> {
+                        val item = detailBottomSheetType.item
+                        ShareBottomSheetContent(item)
                     }
                 }
             }
@@ -163,12 +166,13 @@ private fun InfoBottomSheetContent(
 }
 
 @Composable
-private fun ShareBottomSheetContent() {
+private fun ShareBottomSheetContent(item: ShareItem) {
     //TODO : IOS에 물어보고 만들기!
     val directLinkShare = {}
     val directLinkShareText = "링크로 직접 공유하기"
+    val context = LocalContext.current
 
-    val snsShare = {}
+    val snsShare = { shareKakao(item, context) }
     val snsShareText = "카카오톡으로 공유하기"
 
     Column {
@@ -231,7 +235,7 @@ internal fun ArrowShareButton(
 @Preview
 @Composable
 private fun PreviewShareBottomSheetContent() {
-    ShareBottomSheetContent()
+    ShareBottomSheetContent(ShareItem("", "", "", ""))
 }
 
 
