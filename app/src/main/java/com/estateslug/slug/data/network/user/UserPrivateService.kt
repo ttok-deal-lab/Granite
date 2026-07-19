@@ -2,6 +2,7 @@ package com.estateslug.slug.data.network.user
 
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -53,6 +54,24 @@ interface UserPrivateService {
     @POST("$CONTEXT/$VERSION/$AUTH/$LOGOUT")
     suspend fun logout(): String
 
+    @POST("$CONTEXT/$VERSION/$USERS/{$USER_ID}/$FCM/{$DEVICE_ID}")
+    suspend fun registerFcmToken(
+        @Path(USER_ID) userId: String,
+        @Path(DEVICE_ID) deviceId: String,
+        @Header("FCM-TOKEN") fcmToken: String,
+        @Header("DEVICE-TYPE") deviceType: String = "android",
+    ): Long
+
+    @GET("$CONTEXT/$VERSION/$USERS/{$USER_ID}/$FCM")
+    suspend fun getFcmTokens(
+        @Path(USER_ID) userId: String,
+    ): List<FcmTokenResponseDTO>
+
+    @DELETE("$CONTEXT/$VERSION/$USERS/{$USER_ID}/$FCM")
+    suspend fun deleteFcmToken(
+        @Path(USER_ID) userId: String,
+    ): String
+
     companion object {
         private const val CONTEXT: String = "api/sherbet-auth"
         private const val VERSION: String = "v1"
@@ -64,6 +83,8 @@ interface UserPrivateService {
         private const val USERS: String = "users"
         private const val USER_ID: String = "userId"
         private const val PRODUCT_ID: String = "id"
+        private const val FCM: String = "fcm"
+        private const val DEVICE_ID: String = "deviceId"
 
     }
 }

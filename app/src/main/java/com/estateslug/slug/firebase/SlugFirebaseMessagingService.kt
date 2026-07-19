@@ -16,14 +16,40 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.estateslug.slug.deeplink.DeepLinkKeys
 import com.estateslug.slug.deeplink.DeepLinkRouterActivity
+import com.estateslug.slug.domain.user.RegisterFcmTokenUseCase
 import com.estateslug.slug.main.MainActivity
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 class SlugFirebaseMessagingService : FirebaseMessagingService() {
     override fun onNewToken(token: String) {
         super.onNewToken(token)
-        // TODO: send your new token to the server
+        // 로그아웃 시 deleteToken()이 새 토큰 발급을 유발해 onNewToken이 불릴 수 있다.
+        // 이때는 auto-init이 꺼진 상태(unregisterFcmToken 선행)이므로 서버 재등록을 건너뛴다.
+        if (!FirebaseMessaging.getInstance().isAutoInitEnabled) return
+
+        // 새 토큰을 서버에 등록 (미로그인 상태면 UseCase 내부에서 Result.failure 처리됨)
+        val registerFcmTokenUseCase = EntryPointAccessors.fromApplication(
+            applicationContext,
+            FcmTokenEntryPoint::class.java
+        ).registerFcmTokenUseCase()
+
+        CoroutineScope(Dispatchers.IO).launch {
+            registerFcmTokenUseCase()
+        }
+    }
+
+    @EntryPoint
+    @InstallIn(SingletonComponent::class)
+    interface FcmTokenEntryPoint {
+        fun registerFcmTokenUseCase(): RegisterFcmTokenUseCase
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {

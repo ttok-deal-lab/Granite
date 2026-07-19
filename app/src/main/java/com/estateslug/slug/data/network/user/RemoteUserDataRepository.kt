@@ -75,4 +75,19 @@ class RemoteUserDataRepository @Inject constructor(
     suspend fun deleteUser(userId: String): Result<String> =
         runCatching { privateUserService.deleteUser(userId) }
 
+    suspend fun registerFcmToken(userId: String, deviceId: String, fcmToken: String): Result<Long> =
+        runCatching {
+            privateUserService.registerFcmToken(
+                userId = userId,
+                deviceId = deviceId,
+                fcmToken = fcmToken,
+            )
+        }
+
+    suspend fun getFcmTokens(userId: String): Result<List<FcmTokenResponseDTO>> =
+        runCatching { privateUserService.getFcmTokens(userId) }
+
+    suspend fun deleteFcmToken(userId: String): Result<String> =
+        runCatching { privateUserService.deleteFcmToken(userId) }
+
 }

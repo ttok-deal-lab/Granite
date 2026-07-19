@@ -8,8 +8,10 @@ import com.estateslug.slug.data.local.user.LocalUserDataRepository
 import com.estateslug.slug.data.network.update.RemoteConfigRepository
 import com.estateslug.slug.data.network.update.UpdateInfo
 import com.estateslug.slug.data.network.user.RemoteUserDataRepository
+import com.estateslug.slug.domain.user.RegisterFcmTokenUseCase
 import com.estateslug.slug.login.sns.SocialLoginType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,6 +29,7 @@ class LoginViewModel @Inject constructor(
     private val localDeviceSettingDataRepository: LocalDeviceSettingDataRepository,
     private val remoteUserDataRepository: RemoteUserDataRepository,
     private val remoteConfigRepository: RemoteConfigRepository,
+    private val registerFcmTokenUseCase: RegisterFcmTokenUseCase,
 ) : ViewModel() {
 
     private val _lastLoginType = MutableStateFlow<SocialLoginType>(SocialLoginType.NEVER_LOGIN)
@@ -64,6 +67,8 @@ class LoginViewModel @Inject constructor(
             }.onSuccess { (token, userProfile) ->
                 localUserDataRepository.setUserSlugToken(token)
                 localUserDataRepository.setUserProfile(userProfile)
+                // 로그인 완료(화면 전환)를 막지 않도록 비동기로 서버에 FCM 토큰 등록
+                CoroutineScope(Dispatchers.IO).launch { registerFcmTokenUseCase() }
                 localDeviceSettingDataRepository.setLastLoginType(type)
                 doAfterSuccess.invoke()
             }.onFailure {
@@ -114,6 +119,8 @@ class LoginViewModel @Inject constructor(
                 }
 
                 localUserDataRepository.setUserProfile(userProfile)
+                // FCM 토큰이 회전됐을 수 있으므로 자동로그인 시에도 재등록 (스플래시 해제를 막지 않도록 비동기)
+                CoroutineScope(Dispatchers.IO).launch { registerFcmTokenUseCase() }
                 _isReadyToRemoveSplash.emit(true)
                 doOnSuccess()
                 //TODO :성공 전달!!
