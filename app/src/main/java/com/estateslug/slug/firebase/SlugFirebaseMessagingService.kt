@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.estateslug.slug.R
 import com.estateslug.slug.deeplink.DeepLinkKeys
 import com.estateslug.slug.deeplink.DeepLinkRouterActivity
 import com.estateslug.slug.domain.user.RegisterFcmTokenUseCase
@@ -112,8 +113,9 @@ class SlugFirebaseMessagingService : FirebaseMessagingService() {
         // notification 생성
         val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
-//            .setSmallIcon(R.drawable.img_splash_logo)
-//            .setContentTitle("SLUG") //TODO : localization need
+            // small icon 없이 notify() 호출 시 IllegalArgumentException 크래시 (QA 시트 참고)
+            .setSmallIcon(R.drawable.notification_line_28_28)
+            .setContentTitle(applicationInfo.loadLabel(packageManager).toString())
             .setContentText(body)
             .setAutoCancel(true)
             .setSound(soundUri)
