@@ -7,6 +7,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.estateslug.slug.main.Route
+import com.estateslug.slug.setting.permission.RoutePermissionSetting
 import com.estateslug.slug.setting.terms.RouteTerms
 import com.estateslug.slug.setting.withdraw.RouteWithdraw
 import com.estateslug.slug.util.moveToStore
@@ -30,6 +31,7 @@ internal fun SettingMainRoute(
     val onWithDrawClick: () -> Unit = {
         onNavigate(RouteWithdraw)
     }
+    val onPermissionSettingClick: () -> Unit = { onNavigate(RoutePermissionSetting) }
 
     val onMoveToStoreClick: () -> Unit = { moveToStore(context) }
 
@@ -48,7 +50,8 @@ internal fun SettingMainRoute(
         onMoveToStoreClick = onMoveToStoreClick,
         onOpenSourceClick = onOpenSourceClick,
         onLogoutClick = onLogoutClick,
-        onWithDrawClick = onWithDrawClick
+        onWithDrawClick = onWithDrawClick,
+        onPermissionSettingClick = onPermissionSettingClick,
     )
 
 }

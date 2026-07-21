@@ -198,23 +198,26 @@ class LogInActivity : ComponentActivity() {
     }
 
     private fun moveToNextActivity() {
-        val isisAllOfEssentialAllowed = PermissionChecker.isAllOfEssentialAllowed(this)
-        if (isisAllOfEssentialAllowed) {
-            // 딥링크로 진입해 로그인한 경우 원 목적지(라우터)로 이어보냄
+        lifecycleScope.launch {
+            // 딥링크로 진입해 로그인한 경우 원 목적지(라우터)로 이어보냄 (권한 인트로 생략 — 딥링크 목적지 우선)
             val pending = intent?.getStringExtra(DeepLinkKeys.PENDING_DEEPLINK)
-            val nextIntent = if (!pending.isNullOrBlank()) {
-                Intent(this, DeepLinkRouterActivity::class.java).apply {
+            if (!pending.isNullOrBlank()) {
+                val nextIntent = Intent(this@LogInActivity, DeepLinkRouterActivity::class.java).apply {
                     action = Intent.ACTION_VIEW
                     data = Uri.parse(pending)
                 }
+                startActivity(nextIntent)
+            } else if (!PermissionChecker.isAllOfEssentialAllowed(this@LogInActivity) ||
+                (PermissionChecker.isNotificationPermissionMissing(this@LogInActivity) &&
+                    loginViewModel.shouldShowNotificationPermissionIntro())
+            ) {
+                loginViewModel.markNotificationPermissionIntroShown()
+                moveToPermissionCheck()
             } else {
-                Intent(this, MainActivity::class.java)
+                startActivity(Intent(this@LogInActivity, MainActivity::class.java))
             }
-            startActivity(nextIntent)
-        } else {
-            moveToPermissionCheck()
+            finish()
         }
-        finish()
     }
 
     private fun showToast(text: String) {

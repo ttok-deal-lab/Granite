@@ -32,12 +32,14 @@ fun SettingMainPage(
     onOpenSourceClick: () -> Unit,
     onLogoutClick: () -> Unit,
     onWithDrawClick: () -> Unit,
+    onPermissionSettingClick: () -> Unit,
 ) {
 //    val onAlarmSettingClick: () -> Unit = {}
 
     Column {
         SettingTopBar(text = "설정", onBackClick = onBackClick)
 //        ArrowSettingButton(buttonText = "알림 설정 관리", onClick = onAlarmSettingClick)
+        ArrowSettingButton(buttonText = "권한 설정", onClick = onPermissionSettingClick)
         ArrowSettingButton(buttonText = "서비스 약관", onClick = onTOSClick)
 
         HorizontalDivider(color = NeutralWeak, thickness = 10.dp)
@@ -94,6 +96,7 @@ fun PreviewSettingScreen() {
     val onOpenSourceClick: () -> Unit = {}
     val onLogoutClick: () -> Unit = {}
     val onWithDrawClick: () -> Unit = {}
+    val onPermissionSettingClick: () -> Unit = {}
     Surface {
         SettingMainPage(
             appVersion = appVersion,
@@ -104,6 +107,7 @@ fun PreviewSettingScreen() {
             onOpenSourceClick = onOpenSourceClick,
             onLogoutClick = onLogoutClick,
             onWithDrawClick = onWithDrawClick,
+            onPermissionSettingClick = onPermissionSettingClick,
         )
     }
 }

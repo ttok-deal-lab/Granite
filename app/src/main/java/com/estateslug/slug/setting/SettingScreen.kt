@@ -17,6 +17,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.estateslug.slug.main.Route
+import com.estateslug.slug.setting.permission.permissionSettingNavGraph
 import com.estateslug.slug.setting.terms.termsNavGraph
 import com.estateslug.slug.setting.withdraw.withdrawNavGraph
 import com.estateslug.slug.ui.component.ProgressCover
@@ -114,6 +115,8 @@ fun SettingNavHost(
             termsNavGraph(onBackClick)
 
             withdrawNavGraph(onBackClick)
+
+            permissionSettingNavGraph(onBackClick)
         }
     }
 }

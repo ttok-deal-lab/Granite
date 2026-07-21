@@ -20,7 +20,7 @@ enum class PermissionDataModel(
         permissionString = Manifest.permission.ACCESS_COARSE_LOCATION,
         requiresApi = Build.VERSION_CODES.BASE,
         iconId = R.drawable.ic_color_location,
-        permissionNameId = R.string.permission_notification_name,
+        permissionNameId = R.string.permission_location_name,
         permissionDescriptionId = R.string.permission_location,
         ),
 

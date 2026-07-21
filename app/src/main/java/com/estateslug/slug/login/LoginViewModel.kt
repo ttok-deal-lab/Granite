@@ -142,6 +142,13 @@ class LoginViewModel @Inject constructor(
     }
 
 
+    suspend fun shouldShowNotificationPermissionIntro(): Boolean =
+        !localDeviceSettingDataRepository.wasNotificationPermissionIntroShown().getOrDefault(false)
+
+    suspend fun markNotificationPermissionIntroShown() {
+        localDeviceSettingDataRepository.setNotificationPermissionIntroShown()
+    }
+
     fun <T> Flow<T>.stateInWhileSubscribed(initialValue: T): StateFlow<T> {
         return stateIn(
             scope = viewModelScope,

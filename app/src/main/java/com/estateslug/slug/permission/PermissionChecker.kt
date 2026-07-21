@@ -1,6 +1,9 @@
 package com.estateslug.slug.permission
 
+import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 
@@ -42,5 +45,12 @@ class PermissionChecker(
             PermissionDataModel.essentialPermissions
                 .map { it.permissionString }
                 .none { activity.checkSelfPermission(it) == PackageManager.PERMISSION_DENIED }
+
+        fun isGranted(context: Context, permissionString: String): Boolean =
+            context.checkSelfPermission(permissionString) == PackageManager.PERMISSION_GRANTED
+
+        fun isNotificationPermissionMissing(context: Context): Boolean =
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                !isGranted(context, Manifest.permission.POST_NOTIFICATIONS)
     }
 }

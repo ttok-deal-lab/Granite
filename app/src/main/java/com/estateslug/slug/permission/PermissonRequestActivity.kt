@@ -50,15 +50,18 @@ import kotlinx.coroutines.launch
 
 class PermissionRequestActivity : ComponentActivity() {
     private var permissionAllowedToExit = MutableStateFlow(false)
+    private var hasUngrantedPermissions = MutableStateFlow(false)
     private val permissionChecker =
         PermissionChecker(activity = this) { essentialFailed, _ ->
             lifecycleScope.launch {
                 permissionAllowedToExit.emit(essentialFailed.isEmpty())
+                hasUngrantedPermissions.emit(calculateHasUngrantedPermissions())
             }
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        hasUngrantedPermissions.value = calculateHasUngrantedPermissions()
 
         setContent {
             SlugTheme {
@@ -75,8 +78,12 @@ class PermissionRequestActivity : ComponentActivity() {
         super.onResume()
         lifecycleScope.launch {
             permissionAllowedToExit.emit(PermissionChecker.isAllOfEssentialAllowed(this@PermissionRequestActivity))
+            hasUngrantedPermissions.emit(calculateHasUngrantedPermissions())
         }
     }
+
+    private fun calculateHasUngrantedPermissions(): Boolean =
+        PermissionDataModel.permissions.any { !PermissionChecker.isGranted(this, it.permissionString) }
 
     //TODO : i18n 준비
     @Composable
@@ -85,6 +92,7 @@ class PermissionRequestActivity : ComponentActivity() {
         optional: List<PermissionDataModel>
     ) {
         val permissionAllowed by permissionAllowedToExit.collectAsStateWithLifecycle()
+        val hasUngranted by hasUngrantedPermissions.collectAsStateWithLifecycle()
         var permissionRequestCount by remember { mutableIntStateOf(0) }
         Scaffold { innerPadding ->
             Column(
@@ -134,13 +142,14 @@ class PermissionRequestActivity : ComponentActivity() {
                     modifier = Modifier.padding(20.dp),
                     buttonText = stringResource(
                         id = when {
+                            permissionRequestCount == 0 && hasUngranted -> R.string.permission_request
                             permissionAllowed -> R.string.permission_confirm
                             permissionRequestCount > REQUEST_MAX_LIMIT -> R.string.permission_close_app
                             else -> R.string.permission_request
                         },
                     ),
                     onButtonClick = {
-                        onBottomButtonClicked(permissionAllowed, permissionRequestCount)
+                        onBottomButtonClicked(permissionAllowed, permissionRequestCount, hasUngranted)
                         permissionRequestCount++
                     }
                 )
@@ -165,8 +174,16 @@ class PermissionRequestActivity : ComponentActivity() {
         }
     }
 
-    private fun onBottomButtonClicked(permissionAllowed: Boolean, permissionRequestCount: Int) {
+    private fun onBottomButtonClicked(
+        permissionAllowed: Boolean,
+        permissionRequestCount: Int,
+        hasUngrantedPermissions: Boolean,
+    ) {
         when {
+            permissionRequestCount == 0 && hasUngrantedPermissions -> {
+                permissionChecker.requestPermission()
+            }
+
             permissionAllowed -> {
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
