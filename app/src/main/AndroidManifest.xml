@@ -64,7 +64,7 @@
 
         <activity
             android:name=".search.SearchActivity"
-            android:exported="true"
+            android:exported="false"
             android:label="@string/title_activity_search"
             android:theme="@style/Theme.Slug" />
         <activity
@@ -116,7 +116,7 @@
         </activity>
         <activity
             android:name=".login.sns.apple.AppleLoginActivity"
-            android:exported="true"
+            android:exported="false"
             android:theme="@style/Theme.Slug" />
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
