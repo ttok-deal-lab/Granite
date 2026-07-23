@@ -46,7 +46,7 @@ class CursorPaginator<T>(
                     it.hasSameData(page)
                 }
                 if (isSame) {
-                    it.copy(isRefreshing = false)
+                    it.copy(isRefreshing = false, error = null)
                 } else {
                     CursorPaginationState(
                         items = page.items,
@@ -75,6 +75,7 @@ class CursorPaginator<T>(
                     isLoadingMore = false,
                     hasMore = page.nextCursor != null,
                     totalCount = page.totalCount,
+                    error = null,
                 )
             }
         } catch (e: Exception) {

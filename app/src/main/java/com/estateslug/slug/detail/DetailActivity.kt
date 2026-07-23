@@ -33,7 +33,8 @@ class DetailActivity : ComponentActivity() {
                 DetailScreen(
                     uiState = uiState,
                     onBackButtonClicked = { this.finish() },
-                    likeClicked = { detailedViewModel.onLikeChangeRequest() }
+                    likeClicked = { detailedViewModel.onLikeChangeRequest() },
+                    onRetry = { detailedViewModel.retry() }
                 )
             }
         }

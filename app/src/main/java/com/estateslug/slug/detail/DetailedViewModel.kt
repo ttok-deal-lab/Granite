@@ -51,7 +51,11 @@ class DetailedViewModel @Inject constructor(
         MutableStateFlow(CourtSaleDetailUiState.preview)
     val uiState: StateFlow<CourtSaleDetailUiState> = _uiState.asStateFlow()
 
+    private var lastRequestedId: String = ""
+
     fun requestData(id: String) {
+        lastRequestedId = id
+        _uiState.update { it.copy(isLoading = true, isError = false) }
         CoroutineScope(Dispatchers.IO).launch {
             remoteSalesDataRepository.getCourtSaleDetail(id)
                 .onSuccess { detail ->
@@ -78,8 +82,13 @@ class DetailedViewModel @Inject constructor(
                         )
                     }
                 }
+                .onFailure {
+                    _uiState.update { it.copy(isLoading = false, isError = true) }
+                }
         }
     }
+
+    fun retry() = requestData(lastRequestedId)
 
     var lastFavoriteJob: Job = Job().apply { complete() }
     fun onLikeChangeRequest() {
@@ -133,6 +142,7 @@ class DetailedViewModel @Inject constructor(
 
 data class CourtSaleDetailUiState(
     val isLoading: Boolean = true,
+    val isError: Boolean = false,
     val productId: String = "",
     val detailSimpleInformation: DetailSimpleInformationUiModel,
     val listOfLessees: List<LesseeInfo>,

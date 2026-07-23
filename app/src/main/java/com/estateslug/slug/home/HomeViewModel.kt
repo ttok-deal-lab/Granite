@@ -83,6 +83,10 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch { paginator.loadMore() }
     }
 
+    fun retryInitialLoad() {
+        viewModelScope.launch { paginator.loadInitial() }
+    }
+
     private val _numberOfProduct: MutableStateFlow<Long> = MutableStateFlow(0L)
     val numberOfProduct = _numberOfProduct.asStateFlow()
 

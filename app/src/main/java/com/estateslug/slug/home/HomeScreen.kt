@@ -14,6 +14,7 @@ import com.estateslug.slug.R
 import com.estateslug.slug.home.bottomsheet.sorting.SortingType
 import com.estateslug.slug.home.component.FilterButtonState
 import com.estateslug.slug.ui.component.ProductListEmpty
+import com.estateslug.slug.ui.component.ProductListError
 import com.estateslug.slug.util.CursorPaginationState
 
 
@@ -32,7 +33,8 @@ fun HomeScreen(
     onFilterClick: (FilterOption) -> Unit,
     onNotificationClick: () -> Unit,
     onSearchClick: () -> Unit,
-    onLocationSelectClick: () -> Unit
+    onLocationSelectClick: () -> Unit,
+    onRetryInitialLoad: () -> Unit
 ) {
 
     Column(modifier = Modifier.padding(padding)) {
@@ -54,6 +56,12 @@ fun HomeScreen(
         when {
             paginationState.isInitialLoading -> {
                 ProductListSkeleton()
+            }
+            paginationState.isInitialError -> {
+                ProductListError(
+                    title = stringResource(R.string.product_list_error_title),
+                    onRetry = onRetryInitialLoad,
+                )
             }
             paginationState.isEmpty -> {
                 ProductListEmpty(stringResource(R.string.home_product_list_empty_title))
@@ -123,5 +131,6 @@ fun PreviewHomeScreen() {
         paginationState = CursorPaginationState(items = ProductItemUiModel.testList),
         onFilterClick = onFilterClick,
         onLoadMore = {},
+        onRetryInitialLoad = {},
     )
 }

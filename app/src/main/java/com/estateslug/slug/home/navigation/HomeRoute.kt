@@ -95,5 +95,6 @@ internal fun HomeRoute(
         onFilterClick = onFilterClick,
         onItemClicked = onItemClicked,
         onLoadMore = { homeViewModel.loadMore() },
+        onRetryInitialLoad = { homeViewModel.retryInitialLoad() },
     )
 }

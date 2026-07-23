@@ -25,6 +25,7 @@ import com.estateslug.slug.home.component.FilterButtonState
 import com.estateslug.slug.search.SearchViewModel
 import com.estateslug.slug.search.bottomsheet.SearchBottomSheetType
 import com.estateslug.slug.ui.component.ProductListEmpty
+import com.estateslug.slug.ui.component.ProductListError
 import com.estateslug.slug.ui.theme.NeutralInverted
 import com.estateslug.slug.util.CursorPaginationState
 
@@ -48,6 +49,7 @@ fun SearchResultRoute(
             onItemClick(item.id)
         },
         onLoadMore = { viewModel.loadMore() },
+        onRetryInitialLoad = { viewModel.retryInitialLoad() },
         onFilterClick = { filterOption ->
             when (filterOption) {
                 ToggleFilterType.VERIFIED -> viewModel.changeVerifiedSelected()
@@ -70,6 +72,7 @@ fun SearchResultScreen(
     paginationState: CursorPaginationState<ProductItemUiModel>,
     onItemClick: (ProductItemUiModel) -> Unit,
     onLoadMore: () -> Unit,
+    onRetryInitialLoad: () -> Unit,
     onFilterClick: (FilterOption) -> Unit,
     onSortingClick: () -> Unit
 ) {
@@ -91,6 +94,13 @@ fun SearchResultScreen(
         when {
             paginationState.isInitialLoading -> {
                 ProductListSkeleton()
+            }
+
+            paginationState.isInitialError -> {
+                ProductListError(
+                    title = stringResource(R.string.product_list_error_title),
+                    onRetry = onRetryInitialLoad,
+                )
             }
 
             paginationState.isEmpty -> {
@@ -120,6 +130,7 @@ fun PreviewSearchResultScreen() {
             paginationState = CursorPaginationState(items = ProductItemUiModel.testList),
             onItemClick = {},
             onLoadMore = {},
+            onRetryInitialLoad = {},
             onFilterClick = {},
             onSortingClick = {},
         )

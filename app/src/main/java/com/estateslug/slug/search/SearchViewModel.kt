@@ -151,6 +151,10 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch { paginator.loadMore() }
     }
 
+    fun retryInitialLoad() {
+        viewModelScope.launch { paginator.loadInitial() }
+    }
+
     private var autoCompleteJob: Job? = null
 
     fun updateSearchKeyword(keyword: String) {

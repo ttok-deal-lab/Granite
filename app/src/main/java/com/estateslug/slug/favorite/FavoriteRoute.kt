@@ -45,7 +45,8 @@ internal fun FavoriteRoute(
         paginationState = paginationState,
         onItemClicked = onItemClicked,
         onLoadMore = { viewModel.loadMore() },
-        onNotificationClick = onNotificationClick
+        onNotificationClick = onNotificationClick,
+        onRetry = { viewModel.refresh() },
     )
 
 }

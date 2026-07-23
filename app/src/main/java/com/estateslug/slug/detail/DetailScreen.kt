@@ -18,13 +18,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.estateslug.slug.R
 import com.estateslug.slug.detail.subpage.TitleAnalysisPage
 import com.estateslug.slug.detail.subpage.auction.AuctionInfoPage
+import com.estateslug.slug.ui.component.ProductListError
 import com.estateslug.slug.ui.theme.NeutralInverted
 import com.estateslug.slug.ui.theme.NeutralWeak
 import com.estateslug.slug.ui.theme.SlugTheme
@@ -35,7 +38,8 @@ import kotlinx.serialization.Serializable
 fun DetailScreen(
     uiState: CourtSaleDetailUiState,
     onBackButtonClicked: () -> Unit,
-    likeClicked: () -> Unit
+    likeClicked: () -> Unit,
+    onRetry: () -> Unit
 ) {
 
     var selectedRoute: DetailedRoute by remember { mutableStateOf(DetailedRoute.AuctionInfo) }
@@ -83,14 +87,22 @@ fun DetailScreen(
         Box(
             modifier = Modifier.padding(paddingValues)
         ) {
+            val contentState: DetailContentState = when {
+                uiState.isLoading -> DetailContentState.Loading
+                uiState.isError -> DetailContentState.Error
+                else -> DetailContentState.Content
+            }
             Crossfade(
-                targetState = uiState.isLoading,
+                targetState = contentState,
                 label = "detailLoadingCrossfade"
-            ) { isLoading ->
-                if (isLoading) {
-                    DetailScreenSkeleton()
-                } else {
-                    Column {
+            ) { state ->
+                when (state) {
+                    DetailContentState.Loading -> DetailScreenSkeleton()
+                    DetailContentState.Error -> ProductListError(
+                        title = stringResource(R.string.product_list_error_title),
+                        onRetry = onRetry,
+                    )
+                    DetailContentState.Content -> Column {
                         LazyColumn(
                             modifier = Modifier
                                 .background(NeutralInverted),
@@ -163,6 +175,10 @@ fun DetailScreen(
 
 }
 
+private enum class DetailContentState {
+    Loading, Error, Content
+}
+
 sealed class DetailedRoute {
     abstract val period: Int
     abstract val name: String
@@ -207,6 +223,7 @@ private fun PreviewDetailPage() {
             uiState = CourtSaleDetailUiState.preview.copy(isLoading = false),
             onBackButtonClicked = {},
             likeClicked = {},
+            onRetry = {},
         )
     }
 }

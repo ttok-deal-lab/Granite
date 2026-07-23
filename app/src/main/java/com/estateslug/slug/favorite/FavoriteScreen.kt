@@ -22,6 +22,7 @@ import com.estateslug.slug.R
 import com.estateslug.slug.home.ProductList
 import com.estateslug.slug.home.ProductListSkeleton
 import com.estateslug.slug.home.ProductItemUiModel
+import com.estateslug.slug.ui.component.ProductListError
 import com.estateslug.slug.ui.component.image.ImageProcessor
 import com.estateslug.slug.ui.component.image.ImageResource
 import com.estateslug.slug.ui.theme.NeutralSubtler
@@ -38,6 +39,7 @@ fun FavoriteScreen(
     onItemClicked: (ProductItemUiModel) -> Unit,
     onLoadMore: () -> Unit,
     onNotificationClick: () -> Unit,
+    onRetry: () -> Unit,
     ) {
     Column(modifier = Modifier.padding(padding)) {
         FavoriteTopBar(
@@ -46,6 +48,12 @@ fun FavoriteScreen(
         when {
             paginationState.isInitialLoading -> {
                 ProductListSkeleton()
+            }
+            paginationState.isInitialError -> {
+                ProductListError(
+                    title = stringResource(R.string.product_list_error_title),
+                    onRetry = onRetry,
+                )
             }
             paginationState.isEmpty -> {
                 EmptyFavoriteScreen()
@@ -96,6 +104,7 @@ fun PreviewHomeScreen() {
         onItemClicked = onItemClicked,
         paginationState = CursorPaginationState(items = ProductItemUiModel.testList),
         onLoadMore = {},
+        onRetry = {},
     )
 }
 @Preview
