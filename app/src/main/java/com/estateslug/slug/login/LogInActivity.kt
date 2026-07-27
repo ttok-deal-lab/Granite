@@ -51,6 +51,7 @@ class LogInActivity : ComponentActivity() {
         enableEdgeToEdge()
         initSocialLoginModule()
         loginViewModel.requestLastLoginType()
+        checkPermissionIntro()
         setContent {
             val lastLoginType by loginViewModel.lastLoginType.collectAsStateWithLifecycle()
             val forceUpdateInfo by loginViewModel.forceUpdateInfo.collectAsStateWithLifecycle()
@@ -82,6 +83,21 @@ class LogInActivity : ComponentActivity() {
             }
         }
         delaySplash()
+    }
+
+    // 로그인 화면 진입 시 1회: 알림 권한이 없으면 권한 안내 화면을 먼저 노출 (확인 시 이 화면으로 복귀)
+    private fun checkPermissionIntro() {
+        lifecycleScope.launch {
+            if (PermissionChecker.isNotificationPermissionMissing(this@LogInActivity) &&
+                loginViewModel.shouldShowNotificationPermissionIntro()
+            ) {
+                // 1회 노출 플래그는 사용자가 요청 버튼을 누른 시점에 PermissionRequestActivity가 기록
+                startActivity(
+                    Intent(this@LogInActivity, PermissionRequestActivity::class.java)
+                        .putExtra(PermissionRequestActivity.EXTRA_FINISH_ON_CONFIRM, true)
+                )
+            }
+        }
     }
 
     private fun delaySplash() {
@@ -198,26 +214,21 @@ class LogInActivity : ComponentActivity() {
     }
 
     private fun moveToNextActivity() {
-        lifecycleScope.launch {
-            // 딥링크로 진입해 로그인한 경우 원 목적지(라우터)로 이어보냄 (권한 인트로 생략 — 딥링크 목적지 우선)
-            val pending = intent?.getStringExtra(DeepLinkKeys.PENDING_DEEPLINK)
-            if (!pending.isNullOrBlank()) {
-                val nextIntent = Intent(this@LogInActivity, DeepLinkRouterActivity::class.java).apply {
-                    action = Intent.ACTION_VIEW
-                    data = Uri.parse(pending)
-                }
-                startActivity(nextIntent)
-            } else if (!PermissionChecker.isAllOfEssentialAllowed(this@LogInActivity) ||
-                (PermissionChecker.isNotificationPermissionMissing(this@LogInActivity) &&
-                    loginViewModel.shouldShowNotificationPermissionIntro())
-            ) {
-                loginViewModel.markNotificationPermissionIntroShown()
-                moveToPermissionCheck()
-            } else {
-                startActivity(Intent(this@LogInActivity, MainActivity::class.java))
+        // 딥링크로 진입해 로그인한 경우 원 목적지(라우터)로 이어보냄
+        // (알림 권한 인트로는 로그인 화면 진입 시 checkPermissionIntro()에서 처리)
+        val pending = intent?.getStringExtra(DeepLinkKeys.PENDING_DEEPLINK)
+        if (!pending.isNullOrBlank()) {
+            val nextIntent = Intent(this, DeepLinkRouterActivity::class.java).apply {
+                action = Intent.ACTION_VIEW
+                data = Uri.parse(pending)
             }
-            finish()
+            startActivity(nextIntent)
+        } else if (!PermissionChecker.isAllOfEssentialAllowed(this)) {
+            moveToPermissionCheck()
+        } else {
+            startActivity(Intent(this, MainActivity::class.java))
         }
+        finish()
     }
 
     private fun showToast(text: String) {

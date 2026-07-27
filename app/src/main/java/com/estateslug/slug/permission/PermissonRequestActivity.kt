@@ -37,6 +37,7 @@ import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.estateslug.slug.R
+import com.estateslug.slug.data.local.device.LocalDeviceSettingDataRepository
 import com.estateslug.slug.main.MainActivity
 import com.estateslug.slug.permission.PermissionDataModel.Companion.REQUEST_MAX_LIMIT
 import com.estateslug.slug.ui.component.button.basic.BasicTextButton
@@ -45,10 +46,21 @@ import com.estateslug.slug.ui.theme.Neutral
 import com.estateslug.slug.ui.theme.NeutralLight
 import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class PermissionRequestActivity : ComponentActivity() {
+    @Inject
+    lateinit var localDeviceSettingDataRepository: LocalDeviceSettingDataRepository
+
+    companion object {
+        /** true면 확인 시 다음 화면 이동 없이 finish()만 (로그인 전 인트로 용) */
+        const val EXTRA_FINISH_ON_CONFIRM = "extra_finish_on_confirm"
+    }
+
     private var permissionAllowedToExit = MutableStateFlow(false)
     private var hasUngrantedPermissions = MutableStateFlow(false)
     private val permissionChecker =
@@ -181,13 +193,22 @@ class PermissionRequestActivity : ComponentActivity() {
     ) {
         when {
             permissionRequestCount == 0 && hasUngrantedPermissions -> {
+                // 사용자가 실제 요청을 진행한 시점에 인트로 1회 노출로 기록
+                // (노출 즉시 기록하면 세션 만료 리다이렉트 등으로 덮였을 때 재노출 기회가 사라짐)
+                lifecycleScope.launch {
+                    localDeviceSettingDataRepository.setNotificationPermissionIntroShown()
+                }
                 permissionChecker.requestPermission()
             }
 
             permissionAllowed -> {
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-                this@PermissionRequestActivity.finish()
+                // 로그인 전 인트로 모드: 호출 화면(로그인)으로 복귀만
+                if (intent.getBooleanExtra(EXTRA_FINISH_ON_CONFIRM, false)) {
+                    this@PermissionRequestActivity.finish()
+                } else {
+                    startActivity(Intent(this, MainActivity::class.java))
+                    this@PermissionRequestActivity.finish()
+                }
             }
 
             permissionRequestCount == REQUEST_MAX_LIMIT -> {

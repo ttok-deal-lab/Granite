@@ -3,6 +3,7 @@ package com.estateslug.slug.setting
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.estateslug.slug.BuildConfig
+import com.estateslug.slug.data.local.device.LocalDeviceSettingDataRepository
 import com.estateslug.slug.data.local.user.LocalUserDataRepository
 import com.estateslug.slug.data.network.user.RemoteUserDataRepository
 import com.estateslug.slug.domain.user.UnregisterFcmTokenUseCase
@@ -24,6 +25,7 @@ import javax.inject.Inject
 class SettingViewModel @Inject constructor(
     @ApplicationContext private val appContext: Context,
     private val localUserDataRepository: LocalUserDataRepository,
+    private val localDeviceSettingDataRepository: LocalDeviceSettingDataRepository,
     private val remoteUserDataRepository: RemoteUserDataRepository,
     private val unregisterFcmTokenUseCase: UnregisterFcmTokenUseCase,
 ) : ViewModel() {
@@ -58,6 +60,8 @@ class SettingViewModel @Inject constructor(
                 remoteUserDataRepository.requestLogout()
             }
             localUserDataRepository.setUserAccessToken("") // 유저 토큰을 없애버림.
+            // 알림 권한 인트로 1회 노출 플래그 리셋 — 재로그인 진입 시(권한 미보유면) 다시 안내
+            localDeviceSettingDataRepository.resetNotificationPermissionIntroShown()
             _isNeedToShowProgress.update { false }
             // 토큰 제거까지 끝난 뒤 화면 전환해야 LogInActivity 자동로그인이
             // 아직 살아있는 토큰으로 성공해 메인으로 복귀하는 레이스가 없다
@@ -77,6 +81,8 @@ class SettingViewModel @Inject constructor(
                 remoteUserDataRepository.deleteUser(userId)
             }
             localUserDataRepository.removeAllData()
+            // 알림 권한 인트로 1회 노출 플래그 리셋 (로그아웃과 동일 — 재로그인 시 다시 안내)
+            localDeviceSettingDataRepository.resetNotificationPermissionIntroShown()
             _isNeedToShowProgress.update { false }
             // 로컬 데이터 제거까지 끝난 뒤 화면 전환 (requestLogout과 동일한 레이스 방지)
             withContext(Dispatchers.Main) { doAfterSuccess() }

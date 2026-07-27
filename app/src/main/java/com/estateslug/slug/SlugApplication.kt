@@ -10,6 +10,7 @@ import com.kakao.vectormap.KakaoMapSdk
 import com.estateslug.slug.data.local.user.LocalUserDataRepository
 import com.estateslug.slug.data.network.AuthEventBus
 import com.estateslug.slug.login.LogInActivity
+import com.estateslug.slug.permission.PermissionRequestActivity
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -85,7 +86,8 @@ class SlugApplication : Application() {
             Toast.LENGTH_LONG,
         ).show()
 
-        if (activity !is LogInActivity) {
+        // 권한 인트로 화면이 떠 있으면 리다이렉트 생략 — 확인 시 아래의 로그인 화면으로 자연 복귀
+        if (activity !is LogInActivity && activity !is PermissionRequestActivity) {
             val intent = Intent(this, LogInActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
             }

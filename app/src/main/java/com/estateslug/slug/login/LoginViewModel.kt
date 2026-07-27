@@ -72,6 +72,7 @@ class LoginViewModel @Inject constructor(
                 localDeviceSettingDataRepository.setLastLoginType(type)
                 doAfterSuccess.invoke()
             }.onFailure {
+                //구글로그인은 네트워크가 끊겨도 여기까지는 진행가능함.
                 Log.e("TESTTESST", "requestUserAuth: FAIL" + it.localizedMessage)
             }
         }
@@ -144,10 +145,6 @@ class LoginViewModel @Inject constructor(
 
     suspend fun shouldShowNotificationPermissionIntro(): Boolean =
         !localDeviceSettingDataRepository.wasNotificationPermissionIntroShown().getOrDefault(false)
-
-    suspend fun markNotificationPermissionIntroShown() {
-        localDeviceSettingDataRepository.setNotificationPermissionIntroShown()
-    }
 
     fun <T> Flow<T>.stateInWhileSubscribed(initialValue: T): StateFlow<T> {
         return stateIn(

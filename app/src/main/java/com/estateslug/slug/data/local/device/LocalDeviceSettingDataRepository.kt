@@ -34,6 +34,10 @@ class LocalDeviceSettingDataRepository @Inject constructor(
     suspend fun setNotificationPermissionIntroShown(): Result<Unit> =
         deviceDataStore.storeData(key = NOTIFICATION_PERMISSION_INTRO_SHOWN, value = true)
 
+    /** 로그아웃/탈퇴 시 호출 — 재로그인 진입 시(권한 미보유면) 인트로를 다시 노출하기 위함 */
+    suspend fun resetNotificationPermissionIntroShown(): Result<Unit> =
+        deviceDataStore.storeData(key = NOTIFICATION_PERMISSION_INTRO_SHOWN, value = false)
+
     suspend fun wasNotificationPermissionIntroShown(): Result<Boolean> =
         runCatching {
             deviceDataStore.getStoredData(key = NOTIFICATION_PERMISSION_INTRO_SHOWN).getOrThrow()
