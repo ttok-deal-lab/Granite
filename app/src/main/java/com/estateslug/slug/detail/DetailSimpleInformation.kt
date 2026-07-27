@@ -17,7 +17,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.estateslug.slug.R
 import com.estateslug.slug.home.component.tooltip.AlertSlugTooltip
+import com.estateslug.slug.ui.component.SlugText
 import com.estateslug.slug.ui.component.label.SlugLabelLarge
 import com.estateslug.slug.ui.component.label.SlugLabelStyle
 import com.estateslug.slug.ui.component.label.SlugLabelUiModel
@@ -252,7 +252,7 @@ private fun LabelList(labelModels: List<SlugLabelUiModel>) {
 private fun NameAndLike(
     nameOfProduct: String,
     numberOfProduct: String,
-    typeDisplayName: String,
+    typeDisplayName: SlugText,
     size: String,
     isFavorite: Boolean,
     numberOfFavorite: Int,
@@ -268,7 +268,7 @@ private fun NameAndLike(
                 color = Neutral
             )
             Text(
-                text = "$typeDisplayName | $size",
+                text = "${typeDisplayName()} | $size",
                 style = SlugTypographyStyle.BodyMiniMedium,
                 color = NeutralSubtler
             )

@@ -1,6 +1,7 @@
 package com.estateslug.slug.detail
 
 import androidx.lifecycle.ViewModel
+import com.estateslug.slug.R
 import com.estateslug.slug.data.local.recent.RecentItemRepository
 import com.estateslug.slug.data.local.user.LocalUserDataRepository
 import com.estateslug.slug.data.network.sales.RemoteSalesDataRepository
@@ -241,7 +242,7 @@ private fun CourtSaleDetail.toDetailSimpleInformationUiModel(isFavorite: Boolean
         numberOfFavorite = zzimCount,
         nameOfProduct = salesBuildingName,
         numberOfProduct = salesNumber,
-        typeDisplayName = itemTypes.first(),
+        typeDisplayName = getStringFromCategory(salesCategories.first()),
         size = exclusiveArea.exclusiveAreaToSize(),
         labelModels = labelModels(),
         lowestPrice = lowestSalesPrice,
@@ -251,6 +252,19 @@ private fun CourtSaleDetail.toDetailSimpleInformationUiModel(isFavorite: Boolean
         recentDealDate = recentTransactionDate, //최근실거래가?
         lastSaleDate = salesDateTime
     )
+
+private fun getStringFromCategory(text: String): SlugText =
+    when (text) {
+        "VILLA" -> SlugText.Id(R.string.building_type_villa)
+        "APARTMENT" -> SlugText.Id(R.string.building_type_apartment)
+        "OFFICETEL" -> SlugText.Id(R.string.building_type_officetel)
+        "SHOP_HOUSE" -> SlugText.Id(R.string.building_type_commercial_house)
+        "HOUSING" -> SlugText.Id(R.string.building_type_house)
+        else -> SlugText.Id(R.string.building_type_other)
+        //논의에 따라 정해지지 않았던 타입들은 전부 기타로 처리하기로함. 2026/05/24
+//                else -> SlugText.Text(text)
+    }//TODO : ProductItemUiModel 참고해서 공통화할것.
+
 
 private fun CourtSaleDetail.labelModels(): List<SlugLabelUiModel> {
     //TODO : 어떤 칩들을 보여줄것인지?

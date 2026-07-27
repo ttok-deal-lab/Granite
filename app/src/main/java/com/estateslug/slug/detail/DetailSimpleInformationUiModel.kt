@@ -17,7 +17,7 @@ data class DetailSimpleInformationUiModel(
     val numberOfFavorite: Int,
     val nameOfProduct: String,
     val numberOfProduct: String,
-    val typeDisplayName: String,
+    val typeDisplayName: SlugText,
     val size: String,
     val labelModels: List<SlugLabelUiModel>,
     val lowestPrice: Long,
@@ -36,7 +36,7 @@ data class DetailSimpleInformationUiModel(
                 numberOfFavorite = 100,
                 nameOfProduct = "신촌금호2단지",
                 numberOfProduct = "2023타경 102411",
-                typeDisplayName = "아파트",
+                typeDisplayName = SlugText.Text("아파트"),
                 size = "공급 110.52㎡ (33평)",
                 labelModels = listOf(
                     SlugLabelUiModel(SlugLabelStyle.GradientBackground.Verified , SlugText.Text("인증매물")),
