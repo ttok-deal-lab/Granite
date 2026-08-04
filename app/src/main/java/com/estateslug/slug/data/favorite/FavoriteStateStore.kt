@@ -1,15 +1,10 @@
 package com.estateslug.slug.data.favorite
 
-import android.content.Context
-import android.widget.Toast
-import com.estateslug.slug.R
 import com.estateslug.slug.data.local.user.LocalUserDataRepository
 import com.estateslug.slug.data.network.user.RemoteUserDataRepository
 import com.estateslug.slug.home.ProductItemUiModel
 import com.estateslug.slug.util.CursorPaginationState
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.channels.BufferOverflow
@@ -21,7 +16,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -40,7 +34,7 @@ import javax.inject.Singleton
 @Singleton
 class FavoriteStateStore @Inject constructor(
     @ApplicationScope private val appScope: CoroutineScope,
-    @ApplicationContext private val appContext: Context,
+    private val errorNotifier: FavoriteErrorNotifier,
     private val remoteUserDataRepository: RemoteUserDataRepository,
     private val localUserDataRepository: LocalUserDataRepository,
 ) {
@@ -135,10 +129,7 @@ class FavoriteStateStore @Inject constructor(
     private suspend fun rollback(productId: String, attempted: Boolean) {
         _overrides.update { it + (productId to !attempted) }
         _changes.tryEmit(FavoriteChange(productId, !attempted, snapshot = null))
-        withContext(Dispatchers.Main) {
-            Toast.makeText(appContext, R.string.favorite_action_failed_toast, Toast.LENGTH_SHORT)
-                .show()
-        }
+        errorNotifier.notifyFavoriteActionFailed()
     }
 }
 

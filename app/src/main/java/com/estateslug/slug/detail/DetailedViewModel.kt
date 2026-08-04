@@ -3,10 +3,12 @@ package com.estateslug.slug.detail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.estateslug.slug.R
 import com.estateslug.slug.data.favorite.FavoriteStateStore
 import com.estateslug.slug.data.local.recent.RecentItemRepository
 import com.estateslug.slug.data.network.sales.RemoteSalesDataRepository
+import com.estateslug.slug.detail.navigation.RouteDetail
 import com.estateslug.slug.detail.subpage.LesseeInfo
 import com.estateslug.slug.detail.subpage.OccupancyStatus
 import com.estateslug.slug.detail.subpage.auction.AuctionCardUiModel
@@ -64,9 +66,10 @@ class DetailedViewModel @Inject constructor(
     private var lastServerFavorite: Boolean = false
 
     init {
-        // typed route 인자(RouteDetail.productId)가 SavedStateHandle에 실려 process death 후에도 복원된다.
+        // typed route 인자가 SavedStateHandle에 실려 process death 후에도 복원된다.
+        // toRoute라 RouteDetail 필드명 변경도 컴파일 타임에 잡힌다.
         // requestData는 public 유지 — 백스택 엔트리 없이 id를 꽂는 호스트(추후 2-pane)의 진입 경로
-        savedStateHandle.get<String>("productId")?.let(::requestData)
+        requestData(savedStateHandle.toRoute<RouteDetail>().productId)
     }
 
     fun requestData(id: String) {
