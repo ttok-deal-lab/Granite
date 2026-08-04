@@ -8,10 +8,12 @@ import kotlinx.serialization.Serializable
 
 fun NavGraphBuilder.homeNavGraph(
     padding: PaddingValues,
+    onProductClick: (String) -> Unit,
 ) {
     composable<RouteHome> {
         HomeRoute(
-            padding = padding
+            padding = padding,
+            onProductClick = onProductClick,
         )
     }
 }

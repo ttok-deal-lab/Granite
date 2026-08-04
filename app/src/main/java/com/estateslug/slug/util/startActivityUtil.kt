@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
-import com.estateslug.slug.detail.DetailActivity
 import com.estateslug.slug.login.LogInActivity
 import com.estateslug.slug.mypage.recent.RecentItemsActivity
 import com.estateslug.slug.search.SearchActivity
@@ -13,19 +12,6 @@ import com.estateslug.slug.setting.SettingActivity
 import androidx.core.net.toUri
 
 
-fun startDetailActivity(
-    context: Context,
-    id: String // TODO : API 연결 이후 설정 필요.
-) {
-    val toDetailedActivity = Intent(context, DetailActivity::class.java)
-        .apply {
-            putExtra(PRODUCT_ID, id)
-        }
-    //TODO : putExtra로 id등 전달
-    context.startActivity(toDetailedActivity)
-}
-
-const val PRODUCT_ID = "PRODUCT_ID"
 fun startSettingActivity(
     context: Context,
 //    id: String // TODO : API 연결 이후 설정 필요.

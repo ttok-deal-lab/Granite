@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.widget.Toast
 import com.kakao.sdk.common.KakaoSdk
 import com.kakao.vectormap.KakaoMapSdk
+import com.estateslug.slug.data.favorite.FavoriteStateStore
 import com.estateslug.slug.data.local.user.LocalUserDataRepository
 import com.estateslug.slug.data.network.AuthEventBus
 import com.estateslug.slug.login.LogInActivity
@@ -29,6 +30,9 @@ class SlugApplication : Application() {
 
     @Inject
     lateinit var localUserDataRepository: LocalUserDataRepository
+
+    @Inject
+    lateinit var favoriteStateStore: FavoriteStateStore
 
     private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private var currentActivityRef: WeakReference<Activity> = WeakReference(null)
@@ -78,6 +82,7 @@ class SlugApplication : Application() {
         withContext(Dispatchers.IO) {
             localUserDataRepository.removeAllData()
         }
+        favoriteStateStore.clear() // 세션 경계 — 다음 계정 관심 오버레이 오염 방지
 
         val activity = currentActivityRef.get()
         Toast.makeText(

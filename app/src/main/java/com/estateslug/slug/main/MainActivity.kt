@@ -23,9 +23,17 @@ class MainActivity : ComponentActivity() {
         val startItem = intent?.getStringExtra(DeepLinkKeys.START_TAB)
             ?.let { runCatching { DeepLinkTab.valueOf(it) }.getOrNull() }
             .toBottomBarItem()
+        // 회전 등 재생성 시(savedInstanceState != null)에는 nav 상태가 복원되므로
+        // 딥링크 상세를 다시 push하지 않는다
+        val startProductId: String? =
+            if (savedInstanceState == null) intent?.getStringExtra(DeepLinkKeys.DETAIL_ID)
+            else null
         setContent {
             SlugTheme {
-                MainScreen(startItem = startItem)
+                MainScreen(
+                    startItem = startItem,
+                    startProductId = startProductId,
+                )
             }
         }
     }

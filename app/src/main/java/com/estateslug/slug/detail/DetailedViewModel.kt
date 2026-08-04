@@ -1,11 +1,12 @@
 package com.estateslug.slug.detail
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.estateslug.slug.R
+import com.estateslug.slug.data.favorite.FavoriteStateStore
 import com.estateslug.slug.data.local.recent.RecentItemRepository
-import com.estateslug.slug.data.local.user.LocalUserDataRepository
 import com.estateslug.slug.data.network.sales.RemoteSalesDataRepository
-import com.estateslug.slug.data.network.user.RemoteUserDataRepository
 import com.estateslug.slug.detail.subpage.LesseeInfo
 import com.estateslug.slug.detail.subpage.OccupancyStatus
 import com.estateslug.slug.detail.subpage.auction.AuctionCardUiModel
@@ -17,6 +18,7 @@ import com.estateslug.slug.detail.subpage.auction.CourtInfoUiModel
 import com.estateslug.slug.detail.subpage.auction.RegistryInfoUiModel
 import com.estateslug.slug.domain.sales.CourtSaleDetail
 import com.estateslug.slug.domain.user.GetFavoriteStatusUseCase
+import com.estateslug.slug.home.ProductItemUiModel
 import com.estateslug.slug.ui.component.SlugText
 import com.estateslug.slug.ui.component.image.ImageResource
 import com.estateslug.slug.ui.component.label.SlugLabelBackground
@@ -24,15 +26,16 @@ import com.estateslug.slug.ui.component.label.SlugLabelStyle
 import com.estateslug.slug.ui.component.label.SlugLabelUiModel
 import com.estateslug.slug.ui.theme.Critical
 import com.estateslug.slug.ui.theme.CriticalWeak
+import com.estateslug.slug.util.calculateDaysLeft
 import com.estateslug.slug.util.extractDateFromDateAndTime
 import com.estateslug.slug.util.extractTimeHHmm
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.Duration
@@ -42,22 +45,34 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailedViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val remoteSalesDataRepository: RemoteSalesDataRepository,
-    private val userDataRepository: RemoteUserDataRepository,
-    private val localUserDataRepository: LocalUserDataRepository,
     private val getFavoriteStatusUseCase: GetFavoriteStatusUseCase,
     private val recentItemRepository: RecentItemRepository,
+    private val favoriteStateStore: FavoriteStateStore,
 ) : ViewModel() {
+    // raw 상태는 서버 진실 그대로 유지하고, 관심 오버레이는 방출 시점에 병합한다
     private val _uiState: MutableStateFlow<CourtSaleDetailUiState> =
         MutableStateFlow(CourtSaleDetailUiState.preview)
-    val uiState: StateFlow<CourtSaleDetailUiState> = _uiState.asStateFlow()
+    val uiState: StateFlow<CourtSaleDetailUiState> =
+        combine(_uiState, favoriteStateStore.overrides) { state, overrides ->
+            state.withFavoriteOverride(overrides[state.productId])
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), _uiState.value)
 
     private var lastRequestedId: String = ""
+    private var lastDetail: CourtSaleDetail? = null
+    private var lastServerFavorite: Boolean = false
+
+    init {
+        // typed route 인자(RouteDetail.productId)가 SavedStateHandle에 실려 process death 후에도 복원된다.
+        // requestData는 public 유지 — 백스택 엔트리 없이 id를 꽂는 호스트(추후 2-pane)의 진입 경로
+        savedStateHandle.get<String>("productId")?.let(::requestData)
+    }
 
     fun requestData(id: String) {
         lastRequestedId = id
         _uiState.update { it.copy(isLoading = true, isError = false) }
-        CoroutineScope(Dispatchers.IO).launch {
+        viewModelScope.launch(Dispatchers.IO) {
             remoteSalesDataRepository.getCourtSaleDetail(id)
                 .onSuccess { detail ->
 
@@ -67,6 +82,9 @@ class DetailedViewModel @Inject constructor(
 
                     val favoriteStatus = getFavoriteStatusUseCase(id)
                         .getOrDefault(false)
+                    lastDetail = detail
+                    lastServerFavorite = favoriteStatus
+                    favoriteStateStore.onServerStateObserved(mapOf(id to favoriteStatus))
 
                     val lessees = detail.toLesseesRaw()
                     val detailSimpleInformation: DetailSimpleInformationUiModel =
@@ -91,54 +109,69 @@ class DetailedViewModel @Inject constructor(
 
     fun retry() = requestData(lastRequestedId)
 
-    var lastFavoriteJob: Job = Job().apply { complete() }
     fun onLikeChangeRequest() {
-        val isFavorite = _uiState.value.detailSimpleInformation.isFavorite
-        lastFavoriteJob.cancel()
-        lastFavoriteJob = CoroutineScope(Dispatchers.IO).launch {
-            val userId: String? = localUserDataRepository.getUserId().getOrNull()
-            userId ?: return@launch //TODO 수정되어야함!
-            if (isFavorite)
-                removeFavorite(userId, uiState.value.productId)
-            else
-                addFavorite(userId, uiState.value.productId)
-        }
-    }
-
-    private suspend fun addFavorite(userId: String, productId: String) {
-        _uiState.update {
-            it.copy(
-                detailSimpleInformation = it.detailSimpleInformation.copy(
-                    isFavorite = true,
-                    numberOfFavorite = it.detailSimpleInformation.numberOfFavorite + 1,
-                )
-            )
-        }
-        lastFavoriteJob.cancel()
-        lastFavoriteJob = CoroutineScope(Dispatchers.IO).launch {
-            userDataRepository.addProductFavorite(
-                userId = userId,
-                productId = productId
-            )
-        }
-    }
-
-    private suspend fun removeFavorite(userId: String, productId: String) {
-        _uiState.update {
-            it.copy(
-                detailSimpleInformation = it.detailSimpleInformation.copy(
-                    isFavorite = false,
-                    numberOfFavorite = it.detailSimpleInformation.numberOfFavorite - 1,
-                )
-            )
-        }
-        userDataRepository.removeProductFavorite(
-            userId = userId,
-            productId = productId
+        val current = uiState.value
+        if (current.productId.isBlank()) return
+        favoriteStateStore.setFavorite(
+            productId = current.productId,
+            isFavorite = !current.detailSimpleInformation.isFavorite,
+            snapshot = lastDetail?.toProductItemSnapshot(
+                id = current.productId,
+                serverFavorite = lastServerFavorite,
+            ),
         )
     }
+}
 
+private fun CourtSaleDetailUiState.withFavoriteOverride(override: Boolean?): CourtSaleDetailUiState {
+    if (override == null || productId.isBlank()) return this
+    val info = detailSimpleInformation
+    if (override == info.isFavorite) return this
+    return copy(
+        detailSimpleInformation = info.copy(
+            isFavorite = override,
+            numberOfFavorite = (info.numberOfFavorite + if (override) 1 else -1).coerceAtLeast(0),
+        )
+    )
+}
 
+/** 관심탭 prepend용 스냅샷 — 서버 재조회 없이 목록 행을 구성한다 */
+private fun CourtSaleDetail.toProductItemSnapshot(
+    id: String,
+    serverFavorite: Boolean,
+): ProductItemUiModel =
+    ProductItemUiModel(
+        id = id,
+        priceOfProduct = appraisalPrice,
+        nameOfProduct = salesBuildingName,
+        location = salesAddress,
+        daysLeft = calculateDaysLeft(salesDateTime, System.currentTimeMillis()),
+        buildingImage = salesPictures.firstOrNull()?.let { ImageResource.Url(it.imageUrl) }
+            ?: ImageResource.Id(R.drawable.logo_metaopo),
+        isFavorite = true,
+        // fetch 시점 zzimCount에 이 사용자가 이미 포함돼 있었는지에 따라 보정
+        favoritePersons = (zzimCount + if (serverFavorite) 0 else 1).toLong(),
+        infoChipList = buildSnapshotChips(),
+    )
+
+private fun CourtSaleDetail.buildSnapshotChips(): List<SlugLabelUiModel> {
+    val chips = mutableListOf<SlugLabelUiModel>()
+    if (verified)
+        chips += SlugLabelUiModel(SlugLabelStyle.GradientBackground.Verified, SlugText.Text("인증매물"))
+    if (isSoldOut)
+        chips += SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State, SlugText.Text("매각완료"))
+    else if (failBidCount > 0)
+        chips += SlugLabelUiModel(
+            SlugLabelStyle.BuildingInfo.State,
+            SlugText.Text("유찰 ${failBidCount}회")
+        )
+    salesCategories.firstOrNull()?.let { category ->
+        chips += SlugLabelUiModel(
+            SlugLabelStyle.BuildingInfo.BuildingType,
+            ProductItemUiModel.getStringFromCategory(category),
+        )
+    }
+    return chips
 }
 
 data class CourtSaleDetailUiState(

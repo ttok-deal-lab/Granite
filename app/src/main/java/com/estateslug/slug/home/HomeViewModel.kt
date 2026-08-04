@@ -2,6 +2,9 @@ package com.estateslug.slug.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.estateslug.slug.data.favorite.FavoriteStateStore
+import com.estateslug.slug.data.favorite.withFavoriteOverride
+import com.estateslug.slug.data.favorite.withFavoriteOverrides
 import com.estateslug.slug.data.network.search.RemoteSearchRepository
 import com.estateslug.slug.data.network.search.SoldOutStatus
 import com.estateslug.slug.data.network.search.Sort
@@ -23,9 +26,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -33,6 +39,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val remoteSearchRepository: RemoteSearchRepository,
+    private val favoriteStateStore: FavoriteStateStore,
 ) : ViewModel() {
 
     private val _queryState = MutableStateFlow(SearchQuery())
@@ -45,17 +52,23 @@ class HomeViewModel @Inject constructor(
     private val _stateList: MutableStateFlow<List<FilterButtonState>> =
         MutableStateFlow(FilterButtonState.defaultStateList)
     val stateList get() = _stateList.asStateFlow()
+    // raw 상태는 서버 진실 그대로 두고(스마트 리프레시 hasSameData 비오염),
+    // 관심 오버레이는 방출 시점에 병합한다
     private val _paginationState = MutableStateFlow(CursorPaginationState<ProductItemUiModel>())
     val paginationState: StateFlow<CursorPaginationState<ProductItemUiModel>> =
-        _paginationState.asStateFlow()
+        combine(_paginationState, favoriteStateStore.overrides) { state, overrides ->
+            state.withFavoriteOverrides(overrides)
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), _paginationState.value)
 
     private val paginator = CursorPaginator(
         state = _paginationState,
         fetchPage = { cursor ->
             val query = _queryState.value
             val page = remoteSearchRepository.getProductListByCursorWithFavorites(cursor, query)
+            val items = page.items.map { it.toUiModel() }
+            favoriteStateStore.onServerStateObserved(items.associate { it.id to it.isFavorite })
             com.estateslug.slug.util.CursorPage(
-                items = page.items.map { it.toUiModel() },
+                items = items,
                 nextCursor = page.nextCursor,
                 totalCount = page.totalCount,
             )
@@ -76,6 +89,18 @@ class HomeViewModel @Inject constructor(
                     _numberOfProduct.emit(totalCount)
                     _tempProductSize.emit(totalCount)
                 }
+        }
+        viewModelScope.launch {
+            // raw 상태도 변경 이벤트로 함께 패치한다 — 오버레이만 믿으면 다른 화면의 fetch가
+            // 오버레이를 축출한 순간 stale한 raw 값이 노출되어 하트가 되돌아간다
+            favoriteStateStore.changes.collect { change ->
+                _paginationState.update { state ->
+                    state.copy(items = state.items.map { item ->
+                        if (item.id == change.productId) item.withFavoriteOverride(change.isFavorite)
+                        else item
+                    })
+                }
+            }
         }
     }
 

@@ -1,6 +1,7 @@
 package com.estateslug.slug.ui.component.maps
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -34,6 +35,12 @@ private fun KakaoMap(
 ) {
     val context = LocalContext.current
     val mapView: MapView = remember { MapView(context) }
+
+    // 상세가 NavHost destination이 되면 Activity 파괴가 지도를 정리해주지 않는다 —
+    // 컴포지션 이탈 시 지도 엔진을 직접 해제해야 push/pop 반복 시 누수가 없다
+    DisposableEffect(mapView) {
+        onDispose { mapView.finish() }
+    }
 
     AndroidView(
         modifier = modifier,

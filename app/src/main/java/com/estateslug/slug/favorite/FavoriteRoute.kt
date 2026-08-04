@@ -12,20 +12,19 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.estateslug.slug.home.ProductItemUiModel
-import com.estateslug.slug.util.startDetailActivity
 
 
 @Composable
 internal fun FavoriteRoute(
     padding: PaddingValues,
+    onProductClick: (String) -> Unit,
     viewModel: FavoriteViewModel = hiltViewModel(viewModelStoreOwner = LocalContext.current as ViewModelStoreOwner)
 ) {
 
     val paginationState by viewModel.paginationState.collectAsStateWithLifecycle()
 
-    val currentContext = LocalContext.current
     val onItemClicked: (ProductItemUiModel) -> Unit = {
-        startDetailActivity(currentContext, it.id)
+        onProductClick(it.id)
     }
     val onNotificationClick: () -> Unit = {}
 
@@ -33,7 +32,9 @@ internal fun FavoriteRoute(
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
-                viewModel.refresh()
+                // 관심 상태는 FavoriteStateStore가 즉시 동기화하므로 무조건 refresh하지 않는다.
+                // 스냅샷 폴백이 필요했던 경우에만 1회 리프레시.
+                viewModel.consumePendingRefresh()
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)

@@ -5,11 +5,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.core.app.TaskStackBuilder
 import com.estateslug.slug.data.local.user.LocalUserDataRepository
-import com.estateslug.slug.detail.DetailActivity
 import com.estateslug.slug.login.LogInActivity
 import com.estateslug.slug.main.MainActivity
 import com.estateslug.slug.search.SearchActivity
-import com.estateslug.slug.util.PRODUCT_ID
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
@@ -55,10 +53,11 @@ class DeepLinkRouterActivity : ComponentActivity() {
         val builder = TaskStackBuilder.create(this)
         when (destination) {
             is DeepLinkDestination.Detail -> {
-                builder.addNextIntent(mainIntent(DeepLinkTab.HOME))
+                // 상세는 MainActivity NavHost의 destination이므로 Main 단일 인텐트에 id를 실어 보낸다
+                // (TaskStackBuilder 유지 → task-rebuild 시맨틱과 onCreate 보장은 기존과 동일)
                 builder.addNextIntent(
-                    Intent(this, DetailActivity::class.java)
-                        .putExtra(PRODUCT_ID, destination.id)
+                    mainIntent(DeepLinkTab.HOME)
+                        .putExtra(DeepLinkKeys.DETAIL_ID, destination.id)
                 )
             }
 

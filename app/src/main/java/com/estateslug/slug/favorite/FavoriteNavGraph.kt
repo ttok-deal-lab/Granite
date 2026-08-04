@@ -8,10 +8,12 @@ import kotlinx.serialization.Serializable
 
 fun NavGraphBuilder.favoriteNavGraph(
     padding: PaddingValues,
+    onProductClick: (String) -> Unit,
 ) {
     composable<RouteFavorite> {
         FavoriteRoute(
-            padding = padding
+            padding = padding,
+            onProductClick = onProductClick,
         )
     }
 }

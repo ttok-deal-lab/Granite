@@ -14,9 +14,10 @@ class CursorPaginator<T>(
     private val fetchPage: suspend (cursor: String?) -> CursorPage<T>,
     private val itemKey: ((T) -> Any)? = null,
 ) {
-    suspend fun loadInitial() {
+    /** @return 성공 여부 — 호출자가 실패 시 재시도 플래그를 유지할 수 있게 한다 */
+    suspend fun loadInitial(): Boolean {
         state.update { CursorPaginationState(isInitialLoading = true) }
-        try {
+        return try {
             val page = fetchPage(null)
             state.update {
                 CursorPaginationState(
@@ -26,18 +27,20 @@ class CursorPaginator<T>(
                     totalCount = page.totalCount,
                 )
             }
+            true
         } catch (e: Exception) {
             state.update { CursorPaginationState(error = e) }
+            false
         }
     }
 
-    suspend fun refresh() {
+    /** @return 성공 여부 */
+    suspend fun refresh(): Boolean {
         if (state.value.items.isEmpty()) {
-            loadInitial()
-            return
+            return loadInitial()
         }
         state.update { it.copy(isRefreshing = true) }
-        try {
+        return try {
             val page = fetchPage(null)
             state.update {
                 val isSame = if (itemKey != null) {
@@ -56,8 +59,10 @@ class CursorPaginator<T>(
                     )
                 }
             }
+            true
         } catch (e: Exception) {
             state.update { it.copy(isRefreshing = false, error = e) }
+            false
         }
     }
 
@@ -80,6 +85,15 @@ class CursorPaginator<T>(
             }
         } catch (e: Exception) {
             state.update { it.copy(isLoadingMore = false, error = e) }
+        }
+    }
+
+    fun prependItem(item: T) {
+        state.update {
+            it.copy(
+                items = listOf(item) + it.items,
+                totalCount = it.totalCount + 1,
+            )
         }
     }
 

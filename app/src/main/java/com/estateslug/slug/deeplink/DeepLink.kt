@@ -95,6 +95,9 @@ object DeepLinkKeys {
     /** SearchActivity 초기 검색어. */
     const val SEARCH_KEYWORD = "SEARCH_KEYWORD"
 
+    /** MainActivity가 진입 직후 NavHost에서 열어줄 상세 매물 id. */
+    const val DETAIL_ID = "DETAIL_ID"
+
     /** FCM data payload에서 딥링크 URL을 담는 키. */
     const val FCM_LINK = "link"
 }

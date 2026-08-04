@@ -17,6 +17,8 @@
     <string name="permission_confirm" translatable="false">확인</string>
     <string name="permission_request" translatable="false">권한 요청하기</string>
     <string name="permission_close_app" translatable="false">종료하기</string>
+    <!--  favorite  -->
+    <string name="favorite_action_failed_toast" translatable="false">관심 매물 처리에 실패했어요. 잠시 후 다시 시도해 주세요.</string>
     <!--  main  -->
     <string name="main_back_press_exit_toast" translatable="false">\'뒤로\' 버튼을 한 번 더 누르면 종료됩니다</string>
     <!--  home favorite  -->
@@ -88,7 +90,6 @@
     <string name="filter_price_above" translatable="false">이상</string>
 
     <string name="filter_price_all" translatable="false">전체</string>
-    <string name="title_activity_detail">DetailActivity</string>
 
     <!-- Detailed BottomSheet-->
     <string name="detailed_bottom_confirm" translatable="false">확인</string>

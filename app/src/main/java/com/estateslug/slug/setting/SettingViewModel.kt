@@ -3,6 +3,7 @@ package com.estateslug.slug.setting
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.estateslug.slug.BuildConfig
+import com.estateslug.slug.data.favorite.FavoriteStateStore
 import com.estateslug.slug.data.local.device.LocalDeviceSettingDataRepository
 import com.estateslug.slug.data.local.user.LocalUserDataRepository
 import com.estateslug.slug.data.network.user.RemoteUserDataRepository
@@ -28,6 +29,7 @@ class SettingViewModel @Inject constructor(
     private val localDeviceSettingDataRepository: LocalDeviceSettingDataRepository,
     private val remoteUserDataRepository: RemoteUserDataRepository,
     private val unregisterFcmTokenUseCase: UnregisterFcmTokenUseCase,
+    private val favoriteStateStore: FavoriteStateStore,
 ) : ViewModel() {
     private val _isNeedToShowLogOutDialog: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val isNeedToShowLogOutDialog get() = _isNeedToShowLogOutDialog.asStateFlow()
@@ -60,6 +62,7 @@ class SettingViewModel @Inject constructor(
                 remoteUserDataRepository.requestLogout()
             }
             localUserDataRepository.setUserAccessToken("") // 유저 토큰을 없애버림.
+            favoriteStateStore.clear() // 다음 세션(다른 계정) 관심 오버레이 오염 방지
             // 알림 권한 인트로 1회 노출 플래그 리셋 — 재로그인 진입 시(권한 미보유면) 다시 안내
             localDeviceSettingDataRepository.resetNotificationPermissionIntroShown()
             _isNeedToShowProgress.update { false }
@@ -81,6 +84,7 @@ class SettingViewModel @Inject constructor(
                 remoteUserDataRepository.deleteUser(userId)
             }
             localUserDataRepository.removeAllData()
+            favoriteStateStore.clear() // 다음 세션(다른 계정) 관심 오버레이 오염 방지
             // 알림 권한 인트로 1회 노출 플래그 리셋 (로그아웃과 동일 — 재로그인 시 다시 안내)
             localDeviceSettingDataRepository.resetNotificationPermissionIntroShown()
             _isNeedToShowProgress.update { false }

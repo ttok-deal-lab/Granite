@@ -21,13 +21,13 @@ import com.estateslug.slug.home.bottomsheet.location.Location
 import com.estateslug.slug.home.component.FilterButtonState
 import com.estateslug.slug.main.MainBottomSheetType.HomeBottomSheetType
 import com.estateslug.slug.main.MainViewModel
-import com.estateslug.slug.util.startDetailActivity
 import com.estateslug.slug.util.startSearchActivity
 
 
 @Composable
 internal fun HomeRoute(
     padding: PaddingValues,
+    onProductClick: (String) -> Unit,
     homeViewModel: HomeViewModel = hiltViewModel(viewModelStoreOwner = LocalContext.current as ViewModelStoreOwner),
     mainViewModel: MainViewModel = hiltViewModel(viewModelStoreOwner = LocalContext.current as ViewModelStoreOwner)
 ) {
@@ -51,13 +51,9 @@ internal fun HomeRoute(
     val onNotificationClick: () -> Unit = {}
     val verifiedProductExist: Boolean = true //TODO : 처리해야함!
 
-    val currentContext = LocalContext.current
     val onItemClicked: (ProductItemUiModel) -> Unit = { model ->
-        //TODO :API연결 이후 재확인
         // 최근 본 목록 추가는 상세 화면 진입(데이터 로드 성공) 시점에서 처리 (딥링크 진입도 커버)
-        startDetailActivity(currentContext, model.id)
-
-//        Toast.makeText(currentContext, model.nameOfProduct, Toast.LENGTH_SHORT).show()
+        onProductClick(model.id)
     }
 
     //TODO : viewmodel에서 처리하게 하는건?

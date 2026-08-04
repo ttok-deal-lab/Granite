@@ -6,6 +6,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,10 +34,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.estateslug.slug.deeplink.DeepLinkKeys
+import com.estateslug.slug.detail.navigation.RouteDetail
+import com.estateslug.slug.detail.navigation.detailNavGraph
 import com.estateslug.slug.search.bottomsheet.SearchBottomSheetContent
 import com.estateslug.slug.search.bottomsheet.SearchBottomSheetType
 import com.estateslug.slug.search.component.SearchTopBar
@@ -40,7 +48,6 @@ import com.estateslug.slug.search.navigation.RouteSearchBridge
 import com.estateslug.slug.search.navigation.RouteSearchResult
 import com.estateslug.slug.search.navigation.searchNavGraph
 import com.estateslug.slug.ui.theme.SlugTheme
-import com.estateslug.slug.util.startDetailActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -89,14 +96,25 @@ class SearchActivity : ComponentActivity() {
                 val currentEntry by navController.currentBackStackEntryAsState()
                 val isOnSearchResult =
                     currentEntry?.destination?.route?.contains("RouteSearchResult") == true
+                // 상세는 자체 TopBar를 가지므로 검색 TopBar를 숨긴다
+                val isOnDetail =
+                    currentEntry?.destination?.hasRoute<RouteDetail>() == true
 
                 Scaffold(
                     modifier = Modifier
                         .fillMaxSize()
-                        .imePadding()
+                        // 상세에서는 IME 인셋을 적용하지 않는다 — 키보드가 열린 채 진입해도
+                        // 상세가 키보드 높이만큼 줄어든 채 그려지지 않게
+                        .then(if (isOnDetail) Modifier else Modifier.imePadding())
                         .systemBarsPadding(),
                     topBar = {
-                        SearchTopBar(
+                        // 구조적 제거 대신 AnimatedVisibility — innerPadding.top이 전환과 함께
+                        // 애니메이션되어 검색 결과가 위로 튀는 현상을 막는다
+                        AnimatedVisibility(
+                            visible = !isOnDetail,
+                            enter = expandVertically() + fadeIn(),
+                            exit = shrinkVertically() + fadeOut(),
+                        ) { SearchTopBar(
                             searchText = searchKeyword,
                             onSearchTextChange = { keyword ->
                                 searchViewModel.updateSearchKeyword(keyword)
@@ -132,6 +150,7 @@ class SearchActivity : ComponentActivity() {
                             onCloseClick = { finish() },
 //                            autoFocus = !isOnSearchResult
                         )
+                        }
 
                     }
                 ) { innerPadding ->
@@ -149,13 +168,22 @@ class SearchActivity : ComponentActivity() {
                                 searchViewModel = searchViewModel,
                                 navController = navController,
                                 onItemClick = { itemId ->
-                                    startDetailActivity(this@SearchActivity, itemId)
+                                    // 전환 중 연타 시 인자 교체로 잘못된 매물이 뜨는 것 방지
+                                    if (navController.currentBackStackEntry?.destination
+                                            ?.hasRoute<RouteDetail>() != true
+                                    ) {
+                                        navController.navigate(RouteDetail(itemId)) {
+                                            launchSingleTop = true
+                                        }
+                                    }
                                 },
                                 onShowBottomSheet = { type ->
                                     bottomSheetType = type
                                     isBottomSheetShowing = true
                                 }
                             )
+
+                            detailNavGraph(onBack = { navController.popBackStack() })
                         }
                     }
 

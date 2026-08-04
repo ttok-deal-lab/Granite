@@ -15,19 +15,28 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.estateslug.slug.R
+import com.estateslug.slug.detail.navigation.RouteDetail
+import com.estateslug.slug.detail.navigation.detailNavGraph
 import com.estateslug.slug.home.ProductItemUiModel
 import com.estateslug.slug.home.ProductList
 import com.estateslug.slug.home.ProductListSkeleton
+import com.estateslug.slug.main.Route
 import com.estateslug.slug.ui.component.ProductListEmpty
 import com.estateslug.slug.ui.component.topbar.ArrowTopBar
 import com.estateslug.slug.ui.theme.SlugTheme
-import com.estateslug.slug.util.startDetailActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.serialization.Serializable
 
+
+@Serializable
+data object RouteRecentItems : Route
 
 @AndroidEntryPoint
 class RecentItemsActivity : ComponentActivity() {
@@ -39,10 +48,30 @@ class RecentItemsActivity : ComponentActivity() {
         setContent {
             val uiState by viewmodel.uiState.collectAsStateWithLifecycle()
             SlugTheme {
-                RecentItemsScreen(
-                    uiState = uiState,
-                    onBackClick = { finish() }
-                )
+                val navController = rememberNavController()
+                NavHost(
+                    navController = navController,
+                    startDestination = RouteRecentItems,
+                ) {
+                    composable<RouteRecentItems> {
+                        RecentItemsScreen(
+                            uiState = uiState,
+                            onBackClick = { finish() },
+                            onItemClicked = { model ->
+                                // 전환 중 연타 시 인자 교체로 잘못된 매물이 뜨는 것 방지
+                                if (navController.currentBackStackEntry?.destination
+                                        ?.hasRoute<RouteDetail>() != true
+                                ) {
+                                    navController.navigate(RouteDetail(model.id)) {
+                                        launchSingleTop = true
+                                    }
+                                }
+                            },
+                        )
+                    }
+
+                    detailNavGraph(onBack = { navController.popBackStack() })
+                }
             }
         }
     }
@@ -51,13 +80,9 @@ class RecentItemsActivity : ComponentActivity() {
 @Composable
 fun RecentItemsScreen(
     onBackClick: () -> Unit,
+    onItemClicked: (ProductItemUiModel) -> Unit,
     uiState: RecentItemsUiState
 ) {
-    val context = LocalContext.current
-    val onItemClicked: (ProductItemUiModel) -> Unit = { model ->
-        startDetailActivity(context, model.id)
-    }
-
     Scaffold(
         modifier = Modifier.systemBarsPadding(),
         topBar = {

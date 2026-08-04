@@ -79,12 +79,6 @@
             android:theme="@style/Theme.Slug" />
         <!--    Share Activity    -->
         <activity
-            android:name=".detail.DetailActivity"
-            android:exported="false"
-            android:label="@string/title_activity_detail"
-            android:theme="@style/Theme.Slug">
-        </activity>
-        <activity
             android:name=".main.MainActivity"
             android:launchMode="singleTop"
             android:exported="true"
