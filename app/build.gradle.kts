@@ -32,7 +32,7 @@ android {
     buildTypes {
         debug {
             resValue("string", "app_name", "민달팽이_DEV")
-            isMinifyEnabled = false
+                isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -41,7 +41,8 @@ android {
         }
         release {
             resValue("string", "app_name", "민달팽이")//TODO : 나중에 수정
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
