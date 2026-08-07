@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.estateslug.slug.detail.subpage.ItemInfo
 import com.estateslug.slug.detail.subpage.ItemTitle
+import com.estateslug.slug.ui.component.SlugText
 import com.estateslug.slug.ui.component.maps.SlugMap
 import com.estateslug.slug.ui.theme.NeutralInverted
 
@@ -33,7 +34,7 @@ fun CourtInfo(uiModel: CourtInfoUiModel, onMapFocused: (Boolean) -> Unit) {
     ) {
         ItemTitle("법원 정보")
 
-        ItemInfo(name = "관할법원", value = uiModel.courtName)
+        ItemInfo(name = "관할법원", value = uiModel.courtName())
         ItemInfo(name = "담당", value = uiModel.courtTeam)
         ItemInfo(name = "매각기일", value = uiModel.saleDate)
         ItemInfo(name = "입찰시간", value = uiModel.bidTime)
@@ -56,7 +57,7 @@ fun CourtInfo(uiModel: CourtInfoUiModel, onMapFocused: (Boolean) -> Unit) {
 }
 
 data class CourtInfoUiModel(
-    val courtName: String,
+    val courtName: SlugText,
     val courtTeam: String,
     val courtAddress: String,
     val saleDate: String,
@@ -67,7 +68,7 @@ data class CourtInfoUiModel(
 ) {
     companion object {
         val preview = CourtInfoUiModel(
-            courtName = "성남지원",
+            courtName = SlugText.Text("성남지원"),
             courtTeam = "경매 2개",
             courtAddress = "서울특별시 서초구 서초중앙로 157",
             saleDate = "2025.05.05",

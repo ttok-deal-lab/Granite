@@ -17,6 +17,67 @@
     <string name="permission_confirm" translatable="false">확인</string>
     <string name="permission_request" translatable="false">권한 요청하기</string>
     <string name="permission_close_app" translatable="false">종료하기</string>
+    <!--  court names (서버 CourtName enum → 한글)  -->
+    <string name="court_name_seoul_central_district" translatable="false">서울중앙지방법원</string>
+    <string name="court_name_seoul_east_district" translatable="false">서울동부지방법원</string>
+    <string name="court_name_seoul_west_district" translatable="false">서울서부지방법원</string>
+    <string name="court_name_seoul_south_district" translatable="false">서울남부지방법원</string>
+    <string name="court_name_seoul_north_district" translatable="false">서울북부지방법원</string>
+    <string name="court_name_uijeongbu_district" translatable="false">의정부지방법원</string>
+    <string name="court_name_goyang_branch" translatable="false">고양지원</string>
+    <string name="court_name_namyangju_branch" translatable="false">남양주지원</string>
+    <string name="court_name_incheon_district" translatable="false">인천지방법원</string>
+    <string name="court_name_bucheon_branch" translatable="false">부천지원</string>
+    <string name="court_name_suwon_district" translatable="false">수원지방법원</string>
+    <string name="court_name_seongnam_branch" translatable="false">성남지원</string>
+    <string name="court_name_yeoju_branch" translatable="false">여주지원</string>
+    <string name="court_name_pyeongtaek_branch" translatable="false">평택지원</string>
+    <string name="court_name_ansan_branch" translatable="false">안산지원</string>
+    <string name="court_name_anyang_branch" translatable="false">안양지원</string>
+    <string name="court_name_chuncheon_district" translatable="false">춘천지방법원</string>
+    <string name="court_name_gangneung_branch" translatable="false">강릉지원</string>
+    <string name="court_name_wonju_branch" translatable="false">원주지원</string>
+    <string name="court_name_sokcho_branch" translatable="false">속초지원</string>
+    <string name="court_name_yeongwol_branch" translatable="false">영월지원</string>
+    <string name="court_name_cheongju_district" translatable="false">청주지방법원</string>
+    <string name="court_name_chungju_branch" translatable="false">충주지원</string>
+    <string name="court_name_jecheon_branch" translatable="false">제천지원</string>
+    <string name="court_name_yeongdong_branch" translatable="false">영동지원</string>
+    <string name="court_name_daejeon_district" translatable="false">대전지방법원</string>
+    <string name="court_name_hongseong_branch" translatable="false">홍성지원</string>
+    <string name="court_name_nonsan_branch" translatable="false">논산지원</string>
+    <string name="court_name_cheonan_branch" translatable="false">천안지원</string>
+    <string name="court_name_gongju_branch" translatable="false">공주지원</string>
+    <string name="court_name_seosan_branch" translatable="false">서산지원</string>
+    <string name="court_name_daegu_district" translatable="false">대구지방법원</string>
+    <string name="court_name_andong_branch" translatable="false">안동지원</string>
+    <string name="court_name_gyeongju_branch" translatable="false">경주지원</string>
+    <string name="court_name_gimcheon_branch" translatable="false">김천지원</string>
+    <string name="court_name_sangju_branch" translatable="false">상주지원</string>
+    <string name="court_name_uiseong_branch" translatable="false">의성지원</string>
+    <string name="court_name_yeongdeok_branch" translatable="false">영덕지원</string>
+    <string name="court_name_pohang_branch" translatable="false">포항지원</string>
+    <string name="court_name_daegu_west_branch" translatable="false">대구서부지원</string>
+    <string name="court_name_busan_district" translatable="false">부산지방법원</string>
+    <string name="court_name_busan_east_branch" translatable="false">부산동부지원</string>
+    <string name="court_name_busan_west_branch" translatable="false">부산서부지원</string>
+    <string name="court_name_ulsan_district" translatable="false">울산지방법원</string>
+    <string name="court_name_changwon_district" translatable="false">창원지방법원</string>
+    <string name="court_name_masan_branch" translatable="false">마산지원</string>
+    <string name="court_name_jinju_branch" translatable="false">진주지원</string>
+    <string name="court_name_tongyeong_branch" translatable="false">통영지원</string>
+    <string name="court_name_milyang_branch" translatable="false">밀양지원</string>
+    <string name="court_name_geochang_branch" translatable="false">거창지원</string>
+    <string name="court_name_gwangju_district" translatable="false">광주지방법원</string>
+    <string name="court_name_mokpo_branch" translatable="false">목포지원</string>
+    <string name="court_name_jangheung_branch" translatable="false">장흥지원</string>
+    <string name="court_name_suncheon_branch" translatable="false">순천지원</string>
+    <string name="court_name_haenam_branch" translatable="false">해남지원</string>
+    <string name="court_name_jeonju_district" translatable="false">전주지방법원</string>
+    <string name="court_name_gunsan_branch" translatable="false">군산지원</string>
+    <string name="court_name_jeongeup_branch" translatable="false">정읍지원</string>
+    <string name="court_name_namwon_branch" translatable="false">남원지원</string>
+    <string name="court_name_jeju_district" translatable="false">제주지방법원</string>
     <!--  favorite  -->
     <string name="favorite_action_failed_toast" translatable="false">관심 매물 처리에 실패했어요. 잠시 후 다시 시도해 주세요.</string>
     <!--  main  -->

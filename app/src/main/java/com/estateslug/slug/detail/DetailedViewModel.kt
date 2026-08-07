@@ -17,6 +17,7 @@ import com.estateslug.slug.detail.subpage.auction.AuctionInfoUiModel
 import com.estateslug.slug.detail.subpage.auction.AuctionResult
 import com.estateslug.slug.detail.subpage.auction.AuctionRound
 import com.estateslug.slug.detail.subpage.auction.CourtInfoUiModel
+import com.estateslug.slug.detail.subpage.auction.courtDisplayName
 import com.estateslug.slug.detail.subpage.auction.RegistryInfoUiModel
 import com.estateslug.slug.domain.sales.CourtSaleDetail
 import com.estateslug.slug.domain.user.GetFavoriteStatusUseCase
@@ -242,7 +243,8 @@ private fun CourtSaleDetail.toAuctionHistoryUiModel(): AuctionHistoryUiModel =
 
 private fun CourtSaleDetail.toCourtInfoUiModel(): CourtInfoUiModel =
     CourtInfoUiModel(
-        courtName = court?.name ?: courtCode,
+        // 서버 enum name → 한글 리소스, 미등록 값은 원문 그대로
+        courtName = courtDisplayName(court?.name ?: courtCode),
         courtTeam = courtTeam,
         courtAddress = court?.address ?: "",
         saleDate = salesDateTime.extractDateFromDateAndTime(),
