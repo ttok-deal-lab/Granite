@@ -43,6 +43,8 @@ data class CourtSaleDetail(
 
 data class SalesDetail(
     val timeStamp: String,
+    /** 개찰 시각 (YYYY-MM-DD HH:mm:ss), 없으면 빈 문자열 */
+    val bidOpeningTimeStamp: String,
     val type: String,
     val location: String,
     val leastSalesPrice: Long,

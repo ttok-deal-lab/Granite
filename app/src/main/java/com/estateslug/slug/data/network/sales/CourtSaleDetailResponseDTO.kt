@@ -175,6 +175,10 @@ data class SalesDetailDTO(
     @SerializedName("timeStamp")
     val timeStamp: String,
 
+    // 개찰 시각 (YYYY-MM-DD HH:mm:ss) — 과거 응답에는 없을 수 있어 nullable
+    @SerializedName("bidOpeningTimeStamp")
+    val bidOpeningTimeStamp: String?,
+
     @SerializedName("type")
     val type: String,
 
@@ -190,6 +194,7 @@ data class SalesDetailDTO(
     override fun toDomain(): SalesDetail =
         SalesDetail(
             timeStamp = timeStamp,
+            bidOpeningTimeStamp = bidOpeningTimeStamp.orEmpty(),
             type = type,
             location = location,
             leastSalesPrice = leastSalesPrice,

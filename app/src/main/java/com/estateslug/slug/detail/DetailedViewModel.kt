@@ -247,7 +247,8 @@ private fun CourtSaleDetail.toCourtInfoUiModel(): CourtInfoUiModel =
         courtAddress = court?.address ?: "",
         saleDate = salesDateTime.extractDateFromDateAndTime(),
         bidTime = salesDetails.first().timeStamp.extractTimeHHmm(),
-        openingTime = " TODO 논의 필요",
+        // index 0이 항상 최신 회차 — 개찰 시각은 최신 회차 기준으로 표시
+        openingTime = salesDetails.first().bidOpeningTimeStamp.extractTimeHHmm(),
         lat = court?.latitude ?: 0.0,
         lng = court?.longitude ?: 0.0,
     )
