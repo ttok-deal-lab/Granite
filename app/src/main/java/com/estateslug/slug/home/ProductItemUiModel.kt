@@ -178,7 +178,7 @@ data class ProductItemUiModel(
                 else -> SlugText.Id(R.string.building_type_other)
                 //논의에 따라 정해지지 않았던 타입들은 전부 기타로 처리하기로함. 2026/05/24
 //                else -> SlugText.Text(text)
-            }//TODO :공통화 해야함
+            }// 건물 용도 매핑의 단일 소스 — 홈/검색 칩과 상세(typeDisplayName)가 함께 사용
 
 
         val testList = listOf(
