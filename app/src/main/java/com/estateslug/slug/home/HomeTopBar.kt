@@ -69,19 +69,19 @@ fun HomeTopBar(//TODO : 각 리소스 별 Description 처리 할것.
                     contentDescription = "searchIcon"
                 )
             }
-
-            Box(
-                modifier = minSizeModifier
-                    .blockingClickable(onClick = onNotificationClick),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    modifier = Modifier.sizeIn(28.dp, minHeight = 28.dp),
-                    painter = painterResource(R.drawable.notification_line_28_28),
-                    tint = Neutral,
-                    contentDescription = "notificationIcon"
-                )
-            }
+// TODO : MVP1 기능 미제공.
+//            Box(
+//                modifier = minSizeModifier
+//                    .blockingClickable(onClick = onNotificationClick),
+//                contentAlignment = Alignment.Center
+//            ) {
+//                Icon(
+//                    modifier = Modifier.sizeIn(28.dp, minHeight = 28.dp),
+//                    painter = painterResource(R.drawable.notification_line_28_28),
+//                    tint = Neutral,
+//                    contentDescription = "notificationIcon"
+//                )
+//            }
             Spacer(Modifier.width(10.dp))
         }
     }

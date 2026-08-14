@@ -48,7 +48,7 @@ internal fun HomeRoute(
     }
     val context = LocalContext.current
     val onSearchClick: () -> Unit = { startSearchActivity(context) }
-    val onNotificationClick: () -> Unit = {}
+    val onNotificationClick: () -> Unit = {} //TODO : MVP1에 없음
     val verifiedProductExist: Boolean = true //TODO : 처리해야함!
 
     val onItemClicked: (ProductItemUiModel) -> Unit = { model ->
