@@ -48,7 +48,7 @@ class SearchViewModel @Inject constructor(
         savedStateHandle.toRoute<RouteSearchResult>()
     }.getOrNull()
 
-    private val _searchKeyword = MutableStateFlow(route?.keyword ?: "")
+    private val _searchKeyword = MutableStateFlow(route?.keyword?.trim() ?: "")
     val searchKeyword = _searchKeyword.asStateFlow()
 
     val recentSearches: StateFlow<List<String>> =
@@ -112,7 +112,7 @@ class SearchViewModel @Inject constructor(
     private var _tempCountJob: Job? = null
 
     private val _queryState = MutableStateFlow(
-        SearchQuery(keyword = route?.keyword ?: "unknown")
+        SearchQuery(keyword = _searchKeyword.value.ifBlank { "unknown" })
     )
 
     private val _paginationState = MutableStateFlow(CursorPaginationState<ProductItemUiModel>())
@@ -158,13 +158,15 @@ class SearchViewModel @Inject constructor(
     private var autoCompleteJob: Job? = null
 
     fun updateSearchKeyword(keyword: String) {
-        _searchKeyword.update { keyword }
+        // singleLine TextField도 붙여넣기·IME 경로로 개행이 섞여 들어올 수 있음 — 쿼리에 실리면 서버가 400 반환
+        val cleaned = keyword.filterNot { it == '\n' || it == '\r' }
+        _searchKeyword.update { cleaned }
         _isSearchResultEmpty.value = false
         autoCompleteJob?.cancel()
-        if (keyword.isNotEmpty()) {
+        if (cleaned.isNotEmpty()) {
             autoCompleteJob = viewModelScope.launch {
                 delay(300L)
-                fetchAutoComplete(keyword)
+                fetchAutoComplete(cleaned.trim())
             }
         } else {
             _autoCompleteResults.update { emptyList() }
@@ -173,9 +175,10 @@ class SearchViewModel @Inject constructor(
 
     fun search(keyword: String) {
         viewModelScope.launch {
-            if (keyword.isBlank()) return@launch
-            addToRecentSearches(keyword)
-            _searchKeyword.update { keyword }
+            val trimmed = keyword.trim()
+            if (trimmed.isBlank()) return@launch
+            addToRecentSearches(trimmed)
+            _searchKeyword.update { trimmed }
             refreshPagingByCurrentFilters()
         }
     }
@@ -185,15 +188,16 @@ class SearchViewModel @Inject constructor(
     fun searchWithCheck(keyword: String, onHasResult: () -> Unit) {
         lastJob?.cancel()
         lastJob = viewModelScope.launch {
-            if (keyword.isBlank()) return@launch
+            val trimmed = keyword.trim()
+            if (trimmed.isBlank()) return@launch
             _isSearchLoading.value = true
             _isSearchResultEmpty.value = false
-            addToRecentSearches(keyword)
-            _searchKeyword.update { keyword }
+            addToRecentSearches(trimmed)
+            _searchKeyword.update { trimmed }
 
             remoteSearchRepository.getProductListByCursor(
                 nextCursor = "",
-                query = SearchQuery(keyword = keyword)
+                query = SearchQuery(keyword = trimmed)
             ).onSuccess { result ->
                 if (result.totalCount > 0) {
                     refreshPagingByCurrentFilters()
@@ -336,7 +340,7 @@ class SearchViewModel @Inject constructor(
         val soldOutStatus = if (isFinishedProductFilterSelected) SoldOutStatus.SOLD_OUT else SoldOutStatus.ALL
 
         return SearchQuery(
-            keyword = _searchKeyword.value.ifBlank { "unknown" },
+            keyword = _searchKeyword.value.trim().ifBlank { "unknown" },
             buildType = buildType,
             auctionFailCount = auctionFailCount,
             verificationStatus = verificationStatus,
