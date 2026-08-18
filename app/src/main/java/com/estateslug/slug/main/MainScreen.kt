@@ -30,6 +30,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -73,7 +74,16 @@ fun MainScreen(
     if (matchedTab != null && matchedTab != lastTab) lastTab = matchedTab
     val isTabDestination = matchedTab != null
     val onClick: (BottomBarItemUiModel) -> Unit = {
-        navController.navigate(it.route)
+        navController.navigate(it.route) {
+            // 탭당 인스턴스 1개 유지(multiple back stacks 패턴):
+            // back은 시작 탭으로 수렴해 2회 종료 로직과 맞물리고,
+            // 떠난 탭은 saveState/restoreState로 백스택·스크롤·VM까지 보존된다
+            popUpTo(navController.graph.findStartDestination().id) {
+                saveState = true
+            }
+            launchSingleTop = true
+            restoreState = true
+        }
     }
     val onProductClick: (String) -> Unit = { productId ->
         // 전환 중 다른 매물을 연타하면 launchSingleTop이 top 엔트리의 인자만 교체해
