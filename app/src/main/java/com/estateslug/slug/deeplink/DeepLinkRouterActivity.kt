@@ -29,7 +29,12 @@ class DeepLinkRouterActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val uri = intent?.data
+        // 이 액티비티가 태스크 루트라 recents(최근 앱)에서 죽은 태스크를 되살리면
+        // base intent(원본 딥링크)가 그대로 재전달된다(FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY 세팅).
+        // 그때 원 목적지로 다시 dispatch하면 종료했던 상세가 재진입하므로 uri를 버리고 홈으로 보낸다
+        val isFromHistory =
+            intent != null && (intent.flags and Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) != 0
+        val uri = if (isFromHistory) null else intent?.data
         val destination = DeepLinkResolver.resolve(uri)
 
         val token = runBlocking { localUserDataRepository.getUserAccessToken().getOrNull() }
