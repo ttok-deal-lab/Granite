@@ -28,6 +28,7 @@ import com.estateslug.slug.R
 import com.estateslug.slug.detail.subpage.TitleAnalysisPage
 import com.estateslug.slug.detail.subpage.auction.AuctionInfoPage
 import com.estateslug.slug.ui.component.ProductListError
+import com.estateslug.slug.ui.component.image.ImageResource
 import com.estateslug.slug.ui.theme.NeutralInverted
 import com.estateslug.slug.ui.theme.NeutralWeak
 import com.estateslug.slug.ui.theme.SlugTheme
@@ -65,7 +66,12 @@ fun DetailScreen(
                     id = uiState.productId,
                     nameOfProduct = information.nameOfProduct,
                     caseNumber = information.numberOfProduct,
-                    imageUrl = "",// TODO : MVP0 수정되어야함!
+                    // 카카오 피드 카드 이미지 — 상세 페이저와 동일한 서버 이미지 중 첫 번째.
+                    // URL 이미지가 없는 매물은 빈 값 유지(이미지 없는 카드로 전송됨)
+                    imageUrl = information.imageList
+                        .filterIsInstance<ImageResource.Url>()
+                        .firstOrNull()?.url
+                        .orEmpty(),
                 )
             )
     }
