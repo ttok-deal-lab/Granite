@@ -2,7 +2,9 @@ package com.estateslug.slug.util
 
 import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
 import android.util.Log
+import com.estateslug.slug.R
 import com.estateslug.slug.detail.ShareItem
 import com.kakao.sdk.common.util.KakaoCustomTabsClient
 import com.kakao.sdk.share.ShareClient
@@ -56,8 +58,32 @@ fun shareKakao(item: ShareItem, context: Context) {
     }
 }
 
+/** 시스템 공유 시트로 링크 직접 공유 — 카카오 피드와 동일한 App Links URL 사용 */
+fun shareLink(item: ShareItem, context: Context) {
+    val sendIntent = Intent(Intent.ACTION_SEND).apply {
+        type = "text/plain"
+        putExtra(
+            Intent.EXTRA_TEXT,
+            context.getString(
+                R.string.detail_share_text,
+                item.nameOfProduct,
+                item.caseNumber,
+                item.webDetailUrl(),
+            )
+        )
+        // 공유 시트 상단 미리보기 제목 (지원 앱에서만 표시)
+        putExtra(Intent.EXTRA_TITLE, item.nameOfProduct)
+    }
+    context.startActivity(Intent.createChooser(sendIntent, null))
+}
+
+private fun ShareItem.shareUrl(): String = "$shareLinkBase/sales/$id"
+
+/** 링크 직접 공유용 웹 프론트 상세 페이지 URL (카카오 피드의 webUrl은 콘솔 등록 도메인이라 별도 유지) */
+private fun ShareItem.webDetailUrl(): String = "$webDetailLinkBase/detail/$id"
+
 private fun ShareItem.toKaKaoFeed(): FeedTemplate {
-    val shareLink = "$shareLinkBase/sales/${this.id}"
+    val shareLink = shareUrl()
     // 앱 설치 시: 카카오톡이 kakao{APP_KEY}://kakaolink?route=sales/{id} 로 앱 실행
     //   → DeepLinkRouterActivity가 DeepLinkResolver.KAKAO_ROUTE_PARAM 계약으로 상세 진입
     // 미설치 시: webUrl(https://link.estateslug.com/...)로 폴백
@@ -87,3 +113,5 @@ private fun ShareItem.toKaKaoFeed(): FeedTemplate {
 
 private val TAG = "shareKakao"
 const val shareLinkBase = "https://link.estateslug.com"
+//TODO : 배포 환경 분리 시 BuildConfig로 이동
+const val webDetailLinkBase = "https://ttok-front-dev.estateslug.com"

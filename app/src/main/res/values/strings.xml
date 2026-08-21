@@ -154,6 +154,11 @@
 
     <!-- Detailed BottomSheet-->
     <string name="detailed_bottom_confirm" translatable="false">확인</string>
+
+    <!-- 상세 공유 -->
+    <string name="detail_share_direct_link" translatable="false">링크로 직접 공유하기</string>
+    <string name="detail_share_kakao" translatable="false">카카오톡으로 공유하기</string>
+    <string name="detail_share_text" translatable="false">%1$s (사건번호: %2$s)\n%3$s</string>
     <string name="title_activity_setting">SettingActivity</string>
     <string name="title_activity_recent_items">RecentItemsActivity</string>
 

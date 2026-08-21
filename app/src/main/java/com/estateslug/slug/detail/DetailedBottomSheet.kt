@@ -52,6 +52,7 @@ import com.estateslug.slug.ui.theme.Primary
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 import com.estateslug.slug.util.blockingClickable
 import com.estateslug.slug.util.shareKakao
+import com.estateslug.slug.util.shareLink
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -167,13 +168,12 @@ private fun InfoBottomSheetContent(
 
 @Composable
 private fun ShareBottomSheetContent(item: ShareItem) {
-    //TODO : IOS에 물어보고 만들기!
-    val directLinkShare = {}
-    val directLinkShareText = "링크로 직접 공유하기"
     val context = LocalContext.current
+    val directLinkShare = { shareLink(item, context) }
+    val directLinkShareText = stringResource(R.string.detail_share_direct_link)
 
     val snsShare = { shareKakao(item, context) }
-    val snsShareText = "카카오톡으로 공유하기"
+    val snsShareText = stringResource(R.string.detail_share_kakao)
 
     Column {
         ArrowShareButton({
