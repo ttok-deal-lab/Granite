@@ -15,7 +15,7 @@ data class ProductItemUiModel(
     val priceOfProduct: Long,
     val nameOfProduct: String,
     val location: String,
-    val daysLeft: Int,
+    val daysLeft: Int,//TODO : 더 나은방법 생각해보기
     val buildingImage: ImageResource,
     val isFavorite: Boolean,
     val favoritePersons: Long,
@@ -38,7 +38,7 @@ data class ProductItemUiModel(
                 priceOfProduct = appraisalPrice,
                 nameOfProduct = salesBuildingName,
                 location = salesAddress,
-                daysLeft = daysLeft,
+                daysLeft = if (soldOut) -1 else daysLeft, //TODO : 더 나은방법 생각해보기
                 buildingImage =
                     salesPicture?.let { ImageResource.Url(it) }
                         ?: ImageResource.Id(R.drawable.logo_metaopo),
