@@ -189,7 +189,7 @@ data class CourtSaleDetailUiState(
     companion object {
         val preview = CourtSaleDetailUiState(
             isLoading = true,
-            detailSimpleInformation = DetailSimpleInformationUiModel.preview,
+            detailSimpleInformation = DetailSimpleInformationUiModel.preview.copy(topTitle = ""),
             listOfLessees = LesseeInfo.lesseePreviewList,
             auctionInfo = AuctionInfoUiModel.preview
         )
