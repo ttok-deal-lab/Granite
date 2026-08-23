@@ -35,7 +35,7 @@ enum class BuildingFilterType(@StringRes val stringId: Int) : FilterOption {
     OFFICETEL(R.string.filter_building_officetel),
     COMMERCIAL_HOUSE(R.string.filter_building_commercial_house),
     HOUSE(R.string.filter_building_house),
-    OTHER(R.string.filter_building_other),
+//    OTHER(R.string.filter_building_other),
     ;
 
     @Composable
