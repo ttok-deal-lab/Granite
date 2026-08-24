@@ -41,6 +41,7 @@ import com.estateslug.slug.ui.theme.NeutralLight
 import com.estateslug.slug.ui.theme.NeutralSubtler
 import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
+import com.estateslug.slug.util.formatProductCount
 import com.estateslug.slug.util.numberToCurrency
 
 @Composable
@@ -102,7 +103,7 @@ fun <T : Price> PriceRangeFilter(
 ) {
     val endString = "${numberToCurrency(maxValue)} 이상"//TODO i18n
     val startString = "${numberToCurrency(minValue)}"//TODO i18n
-    val buttonText = "${valueOfItem}개 매물보기"
+    val buttonText = "${formatProductCount(valueOfItem)}개 매물보기"
 
     val rangeString = when {
         price is Price.Range -> {

@@ -11,6 +11,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.estateslug.slug.R
 import com.estateslug.slug.home.BuildingFilterType
 import com.estateslug.slug.home.HomeViewModel
+import com.estateslug.slug.util.formatProductCount
 
 
 @Composable
@@ -30,7 +31,7 @@ fun BuildingFilterContent(
         filterName = filterName,
         selectedOptions = selectedOptions,
         options = options,
-        buttonText = "${valueOfItem}개 매물보기",
+        buttonText = "${formatProductCount(valueOfItem)}개 매물보기",
         onConfirmClicked = { list ->
             homeViewModel.changeBuildingFilterSelectList(list)
             requestHideBottomSheet()

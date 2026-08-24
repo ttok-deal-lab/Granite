@@ -36,8 +36,7 @@ import com.estateslug.slug.ui.theme.NeutralSubtler
 import com.estateslug.slug.ui.theme.Primary
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 import com.estateslug.slug.util.blockingClickable
-import java.text.NumberFormat
-import java.util.Locale
+import com.estateslug.slug.util.formatProductCount
 
 @Composable
 fun HomeFilterBar(
@@ -94,15 +93,17 @@ fun CountAndSort(
     sortTypeName: String,
     onSortingClick: () -> Unit
 ) {
-    val formatter = remember { NumberFormat.getNumberInstance(Locale.KOREA) }
-    val formattedNumber = remember(numberOfProduct) { formatter.format(numberOfProduct) }
+    val formattedNumber = remember(numberOfProduct) { formatProductCount(numberOfProduct) }
     Row(
         modifier = Modifier
             .padding(horizontal = 20.dp)
             .sizeIn(minHeight = 42.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(modifier = Modifier.animateContentSize(), verticalAlignment = Alignment.CenterVertically){
+        Row(
+            modifier = Modifier.animateContentSize(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Text(
                 "상품",
                 style = SlugTypographyStyle.BodyMicroMedium,

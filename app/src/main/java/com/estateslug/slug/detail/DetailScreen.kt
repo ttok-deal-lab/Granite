@@ -104,6 +104,7 @@ fun DetailScreen(
             ) { state ->
                 when (state) {
                     DetailContentState.Loading -> DetailScreenSkeleton()
+                    //TODO : 404 처리등 에러별 처리 추가 필요.
                     DetailContentState.Error -> ProductListError(
                         title = stringResource(R.string.product_list_error_title),
                         onRetry = onRetry,
