@@ -2,6 +2,7 @@ package com.estateslug.slug.detail
 
 import com.estateslug.slug.R
 import com.estateslug.slug.ui.component.SlugText
+import com.estateslug.slug.domain.sales.RecentTransaction
 import com.estateslug.slug.ui.component.image.ImageResource
 import com.estateslug.slug.ui.component.label.SlugLabelBackground
 import com.estateslug.slug.ui.component.label.SlugLabelStyle
@@ -23,8 +24,7 @@ data class DetailSimpleInformationUiModel(
     val lowestPrice: Long,
     val appraisalPrice: Long,
     val priceDiff: Long,
-    val recentDealPrice: Long,
-    val recentDealDate: String,
+    val recentDeal: RecentTransaction,
     val lastSaleDate: String,
 ) {
     companion object {
@@ -50,8 +50,7 @@ data class DetailSimpleInformationUiModel(
                 lowestPrice = 183_200_000L,
                 appraisalPrice = 230_000_000L,
                 priceDiff = -48_000_000L,
-                recentDealPrice = 554_210_000L,
-                recentDealDate = "25.03.16",
+                recentDeal = RecentTransaction(price = 554_210_000L, date = "25.03.16"),
                 lastSaleDate = "2025.04.08 10:00",
                 imageList = listOf(
                     ImageResource.Id(R.drawable.logo_metaopo),

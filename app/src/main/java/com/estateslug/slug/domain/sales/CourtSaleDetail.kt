@@ -15,8 +15,7 @@ data class CourtSaleDetail(
     val itemTypes: List<String>, // TODO 타입으로 받아야함!
     val appraisalPrice: Long,
     val lowestSalesPrice: Long,
-    val recentTransactionPrice: Long,
-    val recentTransactionDate: String,
+    val recentTransaction: RecentTransaction,
     val bidType: String,
     val salesDateTime: String,
     val salesLocation: String,

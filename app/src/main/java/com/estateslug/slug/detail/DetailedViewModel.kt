@@ -287,8 +287,7 @@ private fun CourtSaleDetail.toDetailSimpleInformationUiModel(isFavorite: Boolean
         lowestPrice = lowestSalesPrice,
         appraisalPrice = appraisalPrice,
         priceDiff = appraisalPrice - lowestSalesPrice,
-        recentDealPrice = recentTransactionPrice,
-        recentDealDate = recentTransactionDate, //최근실거래가?
+        recentDeal = recentTransaction,
         lastSaleDate = salesDateTime
     )
 

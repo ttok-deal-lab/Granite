@@ -155,6 +155,9 @@
     <!-- Detailed BottomSheet-->
     <string name="detailed_bottom_confirm" translatable="false">확인</string>
 
+    <!-- 상세 가격 정보 -->
+    <string name="detail_recent_deal_none" translatable="false">최근 실거래 없음</string>
+
     <!-- 상세 공유 -->
     <string name="detail_share_direct_link" translatable="false">링크로 직접 공유하기</string>
     <string name="detail_share_kakao" translatable="false">카카오톡으로 공유하기</string>

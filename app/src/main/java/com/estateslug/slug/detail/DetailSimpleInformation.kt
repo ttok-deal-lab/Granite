@@ -22,9 +22,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.estateslug.slug.R
+import com.estateslug.slug.domain.sales.RecentTransaction
 import com.estateslug.slug.home.component.tooltip.AlertSlugTooltip
 import com.estateslug.slug.ui.component.SlugText
 import com.estateslug.slug.ui.component.label.SlugLabelLarge
@@ -74,8 +76,7 @@ fun DetailSimpleInformation(
             RecentAuctionPrice(
                 lowestPrice = uiModel.lowestPrice,
                 priceDiff = uiModel.priceDiff,
-                recentDealPrice = uiModel.recentDealPrice,
-                recentDealDate = uiModel.recentDealDate,
+                recentDeal = uiModel.recentDeal,
                 lastSaleDate = uiModel.lastSaleDate,
                 appraisalPrice = uiModel.appraisalPrice
             )
@@ -88,16 +89,17 @@ fun DetailSimpleInformation(
 private fun RecentAuctionPrice(
     lowestPrice: Long,
     priceDiff: Long,
-    recentDealPrice: Long,
+    recentDeal: RecentTransaction,
     appraisalPrice: Long,
-    recentDealDate: String,
     lastSaleDate: String,
 ) {
     //TODO : i18n
     val displayLowestPrice = numberToCurrency(lowestPrice)
     val displayPriceDiff = numberToCurrency(priceDiff)
     val displayAppraisalPrice = numberToCurrency(appraisalPrice)
-    val displayRecentDealPrice = numberToCurrency(recentDealPrice)
+    val displayRecentDealPrice =
+        if (recentDeal.isNone) stringResource(R.string.detail_recent_deal_none)
+        else numberToCurrency(recentDeal.price)
     val percentageOfPriceDiff = priceDiff * 10000 / appraisalPrice / 100.0
 
     val shape = RoundedCornerShape(8.dp)
@@ -201,7 +203,7 @@ private fun RecentAuctionPrice(
                     )
                     Spacer(Modifier.width(4.dp))
                     Text(
-                        text = recentDealDate,
+                        text = recentDeal.date,
                         style = SlugTypographyStyle.BodyTinyRegular,
                         color = NeutralSubtler
                     )

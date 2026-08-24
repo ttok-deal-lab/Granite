@@ -6,6 +6,7 @@ import com.estateslug.slug.domain.sales.AppraisalDocument
 import com.estateslug.slug.domain.sales.ConditionReport
 import com.estateslug.slug.domain.sales.CourtSaleDetail
 import com.estateslug.slug.domain.sales.EstateLeaseInfo
+import com.estateslug.slug.domain.sales.RecentTransaction
 import com.estateslug.slug.domain.sales.NearbySalesStat
 import com.estateslug.slug.domain.sales.OccupationRelation
 import com.estateslug.slug.domain.sales.OccupationRelationReport
@@ -54,13 +55,10 @@ data class CourtSaleDetailResponseDTO(
     @SerializedName("lowestSalesPrice")
     val lowestSalesPrice: Long,
 
-    // 센티넬(-999999999) 가능
-    @SerializedName("recentTransactionPrice")
-    val recentTransactionPrice: Long,
-
-    // 비정상 날짜("2026-99-99") 가능
-    @SerializedName("recentTransactionDate")
-    val recentTransactionDate: String,
+    // 구 flat 필드(recentTransactionPrice/Date)를 대체하는 중첩 객체.
+    // 실거래가 없는 매물은 null 가능 (Gson은 누락 필드를 non-null 선언이어도 null로 채우므로 방어적 nullable)
+    @SerializedName("recentTransaction")
+    val recentTransaction: RecentTransactionDTO?,
 
     @SerializedName("bidType")
     val bidType: String,
@@ -143,8 +141,7 @@ data class CourtSaleDetailResponseDTO(
             itemTypes = itemTypes,
             appraisalPrice = appraisalPrice,
             lowestSalesPrice = lowestSalesPrice,
-            recentTransactionPrice = recentTransactionPrice,
-            recentTransactionDate = recentTransactionDate,
+            recentTransaction = recentTransaction?.toDomain() ?: RecentTransaction.NONE,
             bidType = bidType,
             salesDateTime = salesDateTime,
             salesLocation = salesLocation,
@@ -168,6 +165,19 @@ data class CourtSaleDetailResponseDTO(
             rightsAnalysis = rightsAnalysis.map { it.toDomain() },
             court = court?.toDomain(),
         )
+}
+
+/** recentTransaction — 최근 실거래 (구 recentTransactionPrice/Date 대체) */
+data class RecentTransactionDTO(
+    @SerializedName("price")
+    val price: Long,
+
+    // yyyy-MM-dd
+    @SerializedName("date")
+    val date: String,
+) : MapperToDomain<RecentTransaction> {
+    override fun toDomain(): RecentTransaction =
+        RecentTransaction(price = price, date = date)
 }
 
 /** salesDetails */
