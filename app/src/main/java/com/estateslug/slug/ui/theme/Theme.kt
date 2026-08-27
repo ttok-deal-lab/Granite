@@ -43,17 +43,19 @@ fun SlugTheme(
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-//            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-            if (darkTheme) dynamicDarkColorScheme(context) else LightColorScheme
-        }
-
-//        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
-    RemoveOverScroll{
+    //MVP 다크모드 디자인 없음.
+//    val colorScheme = when {
+//        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+//            val context = LocalContext.current
+////            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+//            if (darkTheme) dynamicDarkColorScheme(context) else LightColorScheme
+//        }
+//
+////        darkTheme -> DarkColorScheme
+//        else -> LightColorScheme
+//    }
+    val colorScheme = LightColorScheme
+    RemoveOverScroll {
         MaterialTheme(
             colorScheme = colorScheme,
             typography = Typography,
