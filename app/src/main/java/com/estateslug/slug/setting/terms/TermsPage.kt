@@ -84,9 +84,9 @@ private const val TERMS_LIST = "TERMS_LIST"
 private const val TERMS_SERVICE = "TERMS_SERVICE"
 private const val TERMS_USER_INFO = "TERMS_USER_INFO"
 private const val SERVICE_URL =
-    "https://acoustic-bovid-71a.notion.site/v1-2ba5ff9f915c80f4b458ef4d48083820"
+    "https://acoustic-bovid-71a.notion.site/3c95ff9f915c80a1bdc0dfdacf46fd4b"
 private const val USER_URL =
-    "https://acoustic-bovid-71a.notion.site/AOS-ver-1-2ba5ff9f915c80f2965deb5e144b251b"
+    "https://acoustic-bovid-71a.notion.site/Android-2ba5ff9f915c80f2965deb5e144b251b"
 
 @Composable
 @Preview
