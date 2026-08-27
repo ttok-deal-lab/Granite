@@ -23,10 +23,17 @@ android {
         applicationId = "com.estateslug.slug"
         minSdk = 28
         targetSdk = 36
-        versionCode = 10
+        versionCode = 11
         versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        ndk {
+            // 카카오맵 네이티브(libK3fAndroid.so)가 ARM만 제공 — androidx 소형 립이 x86_64 폴더를
+            // 만들면 Play가 x86_64 네이티브 지원으로 오판해 x86 기기에서 시작 크래시 발생.
+            // ARM 전용으로 잘라 순수 x86 기기는 비호환 처리, ARM 변환 기기는 전체 변환 실행되게 한다
+            abiFilters += listOf("armeabi-v7a", "arm64-v8a")
+        }
     }
 
     signingConfigs {
