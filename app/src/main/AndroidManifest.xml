@@ -6,12 +6,6 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
-    <!-- 광고 미사용: Firebase Analytics가 자동 병합하는 광고 ID 권한 제거
-         (개인정보처리방침·Play 데이터 보안 양식의 "광고 ID 수집 안 함" 선언과 일치) -->
-    <uses-permission
-        android:name="com.google.android.gms.permission.AD_ID"
-        tools:node="remove" />
-
     <!--  kakao talk share  -->
     <queries>
         <package android:name="com.kakao.talk" />
@@ -140,11 +134,6 @@
         <activity
             android:name="com.google.android.gms.oss.licenses.OssLicensesActivity"
             android:theme="@style/Theme.Slug.OssLicenses" />
-        <!-- 광고 미사용: Analytics의 광고 ID 수집 비활성화 (권한 제거와 함께 이중 차단) -->
-        <meta-data
-            android:name="google_analytics_adid_collection_enabled"
-            android:value="false" />
-
         <service
             android:name=".firebase.SlugFirebaseMessagingService"
             android:exported="false">
