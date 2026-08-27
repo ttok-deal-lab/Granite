@@ -214,7 +214,7 @@ sealed class DetailedRoute {
         val entries: List<DetailedRoute> by lazy {
             listOf(
                 AuctionInfo,
-                TitleAnalysis,
+//                TitleAnalysis, // MVP 미적용!
 //                BuildingInfo // MVP 미적용!
             )
         }
