@@ -29,6 +29,19 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        // 자격 증명은 local.properties (커밋 금지). 4종이 모두 있을 때만 구성 —
+        // 조건 없이 getApiKey를 부르면 설정 단계에서 debug 빌드까지 깨진다
+        if (hasReleaseSigningKeys()) {
+            create("release") {
+                storeFile = file(getApiKey("KEYSTORE_FILE"))
+                storePassword = getApiKey("KEYSTORE_PASSWORD")
+                keyAlias = getApiKey("KEY_ALIAS")
+                keyPassword = getApiKey("KEY_PASSWORD")
+            }
+        }
+    }
+
     buildTypes {
         debug {
             resValue("string", "app_name", "민달팽이_DEV")
@@ -42,6 +55,11 @@ android {
             addBuildConfigField("BASE_URL")
         }
         release {
+            if (hasReleaseSigningKeys()) {
+                signingConfig = signingConfigs.getByName("release")
+            } else {
+                logger.warn("⚠ release 서명 미구성 — local.properties에 KEYSTORE_FILE/KEYSTORE_PASSWORD/KEY_ALIAS/KEY_PASSWORD 필요 (산출물이 unsigned)")
+            }
             resValue("string", "app_name", "민달팽이")//TODO : 나중에 수정
             isMinifyEnabled = true
             isShrinkResources = true
@@ -69,6 +87,10 @@ android {
     }
 }
 
+
+fun hasReleaseSigningKeys(): Boolean =
+    listOf("KEYSTORE_FILE", "KEYSTORE_PASSWORD", "KEY_ALIAS", "KEY_PASSWORD")
+        .all { gradleLocalProperties(rootDir, providers).getProperty(it) != null }
 
 fun getApiKey(propertyKey: String): String {
     return gradleLocalProperties(rootDir, providers).getProperty(propertyKey)
