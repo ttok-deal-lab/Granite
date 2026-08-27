@@ -173,7 +173,7 @@ fun VerifiedProductAnnounce() {
         Spacer(Modifier.height(4.dp))
         Row {
             Text(
-                text = "임장보고서가 존재해 정확한 정보를 확인할 수 있어요.",
+                text = "감정평가서가 존재해 정확한 정보를 확인할 수 있어요.",
                 style = SlugTypographyStyle.BodyMiniMedium,
                 color = NeutralSubtler
             )
