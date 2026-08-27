@@ -3,7 +3,7 @@ package com.estateslug.slug.main
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
-import androidx.compose.material3.adaptive.layout.calculatePaneScaffoldDirective
+import androidx.compose.material3.adaptive.layout.calculatePaneScaffoldDirectiveWithTwoPanesOnMediumWidth
 import androidx.compose.material3.adaptive.navigation.BackNavigationBehavior
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
@@ -109,7 +109,11 @@ fun rememberMainAppState(): MainAppState {
 
     // 확장 너비(펼친 폴더블·태블릿)에서만 2-pane, 접힘/일반 폰은 기존 NavHost 흐름 유지.
     // WindowSizeClass 직접 분기 대신 directive로 판별 — androidx.window 버전 차이에 흔들리지 않는다
-    val scaffoldDirective = calculatePaneScaffoldDirective(currentWindowAdaptiveInfoV2())
+    // 기본 directive는 840dp(EXPANDED)부터 2-pane이라 Galaxy Z Fold 내부 화면(세로 ~690dp,
+    // 가로 ~829dp — MEDIUM)에서 영영 분할되지 않는다. 국내 주력 폴더블이 전부 MEDIUM 구간이므로
+    // 600dp부터 2-pane을 허용하는 variant를 사용한다
+    val scaffoldDirective =
+        calculatePaneScaffoldDirectiveWithTwoPanesOnMediumWidth(currentWindowAdaptiveInfoV2())
     val isTwoPane = scaffoldDirective.maxHorizontalPartitions > 1
 
     // 상세 pane 내용의 단일 소스는 navigator의 contentKey.
