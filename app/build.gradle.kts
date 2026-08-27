@@ -38,6 +38,8 @@ android {
                 "proguard-rules.pro"
             )
             sharedAppKeys()
+            // dev 서버 — 기존 local.properties 키 그대로 사용
+            addBuildConfigField("BASE_URL")
         }
         release {
             resValue("string", "app_name", "민달팽이")//TODO : 나중에 수정
@@ -48,6 +50,8 @@ android {
                 "proguard-rules.pro"
             )
             sharedAppKeys()
+            // 프로덕션 서버 — local.properties의 BASE_URL_RELEASE 필요 (없으면 빌드 실패)
+            addBuildConfigField("BASE_URL", "BASE_URL_RELEASE")
         }
     }
     compileOptions {
@@ -68,15 +72,16 @@ android {
 
 fun getApiKey(propertyKey: String): String {
     return gradleLocalProperties(rootDir, providers).getProperty(propertyKey)
+        ?: error("local.properties에 '$propertyKey'가 없습니다. AGENT_ANDROID.md의 필수 키 목록을 확인하세요.")
 }
 
 fun VariantDimension.addBuildConfigField(name: String, propertyKey: String = name) {
     buildConfigField("String", name, getApiKey(propertyKey))
 }
 
+// BASE_URL은 buildType별로 분리 — 각 buildTypes 블록에서 선언
 fun VariantDimension.sharedAppKeys() {
     manifestPlaceholders["KAKAO_APP_KEY"] = getApiKey("KAKAO_APP_KEY_MANIFEST")
-    addBuildConfigField("BASE_URL")
     addBuildConfigField("KAKAO_APP_KEY", "KAKAO_APP_KEY")
     addBuildConfigField("APPLE_CLIENT_ID", "APPLE_CLIENT_ID")
     addBuildConfigField("GOOGLE_APP_KEY", "GOOGLE_APP_KEY")
