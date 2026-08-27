@@ -22,6 +22,7 @@ import com.estateslug.slug.detail.subpage.auction.RegistryInfoUiModel
 import com.estateslug.slug.domain.sales.CourtSaleDetail
 import com.estateslug.slug.domain.user.GetFavoriteStatusUseCase
 import com.estateslug.slug.home.ProductItemUiModel
+import com.estateslug.slug.home.component.DDayState
 import com.estateslug.slug.ui.component.SlugText
 import com.estateslug.slug.ui.component.image.ImageResource
 import com.estateslug.slug.ui.component.label.SlugLabelBackground
@@ -149,7 +150,10 @@ private fun CourtSaleDetail.toProductItemSnapshot(
         priceOfProduct = appraisalPrice,
         nameOfProduct = salesBuildingName,
         location = salesAddress,
-        daysLeft = calculateDaysLeft(salesDateTime, System.currentTimeMillis()),
+        dDayState = DDayState.from(
+            daysLeft = calculateDaysLeft(salesDateTime, System.currentTimeMillis()),
+            isSoldOut = isSoldOut,
+        ),
         buildingImage = salesPictures.firstOrNull()?.let { ImageResource.Url(it.imageUrl) }
             ?: ImageResource.Id(R.drawable.logo_metaopo),
         isFavorite = true,

@@ -113,7 +113,7 @@ private fun ProductItem(
                 imageResource = uiModel.buildingImage,
                 contentScale = ContentScale.Crop,
             )
-            DDayChip(uiModel.daysLeft)
+            DDayChip(state = uiModel.dDayState)
         }
         Spacer(Modifier.width(16.dp))
         Column(modifier = Modifier.weight(1f)) {

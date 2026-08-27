@@ -4,6 +4,7 @@ import com.estateslug.slug.R
 import com.estateslug.slug.domain.court.CourtSalesItem
 import com.estateslug.slug.domain.court.SalesCategory
 import com.estateslug.slug.domain.search.AuctionSearchItem
+import com.estateslug.slug.home.component.DDayState
 import com.estateslug.slug.ui.component.SlugText
 import com.estateslug.slug.ui.component.image.ImageResource
 import com.estateslug.slug.ui.component.label.SlugLabelStyle
@@ -15,7 +16,7 @@ data class ProductItemUiModel(
     val priceOfProduct: Long,
     val nameOfProduct: String,
     val location: String,
-    val daysLeft: Int,//TODO : 더 나은방법 생각해보기
+    val dDayState: DDayState,
     val buildingImage: ImageResource,
     val isFavorite: Boolean,
     val favoritePersons: Long,
@@ -38,7 +39,7 @@ data class ProductItemUiModel(
                 priceOfProduct = appraisalPrice,
                 nameOfProduct = salesBuildingName,
                 location = salesAddress,
-                daysLeft = if (soldOut) -1 else daysLeft, //TODO : 더 나은방법 생각해보기
+                dDayState = DDayState.from(daysLeft = daysLeft, isSoldOut = soldOut),
                 buildingImage =
                     salesPicture?.let { ImageResource.Url(it) }
                         ?: ImageResource.Id(R.drawable.logo_metaopo),
@@ -124,7 +125,7 @@ data class ProductItemUiModel(
                 priceOfProduct = appraisalPrice,
                 nameOfProduct = buildingName ?: caseNumber, // fallback
                 location = address,
-                daysLeft = daysLeft,
+                dDayState = DDayState.from(daysLeft = daysLeft, isSoldOut = soldOut),
                 buildingImage =
                     if (salesPicture.isNotEmpty())
                         ImageResource.Url(salesPicture)
@@ -187,7 +188,7 @@ data class ProductItemUiModel(
                 priceOfProduct = 132100000L,
                 nameOfProduct = "시가정 센트럴 아이파크",
                 location = "서울특별시 서초구 방배동",
-                daysLeft = 3,
+                dDayState = DDayState.Imminent(daysLeft = 3),
                 buildingImage = ImageResource.Id(R.drawable.logo_metaopo),
                 isFavorite = true,
                 favoritePersons = 100,
@@ -204,7 +205,7 @@ data class ProductItemUiModel(
                 priceOfProduct = 85000000L,
                 nameOfProduct = "롯데캐슬 골드파크",
                 location = "경기도 성남시 분당구",
-                daysLeft = 7,
+                dDayState = DDayState.Upcoming(daysLeft = 7),
                 buildingImage = ImageResource.Id(R.drawable.logo_metaopo),
                 isFavorite = false,
                 favoritePersons = 0,
@@ -221,7 +222,7 @@ data class ProductItemUiModel(
                 priceOfProduct = 245000000L,
                 nameOfProduct = "한강 리버파크 오피스텔",
                 location = "서울특별시 용산구 이촌동",
-                daysLeft = 1,
+                dDayState = DDayState.Imminent(daysLeft = 1),
                 buildingImage = ImageResource.Id(R.drawable.logo_metaopo),
                 isFavorite = true,
                 favoritePersons = 234,
@@ -238,7 +239,7 @@ data class ProductItemUiModel(
                 priceOfProduct = 67500000L,
                 nameOfProduct = "대우 푸르지오 단지",
                 location = "인천광역시 남동구 구월동",
-                daysLeft = 12,
+                dDayState = DDayState.Upcoming(daysLeft = 12),
                 buildingImage = ImageResource.Id(R.drawable.logo_metaopo),
                 isFavorite = false,
                 favoritePersons = 78,
@@ -255,7 +256,7 @@ data class ProductItemUiModel(
                 priceOfProduct = 189000000L,
                 nameOfProduct = "삼성 래미안 타워",
                 location = "서울특별시 강남구 청담동",
-                daysLeft = 5,
+                dDayState = DDayState.Upcoming(daysLeft = 5),
                 buildingImage = ImageResource.Id(R.drawable.logo_metaopo),
                 isFavorite = true,
                 favoritePersons = 156,
@@ -272,7 +273,7 @@ data class ProductItemUiModel(
                 priceOfProduct = 189000000L,
                 nameOfProduct = "삼성 래미안 타워",
                 location = "서울특별시 강남구 청담동",
-                daysLeft = 5,
+                dDayState = DDayState.Upcoming(daysLeft = 5),
                 buildingImage = ImageResource.Id(R.drawable.logo_metaopo),
                 isFavorite = true,
                 favoritePersons = 156,
@@ -289,7 +290,7 @@ data class ProductItemUiModel(
                 priceOfProduct = 189000000L,
                 nameOfProduct = "삼성 래미안 타워",
                 location = "서울특별시 강남구 청담동",
-                daysLeft = 5,
+                dDayState = DDayState.Upcoming(daysLeft = 5),
                 buildingImage = ImageResource.Id(R.drawable.logo_metaopo),
                 isFavorite = true,
                 favoritePersons = 156,
