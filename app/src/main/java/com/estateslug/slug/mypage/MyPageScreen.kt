@@ -42,6 +42,7 @@ import com.estateslug.slug.util.startSettingActivity
 fun MyPageScreen(
 //    onSettingClick: () -> Unit,
     userName: String,
+    userEmail: String,
     socialLoginUIModel: SocialLoginUIModel,
     onRecentViewClicked: () -> Unit,
     onInquiryClicked: () -> Unit
@@ -50,7 +51,11 @@ fun MyPageScreen(
     val onSettingClick = { startSettingActivity(currentContext) }
     Column {
         MyPageTopBar(onSettingClick = onSettingClick)
-        UserNameAndLoginType(userName = userName, socialLoginUIModel = socialLoginUIModel)
+        UserNameAndLoginType(
+            userName = userName,
+            userEmail = userEmail,
+            socialLoginUIModel = socialLoginUIModel
+        )
         HorizontalDivider(thickness = 1.dp, color = NeutralWeak)
         MyPageButton(
             iconId = R.drawable.ic_home_recent_checked_20_20,
@@ -67,7 +72,11 @@ fun MyPageScreen(
 
 //TODO : id 기반 분리
 @Composable
-private fun UserNameAndLoginType(userName: String, socialLoginUIModel: SocialLoginUIModel) {
+private fun UserNameAndLoginType(
+    userName: String,
+    userEmail: String,
+    socialLoginUIModel: SocialLoginUIModel
+) {
     Column(
         modifier = Modifier.padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp)
@@ -77,6 +86,13 @@ private fun UserNameAndLoginType(userName: String, socialLoginUIModel: SocialLog
             style = SlugTypographyStyle.TitleLargeBold,
             color = NeutralContrast
         )
+        if (userEmail.isNotBlank()) {
+            Text(
+                text = userEmail,
+                style = SlugTypographyStyle.BodyLargeMedium,
+                color = NeutralContrast
+            )
+        }
         Row(verticalAlignment = Alignment.CenterVertically) {
             Box(
                 modifier = Modifier
@@ -124,6 +140,7 @@ private fun MyPageButton(@DrawableRes iconId: Int, text: String, onClick: () -> 
 fun PreviewMyPageScreen() {
     val onSettingClick: () -> Unit = {}
     val userName = "해리"
+    val userEmail = "harry@example.com"
     val socialLoginUIModel = SocialLoginUIModel.KAKAO
     val onRecentViewClicked = {}
     val onInquiryClicked = {}
@@ -133,6 +150,7 @@ fun PreviewMyPageScreen() {
             MyPageScreen(
 //                onSettingClick,
                 userName,
+                userEmail,
                 socialLoginUIModel,
                 onRecentViewClicked,
                 onInquiryClicked

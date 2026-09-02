@@ -23,6 +23,7 @@ internal fun MyPageRoute(
 //    val onSettingClick: () -> Unit = {}
     val context = LocalContext.current
     val userName by viewModel.userName.collectAsStateWithLifecycle()
+    val userEmail by viewModel.userEmail.collectAsStateWithLifecycle()
     val lastLoginType by viewModel.lastLoginType.collectAsStateWithLifecycle()
     val onRecentViewClicked = { startRecentItemsActivity(context) }
     val onInquiryClicked = { context.openInquiryEmail() }
@@ -31,6 +32,7 @@ internal fun MyPageRoute(
         MyPageScreen(
 //            onSettingClick = onSettingClick, //TODO :NAV3 에서 변경되어야 하는부분
             userName = userName,
+            userEmail = userEmail,
             socialLoginUIModel = SocialLoginUIModel.byType(type = lastLoginType),
             onRecentViewClicked = onRecentViewClicked,
             onInquiryClicked = onInquiryClicked,

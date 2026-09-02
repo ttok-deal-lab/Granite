@@ -44,4 +44,17 @@ class MyPageViewModel @Inject constructor(
         initialValue = "FAIL_TO_GET"
     )
 
+    val userEmail: StateFlow<String> = flow {
+        localUserDataRepository.getUserEmail()
+            .onSuccess { emit(it) }
+            .onFailure {
+                emit("")
+                /*TODO : log 적용 부분*/
+            }
+    }.stateIn(
+        viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = ""
+    )
+
 }
