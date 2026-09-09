@@ -1,10 +1,8 @@
 import com.android.build.api.dsl.VariantDimension
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.firebase.crashlytics)
@@ -14,15 +12,22 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.stability.analyzer)
 }
-//TODO : AGP 9.0에 대응하게 수정할 것
+
+// local.properties — AGP 내부 API(gradleLocalProperties) 대신 Provider API로 읽는다 (구성 캐시 입력으로 추적됨).
+// 파일 상단에 두는 이유: android {} 블록이 구성 단계에서 즉시 호출하므로 먼저 초기화돼야 한다
+val localProperties: Properties = Properties().apply {
+    providers.fileContents(rootProject.layout.projectDirectory.file("local.properties"))
+        .asText.orNull?.let { load(it.reader()) }
+}
+
 android {
     namespace = "com.estateslug.slug"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.estateslug.slug"
         minSdk = 28
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 11
         versionName = "1.0.0"
 
@@ -83,24 +88,21 @@ android {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
-    kotlin {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_21)
-        }
-    }
+    // 빌트인 Kotlin: jvmTarget은 targetCompatibility(21)를 그대로 따르므로 별도 지정 불필요
     buildFeatures {
         compose = true
         buildConfig = true
+        resValues = true // AGP 9.0부터 기본 false — buildTypes의 resValue("app_name") 사용에 필요
     }
 }
 
 
 fun hasReleaseSigningKeys(): Boolean =
     listOf("KEYSTORE_FILE", "KEYSTORE_PASSWORD", "KEY_ALIAS", "KEY_PASSWORD")
-        .all { gradleLocalProperties(rootDir, providers).getProperty(it) != null }
+        .all { localProperties.getProperty(it) != null }
 
 fun getApiKey(propertyKey: String): String {
-    return gradleLocalProperties(rootDir, providers).getProperty(propertyKey)
+    return localProperties.getProperty(propertyKey)
         ?: error("local.properties에 '$propertyKey'가 없습니다. AGENT_ANDROID.md의 필수 키 목록을 확인하세요.")
 }
 

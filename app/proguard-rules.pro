@@ -47,7 +47,8 @@
 
 #Kakao Login
 -keep class com.kakao.sdk.**.model.* { <fields>; }
--keep class * extends com.google.gson.TypeAdapter
+# @JsonAdapter 등 리플렉션 생성 — AGP 9 strict full mode에서는 -keep class 만으로 생성자가 유지되지 않으므로 명시
+-keep class * extends com.google.gson.TypeAdapter { <init>(...); }
 
 #Kakao maps
 -keep class com.kakao.vectormap.** { *; }
