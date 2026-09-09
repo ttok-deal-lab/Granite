@@ -23,8 +23,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import com.google.firebase.crashlytics.ktx.crashlytics
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.crashlytics.crashlytics
+import com.google.firebase.Firebase
 import com.estateslug.slug.firebase.SlugFirebaseMessagingService
 import com.estateslug.slug.login.sns.SocialLoginType
 import com.estateslug.slug.login.sns.google.DisabledSignInPromptsException

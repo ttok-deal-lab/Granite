@@ -20,8 +20,8 @@ lifecycleRuntimeComposeAndroid = "2.8.7"
 landscapist = "2.9.3"
 
 
-#firebase
-firebaseBom = "33.11.0"
+#firebase (BoM 34+: KTX 모듈 제거 — 메인 모듈이 KTX API 포함)
+firebaseBom = "34.19.0"
 firebaseCrashlyticsGradle = "3.0.2"
 
 #SNS
@@ -119,11 +119,11 @@ hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-com
 
 #firebase
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
-firebase-auth = { group = "com.google.firebase", name = "firebase-auth-ktx" }
-firebase-cloud-messaging = { group = "com.google.firebase", name = "firebase-messaging-ktx" }
-firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx" }
-firebase-performance = { group = "com.google.firebase", name = "firebase-perf-ktx" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
+firebase-cloud-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
+firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
+firebase-performance = { group = "com.google.firebase", name = "firebase-perf" }
 firebase-config = { module = "com.google.firebase:firebase-config" }
 
 #Network
