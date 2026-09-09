@@ -49,7 +49,10 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data android:scheme="estateslug" />
-                <data android:scheme="estateSlug" />
+                <!-- 원표기(대문자 S) 링크가 이미 배포돼 있어 의도적으로 유지 — lint AppLinkUrlError만 억제 -->
+                <data
+                    android:scheme="estateSlug"
+                    tools:ignore="AppLinkUrlError" />
             </intent-filter>
 
             <intent-filter>
