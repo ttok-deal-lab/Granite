@@ -9,7 +9,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -83,7 +89,16 @@ fun MainScreen(
     val isTabDestination = matchedTab != null
 
     Scaffold(
-        modifier = modifier.navigationBarsPadding(),
+        modifier = modifier
+            .navigationBarsPadding()
+            // targetSdk 35+는 컷아웃 모드가 ALWAYS로 고정돼 시스템이 레터박스를 넣지 않는다.
+            // 세로에선 상태바가 펀치홀을 덮지만(좌우 인셋 0 → 변화 없음), 펼친 폴더블을 가로로 들면
+            // 구멍이 측면으로 와 레일·상세 페인 가장자리를 가리므로 좌우만 피한다. 상단은 상태바
+            // 인셋이 이미 처리하니 포함하면 이중 패딩이 된다 (2026-09-16 Z Fold 실측)
+            .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
+            // 삼성 폴더블 펼침 화면은 카메라 구멍을 컷아웃으로 선언하지 않아 위 인셋이 0 — 가로에서 구멍 쪽에
+            // 같은 모양의 여백을 직접 준다 (UDC가 아닌 실제 구멍 모델만, InnerCameraSafePadding.kt)
+            .padding(rememberInnerCameraSafePadding()),
         content = { paddingValues ->
             if (appState.isTwoPane) {
                 // 확장 너비에선 하단 바 대신 좌측 레일 — 세로 공간을 목록/상세에 온전히 양보
