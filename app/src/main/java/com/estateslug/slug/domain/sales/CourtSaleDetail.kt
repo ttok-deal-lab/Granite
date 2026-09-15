@@ -63,6 +63,9 @@ data class SalesBuilding(
     val fullAddressName: String,
     val detailAddressName: String,
     val category: String,
+    /** 매물 좌표. 서버에 좌표가 없으면 0.0 (Court.latitude와 동일한 규약) */
+    val latitude: Double,
+    val longitude: Double,
 )
 
 data class SalesItemDetail(

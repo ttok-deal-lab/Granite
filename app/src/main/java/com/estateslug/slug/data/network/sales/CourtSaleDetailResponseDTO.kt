@@ -246,6 +246,14 @@ data class SalesBuildingDTO(
 
     @SerializedName("category")
     val category: String,
+
+    // 매물 좌표 (v2 상세 응답에 추가). 좌표가 없는 매물은 서버가 0으로 내려주고,
+    // 이 필드가 없던 과거 응답도 Gson이 0.0으로 채우므로 CourtDTO와 같이 non-null Double로 받는다
+    @SerializedName("latitude")
+    val latitude: Double,
+
+    @SerializedName("longitude")
+    val longitude: Double,
 ) : MapperToDomain<SalesBuilding> {
     override fun toDomain(): SalesBuilding =
         SalesBuilding(
@@ -255,7 +263,9 @@ data class SalesBuildingDTO(
             riAddressName = riAddressName,
             fullAddressName = fullAddressName,
             detailAddressName = detailAddressName,
-            category = category
+            category = category,
+            latitude = latitude,
+            longitude = longitude,
         )
 }
 
