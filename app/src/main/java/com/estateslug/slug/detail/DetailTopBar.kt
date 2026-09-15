@@ -22,6 +22,7 @@ import com.estateslug.slug.R
 import com.estateslug.slug.ui.component.skeleton.shimmerEffect
 import com.estateslug.slug.ui.theme.Neutral
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
+import androidx.compose.ui.text.style.TextOverflow
 import com.estateslug.slug.util.blockingClickable
 
 //TODO : 각 리소스 별 Description 처리 할것.
@@ -60,14 +61,19 @@ fun DetailTopBar(
                     .clip(RoundedCornerShape(4.dp))
                     .shimmerEffect()
             )
+            Spacer(Modifier.weight(1f))
         } else {
+            // 제목이 남은 폭만 차지하게 weight — 긴 주소가 고유 폭으로 늘어나 공유 아이콘을 페인 밖으로
+            // 밀어내던 문제(2-pane 가로, 2026-09-16 Z Fold QA). 2줄 초과는 말줄임
             Text(
                 topTitle,
+                modifier = Modifier.weight(1f),
                 style = SlugTypographyStyle.BodyLargeBold,
-                color = Neutral
+                color = Neutral,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
             )
         }
-        Spacer(Modifier.weight(1f))
 
         Box(
             modifier = minSizeModifier
