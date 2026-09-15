@@ -66,6 +66,16 @@ class MainAppState(
     }
 
     fun navigateToTab(item: BottomBarItemUiModel) {
+        // 2-pane에서 다른 탭으로 옮기면 열려 있던 상세 페인을 닫는다 — 페인 상태는 탭과 무관한
+        // 앱 단위라 그대로 두면 홈에서 연 상세가 관심 탭 옆에 남는다 (2026-09-16 실기기 QA 관찰).
+        // 같은 탭 재탭은 기존처럼 no-op(페인 유지). 접힘 상태의 상세는 NavHost 위에 있어 아래
+        // popUpTo가 함께 걷어낸다
+        val currentTab = matchTab(navController.currentBackStackEntry?.destination)
+        if (isTwoPane && currentTab != item &&
+            paneNavigator.canNavigateBack(BackNavigationBehavior.PopUntilContentChange)
+        ) {
+            closeDetailPane()
+        }
         navController.navigate(item.route) {
             // 탭당 인스턴스 1개 유지(multiple back stacks 패턴):
             // back은 시작 탭으로 수렴해 2회 종료 로직과 맞물리고,
