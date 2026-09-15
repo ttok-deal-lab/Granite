@@ -139,7 +139,7 @@ enum class BottomBarItemUiModel(
 }
 
 @Composable
-private fun BottomIcon(size: Dp, color: Color, bottomBarItemUiModel: BottomBarItemUiModel) {
+internal fun BottomIcon(size: Dp, color: Color, bottomBarItemUiModel: BottomBarItemUiModel) {
     with(bottomBarItemUiModel) {
         Box(modifier = Modifier.size(size)) {
             if (backgroundResource != tintAbleResource)

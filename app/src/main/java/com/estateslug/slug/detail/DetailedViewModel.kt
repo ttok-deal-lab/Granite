@@ -67,8 +67,10 @@ class DetailedViewModel @Inject constructor(
     init {
         // typed route 인자가 SavedStateHandle에 실려 process death 후에도 복원된다.
         // toRoute라 RouteDetail 필드명 변경도 컴파일 타임에 잡힌다.
-        // requestData는 public 유지 — 백스택 엔트리 없이 id를 꽂는 호스트(추후 2-pane)의 진입 경로
-        requestData(savedStateHandle.toRoute<RouteDetail>().productId)
+        // pane 호스트(2-pane)는 백스택 엔트리 없이 생성되어 route 인자가 없으므로,
+        // 그 경우 조용히 넘어가고 requestData(id) 호출로 진입한다
+        runCatching { savedStateHandle.toRoute<RouteDetail>() }
+            .onSuccess { requestData(it.productId) }
     }
 
     fun requestData(id: String) {
