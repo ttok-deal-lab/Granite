@@ -20,8 +20,6 @@ import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Build
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -55,13 +53,14 @@ private fun CustomSnackBarTest() {
     ) { contentPadding ->
         // Screen content
         Box(modifier = Modifier.padding(contentPadding))
+        // material-icons가 BOM에서 제거되어 아이콘 없는 오버로드 사용 (프리뷰 전용 컴포저블)
         ExtendedFloatingActionButton(
-            text = { Text("Show snackbar") },
-            icon = { Icon(Icons.Filled.Build, contentDescription = "") },
             onClick = {
                 list += NotificationAllowUiModel.CONFIRM
             }
-        )
+        ) {
+            Text("Show snackbar")
+        }
     }
 }
 //1. list의 형태를 가진다.

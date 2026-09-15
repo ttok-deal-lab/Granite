@@ -40,18 +40,23 @@ import androidx.compose.material3.rememberTooltipState
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.CacheDrawScope
 import androidx.compose.ui.draw.DrawResult
+import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.boundsInWindow
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
@@ -90,6 +95,8 @@ fun AlertSlugTooltip(
     val tooltipState = rememberTooltipState(isPersistent = true)
     val coroutineScope = rememberCoroutineScope()
     val positionProvider = rememberSlugPlainTooltipPositionProvider(7.dp)
+    // m3 1.4부터 TooltipScope.drawCaret가 HIDDEN(바이너리 호환용) — anchor 좌표를 직접 캡처해 caret을 그린다
+    var anchorLayoutCoordinates: LayoutCoordinates? by remember { mutableStateOf(null) }
 
     TooltipBox(
         modifier = Modifier,
@@ -102,6 +109,7 @@ fun AlertSlugTooltip(
                 contentColor = SlugTheme.colors.neutral,
                 shape = RoundedCornerShape(8.dp),
                 getIsToolTopTop = positionProvider::getIsToolTipTop,
+                anchorLayoutCoordinates = { anchorLayoutCoordinates },
             ) {
                 Text(
                     text = tooltipText,
@@ -112,7 +120,9 @@ fun AlertSlugTooltip(
         },
         state = tooltipState
     ) {
-        Box(Modifier.blockingClickable(onClick = {
+        Box(Modifier
+            .onGloballyPositioned { anchorLayoutCoordinates = it }
+            .blockingClickable(onClick = {
             coroutineScope.launch {
                 tooltipState.show()
             }
@@ -175,6 +185,7 @@ private fun TooltipScope.SlugPlainTooltip(
     tonalElevation: Dp = 0.dp,
     shadowElevation: Dp = 0.dp,
     getIsToolTopTop: () -> Boolean,
+    anchorLayoutCoordinates: () -> LayoutCoordinates?,
     content: @Composable () -> Unit,
 ) {
     val drawCaretModifier =
@@ -182,13 +193,13 @@ private fun TooltipScope.SlugPlainTooltip(
             val density = LocalDensity.current
             val configuration = LocalConfiguration.current
             Modifier
-                .drawCaret { anchorLayoutCoordinates ->
+                .drawWithCache {
                     drawCaretWithPath(
                         density,
                         configuration,
                         containerColor,
                         caretSize,
-                        anchorLayoutCoordinates,
+                        anchorLayoutCoordinates(),
                         getIsToolTopTop
                     )
                 }
