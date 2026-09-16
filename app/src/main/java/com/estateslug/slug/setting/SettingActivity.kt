@@ -3,15 +3,15 @@ package com.estateslug.slug.setting
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import com.estateslug.slug.ui.theme.SlugTheme
+import com.estateslug.slug.ui.theme.enableLightEdgeToEdge
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SettingActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableLightEdgeToEdge()
         setContent {
             SlugTheme {
                 SettingScreen(

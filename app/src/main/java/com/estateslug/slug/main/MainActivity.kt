@@ -7,11 +7,11 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.addCallback
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import com.estateslug.slug.R
 import com.estateslug.slug.deeplink.DeepLinkKeys
 import com.estateslug.slug.deeplink.DeepLinkTab
 import com.estateslug.slug.ui.theme.SlugTheme
+import com.estateslug.slug.ui.theme.enableLightEdgeToEdge
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableLightEdgeToEdge()
         setBackPress()
         // 딥링크 인텐트는 TaskStackBuilder가 만든 태스크의 base intent로 recents에 남아,
         // 종료 후 최근 앱에서 재실행하면 그대로 재전달된다(FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY 세팅됨).

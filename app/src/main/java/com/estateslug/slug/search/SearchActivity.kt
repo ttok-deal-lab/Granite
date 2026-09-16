@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -48,6 +47,7 @@ import com.estateslug.slug.search.navigation.RouteSearchBridge
 import com.estateslug.slug.search.navigation.RouteSearchResult
 import com.estateslug.slug.search.navigation.searchNavGraph
 import com.estateslug.slug.ui.theme.SlugTheme
+import com.estateslug.slug.ui.theme.enableLightEdgeToEdge
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -57,7 +57,7 @@ class SearchActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableLightEdgeToEdge()
         val initialKeyword = intent?.getStringExtra(DeepLinkKeys.SEARCH_KEYWORD).orEmpty()
         setContent {
             val searchViewModel: SearchViewModel = hiltViewModel()

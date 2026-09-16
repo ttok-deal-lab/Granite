@@ -3,7 +3,6 @@ package com.estateslug.slug.mypage.recent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,6 +30,7 @@ import com.estateslug.slug.main.Route
 import com.estateslug.slug.ui.component.ProductListEmpty
 import com.estateslug.slug.ui.component.topbar.ArrowTopBar
 import com.estateslug.slug.ui.theme.SlugTheme
+import com.estateslug.slug.ui.theme.enableLightEdgeToEdge
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.serialization.Serializable
 
@@ -43,7 +43,7 @@ class RecentItemsActivity : ComponentActivity() {
     private val viewmodel: RecentItemsViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableLightEdgeToEdge()
 
         setContent {
             val uiState by viewmodel.uiState.collectAsStateWithLifecycle()
