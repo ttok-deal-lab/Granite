@@ -255,7 +255,12 @@ private fun NameAndLike(
     val context = LocalContext.current
     fun toastIt(string: String) = Toast.makeText(context, string, Toast.LENGTH_SHORT).show()
     Row(modifier = Modifier.fillMaxWidth()) {
-        Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        // 제목 열이 남은 폭만 차지하게 weight — weight 없는 하트 열이 먼저 측정되고 제목은 그 안에서 줄바꿈된다.
+        // 매물명이 길수록 하트(28dp) 폭이 눌려 0까지 줄던 문제(하트가 안 보이고 눌리지도 않음)
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
             Text(
                 text = nameOfProduct,
                 style = SlugTypographyStyle.TitleLargeBold,
@@ -290,7 +295,7 @@ private fun NameAndLike(
                 )
             }
         }
-        Spacer(Modifier.weight(1f))
+        Spacer(Modifier.width(12.dp))
         Column(
             modifier = Modifier.blockingClickable(onClick = likeClicked),
             horizontalAlignment = Alignment.CenterHorizontally
