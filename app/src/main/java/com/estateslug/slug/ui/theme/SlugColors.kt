@@ -80,6 +80,14 @@ data class SlugColors(
     val iconSubtle: Color,
     /** 로그인 로고 워드마크. 라이트는 순수 검정(#000000)이라 [neutralBlack](Black200)과 다르다. */
     val logoInk: Color,
+    /**
+     * Apple 로그인 버튼의 채움([appleButtonBackground])과 그 위 로고·글자([appleButtonContent]).
+     * Apple HIG(Sign in with Apple)를 따른다: 밝은 바탕에는 검정 스타일, 어두운 바탕에는 흰색 스타일을 쓰고
+     * 검정 스타일을 어두운 바탕에 쓰지 않는다. 로고와 글자는 함께 검정이거나 함께 흰색이어야 한다.
+     * 다른 SNS 버튼은 브랜드 고정색이라 테마를 따르지 않는다.
+     */
+    val appleButtonBackground: Color,
+    val appleButtonContent: Color,
     /** 스위치 꺼진 상태 thumb. 켜진 상태는 onPrimary. */
     val switchThumbOff: Color,
     /** 스낵바 배경·글자·액션. */
@@ -150,6 +158,8 @@ val SlugLightColors: SlugColors = SlugColors(
     iconUnselected = NeutralMuted,
     iconSubtle = RedoIconLight,
     logoInk = PrimaryBlack,
+    appleButtonBackground = AppleBlack,
+    appleButtonContent = NeutralWhite,
     switchThumbOff = NeutralWhite,
     inverseSurface = Gray600,
     inverseOnSurface = NeutralInverted,
@@ -207,6 +217,8 @@ val SlugDarkColors: SlugColors = SlugColors(
     iconUnselected = Gray400,
     iconSubtle = Gray300,
     logoInk = Gray150,
+    appleButtonBackground = PrimaryWhite,
+    appleButtonContent = PrimaryBlack,
     switchThumbOff = Gray150,
     inverseSurface = Gray150,
     inverseOnSurface = Gray800,

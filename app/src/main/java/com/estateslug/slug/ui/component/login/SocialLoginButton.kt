@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -47,7 +48,7 @@ fun SocialLoginButton( //TODO : 해당 Feature로 옮기는 것 고민 할것!
                 .widthIn(min = 335.dp)
                 .height(height = 52.dp)
                 .clip(shape = buttonShape)
-                .background(color = uiModel.backgroundColor)
+                .background(color = uiModel.resolveBackgroundColor())
                 .border(width = 1.dp, color = uiModel.borderColor, shape = buttonShape)
                 .clickable {
                     onSocialLoginSelected(uiModel.type)
@@ -64,13 +65,14 @@ fun SocialLoginButton( //TODO : 해당 Feature로 옮기는 것 고민 할것!
             ) {
                 Image(
                     painter = painterResource(uiModel.iconId),
+                    colorFilter = uiModel.resolveIconTint()?.let { ColorFilter.tint(it) },
                     contentDescription = ""
                 )
             }
             Text(
                 text = stringResource(id = uiModel.loginSNSText) + "로 로그인",
                 style = SlugTypographyStyle.BodyMediumMedium
-                    .copy(color = uiModel.textColor),
+                    .copy(color = uiModel.resolveTextColor()),
             )
         }
 

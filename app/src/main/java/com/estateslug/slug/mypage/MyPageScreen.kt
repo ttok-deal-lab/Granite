@@ -94,12 +94,13 @@ private fun UserNameAndLoginType(
             Box(
                 modifier = Modifier
                     .size(18.dp)
-                    .background(shape = CircleShape, color = socialLoginUIModel.backgroundColor),
+                    .background(shape = CircleShape, color = socialLoginUIModel.resolveBackgroundColor()),
                 contentAlignment = Alignment.Center
             ) {
                 ImageProcessor(
                     modifier = Modifier.size(9.dp),
-                    imageResource = ImageResource.Id(id = socialLoginUIModel.iconId)
+                    imageResource = ImageResource.Id(id = socialLoginUIModel.iconId),
+                    tint = socialLoginUIModel.resolveIconTint()
                 )
             }
 
@@ -138,11 +139,13 @@ fun PreviewMyPageScreen() {
     val onSettingClick: () -> Unit = {}
     val userName = "해리"
     val userEmail = "harry@example.com"
-    val socialLoginUIModel = SocialLoginUIModel.KAKAO
+    val socialLoginUIModel = SocialLoginUIModel.APPLE
     val onRecentViewClicked = {}
     val onInquiryClicked = {}
 
-    SlugTheme {
+    SlugTheme(
+//        darkTheme = true
+    ) {
         Surface {
             MyPageScreen(
 //                onSettingClick,
