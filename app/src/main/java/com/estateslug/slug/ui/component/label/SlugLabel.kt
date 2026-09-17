@@ -34,11 +34,13 @@ import com.estateslug.slug.ui.theme.VerifiedGradientUpper
 @Composable
 fun SlugLabelLarge(
     uiModel: SlugLabelUiModel,
+    modifier: Modifier = Modifier,
     frontSlot: @Composable RowScope.() -> Unit = { },
     backSlot: @Composable RowScope.() -> Unit = { },
 ) {
     SlugLabel(
         uiModel = uiModel,
+        modifier = modifier,
         textStyle = SlugTypographyStyle.BodyMicroMedium,
         frontSlot = frontSlot,
         backSlot = backSlot,
@@ -48,6 +50,7 @@ fun SlugLabelLarge(
 @Composable
 fun VerifiedSlugLabelLarge(
     uiModel: SlugLabelUiModel,
+    modifier: Modifier = Modifier,
     frontSlot: @Composable RowScope.() -> Unit = {
         ImageProcessor(
             modifier = Modifier.size(16.dp),
@@ -58,6 +61,7 @@ fun VerifiedSlugLabelLarge(
 ) {
     SlugLabel(
         uiModel = uiModel,
+        modifier = modifier,
         textStyle = SlugTypographyStyle.BodyMicroMedium,
         frontSlot = frontSlot,
         backSlot = backSlot,
@@ -67,11 +71,13 @@ fun VerifiedSlugLabelLarge(
 @Composable
 fun SlugLabelSmall(
     uiModel: SlugLabelUiModel,
+    modifier: Modifier = Modifier,
     frontSlot: @Composable RowScope.() -> Unit = { },
     backSlot: @Composable RowScope.() -> Unit = { },
 ) {
     SlugLabel(
         uiModel = uiModel,
+        modifier = modifier,
         textStyle = SlugTypographyStyle.CaptionLargeMedium,
         frontSlot = frontSlot,
         backSlot = backSlot,
@@ -79,15 +85,21 @@ fun SlugLabelSmall(
 }
 
 
+/**
+ * 라벨의 높이는 내용이 정한다. 글자만 있으면 글자 높이(글꼴 크기 설정을 따름), 아이콘 슬롯이 있으면 아이콘(고정 dp)과 글자 중 큰 쪽이다.
+ * 그래서 아이콘 있는 라벨과 없는 라벨을 한 줄에 놓으면 높이가 어긋난다(글꼴을 작게 쓸수록 커진다).
+ * 한 줄에 섞어 놓는 쪽에서 `Row(Modifier.height(IntrinsicSize.Min))` + `modifier = Modifier.fillMaxHeight()`로 맞춘다.
+ */
 @Composable
 private fun SlugLabel(
     uiModel: SlugLabelUiModel,
     textStyle: TextStyle,
+    modifier: Modifier = Modifier,
     frontSlot: @Composable RowScope.() -> Unit = { },
     backSlot: @Composable RowScope.() -> Unit = { },
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .clip(RoundedCornerShape(4.dp))
             .labelBackground(slugBackground = uiModel.labelStyle.resolveBackground())
             .padding(vertical = 3.dp, horizontal = 6.dp),

@@ -5,8 +5,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -231,12 +233,19 @@ private fun RecentAuctionPrice(
 
 @Composable
 private fun LabelList(labelModels: List<SlugLabelUiModel>) {
-    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+    // 인증 라벨은 16dp 아이콘이 높이를 정하고 나머지는 글자 높이가 정해서 서로 어긋난다(기본 글꼴 1px, 글꼴을 작게 쓰면 더 큼).
+    // 줄의 높이를 가장 큰 라벨에 맞추고 모든 라벨이 그 높이를 채우게 한다.
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .height(IntrinsicSize.Min),
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
         labelModels.forEach { uiModel ->
             if (uiModel.labelStyle is SlugLabelStyle.GradientBackground.Verified) {
-                VerifiedSlugLabelLarge(uiModel = uiModel)
+                VerifiedSlugLabelLarge(uiModel = uiModel, modifier = Modifier.fillMaxHeight())
             } else
-                SlugLabelLarge(uiModel = uiModel)
+                SlugLabelLarge(uiModel = uiModel, modifier = Modifier.fillMaxHeight())
         }
     }
 }
