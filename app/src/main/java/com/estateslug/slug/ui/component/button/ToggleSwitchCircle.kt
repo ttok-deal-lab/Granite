@@ -33,8 +33,8 @@ fun ToggleSwitchCircle(
     strokeWidth: Dp = 0.5.dp,
     checkedTrackColor: Color = SlugTheme.colors.primary,
     uncheckedTrackColor: Color = SlugTheme.colors.outline,
-    checkedThumbColor: Color = Color(0xFFFFFFFF),
-    uncheckedThumbColor: Color = Color(0xFFFFFFFF),
+    checkedThumbColor: Color = SlugTheme.colors.onPrimary,
+    uncheckedThumbColor: Color = SlugTheme.colors.switchThumbOff,
     gapBetweenThumbAndTrackEdge: Dp = 2.dp,
     state: Boolean,
 ) {

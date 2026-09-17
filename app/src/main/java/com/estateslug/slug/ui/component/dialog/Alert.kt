@@ -40,7 +40,8 @@ private fun BasicAlertDialog(
             .width(335.dp),
         horizontalAlignment = Alignment.Start
     ) {
-        Text(style = TitleLargeBold, text = title)
+        // 색을 명시한다. Dialog가 Scaffold 밖에서 호출되면 LocalContentColor가 기본값(검정)이라 다크에서 제목이 묻힌다.
+        Text(style = TitleLargeBold, color = SlugTheme.colors.neutral, text = title)
         if (description.isNotEmpty()) {
             Spacer(Modifier.height(8.dp))
             Text(style = BodyMediumMedium, color = SlugTheme.colors.neutralSubtler, text = description)
@@ -117,35 +118,40 @@ fun PreviewAlertDialogOneButton() {
     val toastIt: (String) -> Unit = {
         Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
     }
-    Column(
-        modifier = Modifier.padding(50.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+    SlugTheme(
+//        darkTheme = true
     ) {
-        BasicAlertDialog(
-            title = title,
-            description = description,
-            buttonSpace = {}
-        )
-        OneButtonAlertDialog(
-            title = title,
-            description = description,
-            buttonText = "Confirm",
-            onButtonClick = {
-                toastIt("POSITIVE!")
-            }
-        )
-        DoubleButtonAlertDialog(
-            title = title,
-            description = description,
-            leftButtonText = "Left!",
-            onLeftButtonClick = {
-                toastIt("Left!")
-            },
-            rightButtonText = "Right!",
-            onRightButtonClick = {
-                toastIt("Right!")
-            }
-        )
+        Column(
+            modifier = Modifier.padding(50.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            BasicAlertDialog(
+                title = title,
+                description = description,
+                buttonSpace = {}
+            )
+            OneButtonAlertDialog(
+                title = title,
+                description = description,
+                buttonText = "Confirm",
+                onButtonClick = {
+                    toastIt("POSITIVE!")
+                }
+            )
+            DoubleButtonAlertDialog(
+                title = title,
+                description = description,
+                leftButtonText = "Left!",
+                onLeftButtonClick = {
+                    toastIt("Left!")
+                },
+                rightButtonText = "Right!",
+                onRightButtonClick = {
+                    toastIt("Right!")
+                }
+            )
+        }
     }
+
 
 }
