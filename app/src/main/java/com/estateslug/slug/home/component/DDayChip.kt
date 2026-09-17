@@ -54,6 +54,9 @@ fun PreviewDDayChip() {
 /**
  * D-day 칩 상태. 각 상태가 라벨·스타일을 자체 보유해 렌더 지점의 조합 로직을 없앤다.
  * 매각 여부와 날짜 경과는 별개 정보 — 센티널(daysLeft=-1) 대신 [from]의 명시 인자로 판정한다.
+ *
+ * 색은 의도적으로 테마 토큰(SlugTheme.colors)이 아니라 고정 상수를 쓴다: 이 칩은 사진 위 오버레이라
+ * 라이트/다크에서 같은 값이어야 한다(docs/design-system/dark-color-scheme.md 3-1절).
  */
 sealed interface DDayState {
     val textColor: Color

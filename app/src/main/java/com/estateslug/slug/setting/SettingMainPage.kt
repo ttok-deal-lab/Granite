@@ -17,8 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.estateslug.slug.ui.theme.NeutralSubtler
-import com.estateslug.slug.ui.theme.NeutralWeak
+import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 import com.estateslug.slug.util.blockingClickable
 
@@ -42,12 +41,12 @@ fun SettingMainPage(
         ArrowSettingButton(buttonText = "권한 설정", onClick = onPermissionSettingClick)
         ArrowSettingButton(buttonText = "서비스 약관", onClick = onTOSClick)
 
-        HorizontalDivider(color = NeutralWeak, thickness = 10.dp)
+        HorizontalDivider(color = SlugTheme.colors.surfaceSunken, thickness = 10.dp)
         ArrowSettingButton(buttonText = "로그아웃", onClick = onLogoutClick)
         ArrowSettingButton(buttonText = "탈퇴하기", onClick = onWithDrawClick)
         Column(
             modifier = Modifier
-                .background(NeutralWeak)
+                .background(SlugTheme.colors.surfaceSunken)
                 .padding(20.dp)
                 .fillMaxWidth()
                 .weight(1f),
@@ -57,7 +56,7 @@ fun SettingMainPage(
                 Text(
                     "앱 버전 $appVersion",
                     style = SlugTypographyStyle.BodySmallMedium,
-                    color = NeutralSubtler
+                    color = SlugTheme.colors.neutralSubtler
                 )
                 if (!isRecentVersion) {
                     Spacer(Modifier.width(8.dp))
@@ -65,7 +64,7 @@ fun SettingMainPage(
                         Text(
                             "업데이트하기",
                             style = SlugTypographyStyle.BodySmallMedium,
-                            color = NeutralSubtler,
+                            color = SlugTheme.colors.neutralSubtler,
                             textDecoration = TextDecoration.Underline
                         )
                     }
@@ -75,7 +74,7 @@ fun SettingMainPage(
                 Text(
                     "오픈소스 라이선스 보기",
                     style = SlugTypographyStyle.BodySmallMedium,
-                    color = NeutralSubtler,
+                    color = SlugTheme.colors.neutralSubtler,
                     textDecoration = TextDecoration.Underline
                 )
             }

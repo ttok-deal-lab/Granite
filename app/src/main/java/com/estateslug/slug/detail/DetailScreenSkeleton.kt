@@ -24,17 +24,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.estateslug.slug.ui.component.skeleton.shimmerEffect
-import com.estateslug.slug.ui.theme.Gray150
-import com.estateslug.slug.ui.theme.NeutralInverted
-import com.estateslug.slug.ui.theme.NeutralLight
-import com.estateslug.slug.ui.theme.NeutralWeak
 import com.estateslug.slug.ui.theme.SlugTheme
 
 @Composable
 fun DetailScreenSkeleton(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
-            .background(NeutralInverted)
+            .background(SlugTheme.colors.neutralInverted)
             .verticalScroll(rememberScrollState())
     ) {
         // 이미지 영역
@@ -56,17 +52,17 @@ fun DetailScreenSkeleton(modifier: Modifier = Modifier) {
         }
 
         // 구분선
-        HorizontalDivider(color = NeutralWeak, thickness = 10.dp)
+        HorizontalDivider(color = SlugTheme.colors.surfaceSunken, thickness = 10.dp)
 
         // 탭 영역
         TabSkeleton()
 
-        HorizontalDivider(color = NeutralWeak)
+        HorizontalDivider(color = SlugTheme.colors.neutralWeak)
 
         // 컨텐츠 영역 - 한 눈에 보기 카드
         CheckCardsSkeleton()
 
-        HorizontalDivider(color = NeutralWeak, thickness = 10.dp)
+        HorizontalDivider(color = SlugTheme.colors.surfaceSunken, thickness = 10.dp)
 
         // 경매 히스토리 영역
         AuctionHistorySkeleton()
@@ -141,8 +137,8 @@ private fun PriceCardSkeleton() {
         modifier = Modifier
             .fillMaxWidth()
             .clip(shape)
-            .background(NeutralInverted)
-            .border(shape = shape, width = 1.dp, color = Gray150)
+            .background(SlugTheme.colors.surfaceRaised)
+            .border(shape = shape, width = 1.dp, color = SlugTheme.colors.outlineVariant)
     ) {
         // 윗부분 - 최저매각가격
         Column(
@@ -183,10 +179,11 @@ private fun PriceCardSkeleton() {
         }
 
         // 아랫부분 - 감정가, 실거래가, 매각기일
+        // 실제 카드의 아래 칸은 surfaceInset이지만, 다크에서 그 값이 shimmer 바탕(neutralWeak)과 같아 블록이 사라지므로 여기는 neutralLight로 둔다.
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(NeutralLight)
+                .background(SlugTheme.colors.neutralLight)
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
@@ -236,7 +233,7 @@ private fun TabSkeleton() {
 private fun CheckCardsSkeleton() {
     Column(
         modifier = Modifier
-            .background(NeutralInverted)
+            .background(SlugTheme.colors.neutralInverted)
             .padding(horizontal = 20.dp, vertical = 24.dp)
     ) {
         // "한 눈에 보기" 타이틀
@@ -256,7 +253,7 @@ private fun CheckCardsSkeleton() {
                     modifier = Modifier
                         .weight(1f)
                         .clip(RoundedCornerShape(8.dp))
-                        .background(NeutralLight)
+                        .background(SlugTheme.colors.neutralLight)
                         .padding(12.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
@@ -284,7 +281,7 @@ private fun CheckCardsSkeleton() {
 private fun AuctionHistorySkeleton() {
     Column(
         modifier = Modifier
-            .background(NeutralInverted)
+            .background(SlugTheme.colors.neutralInverted)
             .padding(horizontal = 20.dp, vertical = 24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {

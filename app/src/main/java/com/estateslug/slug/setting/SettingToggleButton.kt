@@ -20,8 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.estateslug.slug.ui.component.button.ToggleSwitchCircle
-import com.estateslug.slug.ui.theme.NeutralContrast
-import com.estateslug.slug.ui.theme.NeutralSubtler
+import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 import com.estateslug.slug.util.blockingClickable
 
@@ -41,12 +40,12 @@ internal fun SettingToggleButton(
     ) {
 
         Column {
-            Text(valueName, style = SlugTypographyStyle.BodyLargeMedium, color = NeutralContrast)
+            Text(valueName, style = SlugTypographyStyle.BodyLargeMedium, color = SlugTheme.colors.neutralContrast)
             Spacer(Modifier.height(4.dp))
             Text(
                 valueDescription,
                 style = SlugTypographyStyle.BodyMiniMedium,
-                color = NeutralSubtler
+                color = SlugTheme.colors.neutralSubtler
             )
         }
         Box(modifier = Modifier.blockingClickable(onClick = onToggleButtonClicked)) {

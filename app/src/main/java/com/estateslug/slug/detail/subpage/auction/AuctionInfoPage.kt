@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.estateslug.slug.detail.DetailBottomSheetType
-import com.estateslug.slug.ui.theme.NeutralWeak
+import com.estateslug.slug.ui.theme.SlugTheme
 
 @Composable
 fun AuctionInfoPage(
@@ -22,15 +22,15 @@ fun AuctionInfoPage(
             checkCardList = uiModel.checkCardList,
             requestBottomSheet = requestBottomSheet
         )
-        HorizontalDivider(color = NeutralWeak, thickness = 10.dp)
+        HorizontalDivider(color = SlugTheme.colors.surfaceSunken, thickness = 10.dp)
         AuctionHistory(uiModel.auctionHistoryUiModel)
-        HorizontalDivider(color = NeutralWeak, thickness = 10.dp)
+        HorizontalDivider(color = SlugTheme.colors.surfaceSunken, thickness = 10.dp)
 //        RegistryInfo(uiModel = uiModel.registryInfoUiModel)// TODO : 1차 MVP 미포함
-//        HorizontalDivider(color = NeutralWeak, thickness = 10.dp)
+//        HorizontalDivider(color = SlugTheme.colors.surfaceSunken, thickness = 10.dp)
 //        SalePropertyInfo(uiModel = salePropertyUiModel)
-//        HorizontalDivider(color = NeutralWeak, thickness = 10.dp)
+//        HorizontalDivider(color = SlugTheme.colors.surfaceSunken, thickness = 10.dp)
         CourtInfo(uiModel = uiModel.courtInfoUiModel, onMapFocused = onMapFocused)
-        HorizontalDivider(color = NeutralWeak, thickness = 10.dp)
+        HorizontalDivider(color = SlugTheme.colors.surfaceSunken, thickness = 10.dp)
         CourtDetailInfo(courtDetailInfo = uiModel.courtDetailInfo)
     }
 

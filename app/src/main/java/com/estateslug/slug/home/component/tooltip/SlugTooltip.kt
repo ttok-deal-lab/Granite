@@ -68,8 +68,7 @@ import androidx.compose.ui.window.PopupPositionProvider
 import com.estateslug.slug.R
 import com.estateslug.slug.ui.component.image.ImageProcessor
 import com.estateslug.slug.ui.component.image.ImageResource
-import com.estateslug.slug.ui.theme.Neutral
-import com.estateslug.slug.ui.theme.NeutralInverted
+import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 import com.estateslug.slug.util.blockingClickable
 import kotlinx.coroutines.launch
@@ -99,15 +98,15 @@ fun AlertSlugTooltip(
             SlugPlainTooltip(
                 modifier = Modifier,
                 caretSize = DpSize(12.dp, 5.dp),
-                containerColor = Neutral,
-                contentColor = Neutral,
+                containerColor = SlugTheme.colors.neutral,
+                contentColor = SlugTheme.colors.neutral,
                 shape = RoundedCornerShape(8.dp),
                 getIsToolTopTop = positionProvider::getIsToolTipTop,
             ) {
                 Text(
                     text = tooltipText,
                     style = SlugTypographyStyle.CaptionMediumMedium,
-                    color = NeutralInverted
+                    color = SlugTheme.colors.neutralInverted
                 )
             }
         },
@@ -120,7 +119,8 @@ fun AlertSlugTooltip(
         })) {
             ImageProcessor(
                 modifier = Modifier.size(16.dp),
-                imageResource = ImageResource.Id(R.drawable.ic_info_circle_16_16)
+                imageResource = ImageResource.Id(R.drawable.ic_info_circle_16_16),
+                tint = SlugTheme.colors.neutralSubtler // 자산 색 #6E777C = NeutralSubtler
             )
         }
     }

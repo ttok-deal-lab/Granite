@@ -20,11 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.estateslug.slug.detail.DetailBottomSheetType
 import com.estateslug.slug.detail.subpage.ItemTitle
-import com.estateslug.slug.ui.theme.CriticalLight
-import com.estateslug.slug.ui.theme.CriticalSubtle
-import com.estateslug.slug.ui.theme.NeutralInverted
-import com.estateslug.slug.ui.theme.NeutralLight
-import com.estateslug.slug.ui.theme.NeutralSubtler
+import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 import com.estateslug.slug.util.blockingClickable
 
@@ -35,7 +31,7 @@ fun FirstCheckCards(
 ) {
     Column(
         modifier = Modifier
-            .background(color = NeutralInverted)
+            .background(color = SlugTheme.colors.neutralInverted)
             .padding(horizontal = 20.dp, vertical = 24.dp)
     ) {
         ItemTitle("한 눈에 보기")
@@ -52,7 +48,7 @@ fun FirstCheckCards(
                         .fillMaxHeight()
                         .blockingClickable(onClick = { requestBottomSheet(data.type) })
                         .background(
-                            if (data.isCritical) CriticalLight else NeutralLight,
+                            if (data.isCritical) SlugTheme.colors.criticalLight else SlugTheme.colors.neutralLight,
                             shape = RoundedCornerShape(8.dp)
                         )
                         .padding(12.dp)
@@ -63,14 +59,14 @@ fun FirstCheckCards(
                     Text(
                         data.name,
                         style = SlugTypographyStyle.BodyMicroMedium,
-                        color = NeutralSubtler
+                        color = SlugTheme.colors.neutralSubtler
                     )
                     Spacer(Modifier.height(4.dp))
                     Text(
                         data.value,
                         style = SlugTypographyStyle.BodySmallBold,
                         textAlign = TextAlign.Center,
-                        color = if (data.isCritical) CriticalSubtle else NeutralSubtler
+                        color = if (data.isCritical) SlugTheme.colors.criticalSubtle else SlugTheme.colors.neutralSubtler
                     )
                 }
             }

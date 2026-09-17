@@ -20,7 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.estateslug.slug.R
 import com.estateslug.slug.ui.component.skeleton.shimmerEffect
-import com.estateslug.slug.ui.theme.Neutral
+import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 import androidx.compose.ui.text.style.TextOverflow
 import com.estateslug.slug.util.blockingClickable
@@ -49,7 +49,7 @@ fun DetailTopBar(
             Icon(
                 modifier = Modifier.sizeIn(28.dp, minHeight = 28.dp),
                 painter = painterResource(R.drawable.ic_arrow_left_28_28),
-                tint = Neutral,
+                tint = SlugTheme.colors.neutral,
                 contentDescription = "notificationIcon"
             )
         }
@@ -69,7 +69,7 @@ fun DetailTopBar(
                 topTitle,
                 modifier = Modifier.weight(1f),
                 style = SlugTypographyStyle.BodyLargeBold,
-                color = Neutral,
+                color = SlugTheme.colors.neutral,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -83,7 +83,7 @@ fun DetailTopBar(
             Icon(
                 modifier = Modifier.sizeIn(28.dp, minHeight = 28.dp),
                 painter = painterResource(R.drawable.ic_share_28_28),
-                tint = Neutral,
+                tint = SlugTheme.colors.neutral,
                 contentDescription = "notificationIcon"
             )
         }

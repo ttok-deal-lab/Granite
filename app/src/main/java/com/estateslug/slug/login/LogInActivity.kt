@@ -22,7 +22,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import com.estateslug.slug.ui.theme.enableLightEdgeToEdge
+import androidx.activity.enableEdgeToEdge
 import com.google.firebase.crashlytics.crashlytics
 import com.google.firebase.Firebase
 import com.estateslug.slug.firebase.SlugFirebaseMessagingService
@@ -48,7 +48,7 @@ class LogInActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableLightEdgeToEdge()
+        enableEdgeToEdge()
         initSocialLoginModule()
         loginViewModel.requestLastLoginType()
         checkPermissionIntro()

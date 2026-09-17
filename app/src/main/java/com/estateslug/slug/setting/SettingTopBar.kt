@@ -21,8 +21,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.estateslug.slug.R
-import com.estateslug.slug.ui.theme.Neutral
-import com.estateslug.slug.ui.theme.NeutralInverted
 import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 import com.estateslug.slug.util.blockingClickable
@@ -36,7 +34,7 @@ fun SettingTopBar(
         modifier = Modifier
             .fillMaxWidth()
             .height(60.dp)
-            .background(NeutralInverted)
+            .background(SlugTheme.colors.neutralInverted)
     ) {
         Row(
             Modifier.fillMaxHeight(),
@@ -54,11 +52,11 @@ fun SettingTopBar(
                 Icon(
                     modifier = Modifier.sizeIn(28.dp, minHeight = 28.dp),
                     painter = painterResource(R.drawable.ic_arrow_left_28_28),
-                    tint = Neutral,
+                    tint = SlugTheme.colors.neutral,
                     contentDescription = "ArrowBack 뒤로가기"// TODO : i18n
                 )
             }
-            Text(text = text, style = SlugTypographyStyle.BodyLargeBold, color = Neutral)
+            Text(text = text, style = SlugTypographyStyle.BodyLargeBold, color = SlugTheme.colors.neutral)
             Spacer(Modifier.width(10.dp))
         }
         Spacer(Modifier.weight(1f))

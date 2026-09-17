@@ -25,7 +25,7 @@ import com.estateslug.slug.home.ProductItemUiModel
 import com.estateslug.slug.ui.component.ProductListError
 import com.estateslug.slug.ui.component.image.ImageProcessor
 import com.estateslug.slug.ui.component.image.ImageResource
-import com.estateslug.slug.ui.theme.NeutralSubtler
+import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 import com.estateslug.slug.util.CursorPaginationState
 
@@ -82,7 +82,7 @@ fun EmptyFavoriteScreen() {
             Text(
                 stringResource(R.string.home_favorite_empty_title),
                 style = SlugTypographyStyle.BodySmallMedium,
-                color = NeutralSubtler
+                color = SlugTheme.colors.neutralSubtler
             )
         }
     }

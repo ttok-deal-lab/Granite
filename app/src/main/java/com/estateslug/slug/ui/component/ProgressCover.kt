@@ -19,8 +19,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.estateslug.slug.ui.theme.Primary
 import com.estateslug.slug.ui.theme.PrimaryBlack
+import com.estateslug.slug.ui.theme.SlugTheme
 import kotlinx.coroutines.delay
 
 @Composable
@@ -42,7 +42,7 @@ fun ProgressCover(isVisible: Boolean) {
         ) {
             CircularProgressIndicator(
                 modifier = Modifier.size(40.dp),
-                color = Primary
+                color = SlugTheme.colors.primary
             )
         }
     }

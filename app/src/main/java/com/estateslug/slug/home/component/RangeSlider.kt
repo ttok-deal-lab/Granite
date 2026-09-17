@@ -40,9 +40,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.estateslug.slug.ui.theme.Black200
-import com.estateslug.slug.ui.theme.NeutralWeak
-import com.estateslug.slug.ui.theme.Primary
-import com.estateslug.slug.ui.theme.PrimaryLight
+import com.estateslug.slug.ui.theme.SlugTheme
 
 /**
  * @param segments 스냅할 구간 개수. 0이면 양 끝점으로만 스냅
@@ -58,8 +56,8 @@ fun SlugRangeSlider(
     endValue: Float = 1f,
     trackSize: Dp = 8.dp,
     thumbSize: Dp = 30.dp,
-    inActiveTrackColor: Color = NeutralWeak,
-    activeTrackColor: Color = Primary,
+    inActiveTrackColor: Color = SlugTheme.colors.neutralWeak,
+    activeTrackColor: Color = SlugTheme.colors.primary,
     segments: Int = 9, // segment < 0 일시 snap 미동작
     onRangeChanged: (Pair<Float, Float>) -> Unit
 ) {
@@ -166,8 +164,8 @@ fun SlugRangeSlider(
 @Composable
 private fun Thumb(
     modifier: Modifier = Modifier,
-    innerColor: Color = PrimaryLight,
-    borderColor: Color = Primary,
+    innerColor: Color = SlugTheme.colors.primaryLight,
+    borderColor: Color = SlugTheme.colors.primary,
     xOffset: Dp,
     thumbSize: Dp,
     onDeltaChanged: (delta: Float) -> Unit,

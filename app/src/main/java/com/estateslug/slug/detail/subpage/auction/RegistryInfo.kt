@@ -20,16 +20,14 @@ import com.estateslug.slug.detail.subpage.ItemInfo
 import com.estateslug.slug.detail.subpage.ItemTitle
 import com.estateslug.slug.ui.component.image.ImageProcessor
 import com.estateslug.slug.ui.component.image.ImageResource
-import com.estateslug.slug.ui.theme.Neutral
-import com.estateslug.slug.ui.theme.NeutralInverted
-import com.estateslug.slug.ui.theme.NeutralSubtler
+import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 
 @Composable
 fun RegistryInfo(uiModel: RegistryInfoUiModel) {
     Column(
         modifier = Modifier
-            .background(NeutralInverted)
+            .background(SlugTheme.colors.neutralInverted)
             .padding(horizontal = 20.dp, vertical = 24.dp)
     ) {
         ItemTitle("등기부 현황")
@@ -41,7 +39,7 @@ fun RegistryInfo(uiModel: RegistryInfoUiModel) {
             Text(
                 text = "매각효력",
                 style = SlugTypographyStyle.BodyMediumMedium,
-                color = NeutralSubtler
+                color = SlugTheme.colors.neutralSubtler
             )
             //TODO : 클릭이벤트 물어보기!!
             Row(
@@ -50,7 +48,7 @@ fun RegistryInfo(uiModel: RegistryInfoUiModel) {
                 Text(
                     text = uiModel.saleEffect,
                     style = SlugTypographyStyle.BodyMediumMedium,
-                    color = Neutral
+                    color = SlugTheme.colors.neutral
                 )
                 ImageProcessor(
                     modifier = Modifier.size(16.dp),

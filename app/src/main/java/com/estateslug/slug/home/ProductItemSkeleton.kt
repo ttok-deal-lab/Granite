@@ -19,7 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.estateslug.slug.ui.component.skeleton.shimmerEffect
-import com.estateslug.slug.ui.theme.NeutralWeak
+import com.estateslug.slug.ui.theme.SlugTheme
 
 @Composable
 fun ProductItemSkeleton(modifier: Modifier = Modifier) {
@@ -92,7 +92,7 @@ fun ProductListSkeleton(
         repeat(count) { index ->
             ProductItemSkeleton()
             if (index < count - 1) {
-                HorizontalDivider(color = NeutralWeak)
+                HorizontalDivider(color = SlugTheme.colors.neutralWeak)
             }
         }
     }

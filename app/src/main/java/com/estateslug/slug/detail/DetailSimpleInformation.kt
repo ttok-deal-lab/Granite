@@ -33,14 +33,6 @@ import com.estateslug.slug.ui.component.label.SlugLabelLarge
 import com.estateslug.slug.ui.component.label.SlugLabelStyle
 import com.estateslug.slug.ui.component.label.SlugLabelUiModel
 import com.estateslug.slug.ui.component.label.VerifiedSlugLabelLarge
-import com.estateslug.slug.ui.theme.Critical
-import com.estateslug.slug.ui.theme.Gray150
-import com.estateslug.slug.ui.theme.Neutral
-import com.estateslug.slug.ui.theme.NeutralInverted
-import com.estateslug.slug.ui.theme.NeutralLight
-import com.estateslug.slug.ui.theme.NeutralMuted
-import com.estateslug.slug.ui.theme.NeutralSubtler
-import com.estateslug.slug.ui.theme.Primary
 import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 import com.estateslug.slug.util.ClipBoardModule
@@ -107,8 +99,8 @@ private fun RecentAuctionPrice(
         modifier = Modifier
             .fillMaxWidth()
             .clip(shape = shape)
-            .background(color = NeutralInverted)
-            .border(shape = shape, width = 1.dp, color = Gray150)
+            .background(color = SlugTheme.colors.surfaceRaised)
+            .border(shape = shape, width = 1.dp, color = SlugTheme.colors.outlineVariant)
     ) {
         //윗부분
         Column(
@@ -127,7 +119,7 @@ private fun RecentAuctionPrice(
                     Text(
                         text = "최저매각가격",
                         style = SlugTypographyStyle.BodySmallMedium,
-                        color = NeutralSubtler
+                        color = SlugTheme.colors.neutralSubtler
                     )
                     AlertSlugTooltip("법원이 책정한 입찰을 시작할 수 있는 가장 낮은 가격이에요.")
                 }
@@ -135,7 +127,7 @@ private fun RecentAuctionPrice(
                 Text(
                     text = displayLowestPrice,
                     style = SlugTypographyStyle.TitleMediumBold,
-                    color = Neutral
+                    color = SlugTheme.colors.neutral
                 )
             }
             Spacer(Modifier.height(2.dp))
@@ -150,16 +142,16 @@ private fun RecentAuctionPrice(
                     Text(
                         text = "감정가대비",
                         style = SlugTypographyStyle.BodyTinyMedium,
-                        color = NeutralSubtler
+                        color = SlugTheme.colors.neutralSubtler
                     )
                     Spacer(Modifier.width(2.dp))
                     Text(
                         text = if (priceDiff == 0L) "-" else "$displayPriceDiff (${percentageOfPriceDiff}%)",
                         style = SlugTypographyStyle.BodyTinyMedium,
                         color = when {
-                            priceDiff > 0 -> Critical
-                            priceDiff < 0 -> Primary
-                            else -> NeutralSubtler
+                            priceDiff > 0 -> SlugTheme.colors.critical
+                            priceDiff < 0 -> SlugTheme.colors.primary
+                            else -> SlugTheme.colors.neutralSubtler
                         }
                     )
                 }
@@ -169,7 +161,7 @@ private fun RecentAuctionPrice(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(color = NeutralLight)
+                .background(color = SlugTheme.colors.surfaceInset)
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
@@ -181,7 +173,7 @@ private fun RecentAuctionPrice(
                     Text(
                         text = "감정가",
                         style = SlugTypographyStyle.BodySmallMedium,
-                        color = NeutralSubtler
+                        color = SlugTheme.colors.neutralSubtler
                     )
                     AlertSlugTooltip("시세·입지·건물 상태를 기준으로 감정평가서가 책정한 가격이에요.")
                 }
@@ -189,7 +181,7 @@ private fun RecentAuctionPrice(
                 Text(
                     text = displayAppraisalPrice,
                     style = SlugTypographyStyle.BodySmallMedium,
-                    color = NeutralSubtler
+                    color = SlugTheme.colors.neutralSubtler
                 )
             }
             Row {
@@ -199,20 +191,20 @@ private fun RecentAuctionPrice(
                     Text(
                         text = "최근실거래가",
                         style = SlugTypographyStyle.BodySmallMedium,
-                        color = NeutralSubtler
+                        color = SlugTheme.colors.neutralSubtler
                     )
                     Spacer(Modifier.width(4.dp))
                     Text(
                         text = recentDeal.date,
                         style = SlugTypographyStyle.BodyTinyRegular,
-                        color = NeutralSubtler
+                        color = SlugTheme.colors.neutralSubtler
                     )
                 }
                 Spacer(Modifier.weight(1f))
                 Text(
                     text = displayRecentDealPrice,
                     style = SlugTypographyStyle.BodySmallMedium,
-                    color = NeutralSubtler
+                    color = SlugTheme.colors.neutralSubtler
                 )
             }
             Row {
@@ -223,14 +215,14 @@ private fun RecentAuctionPrice(
                     Text(
                         text = "매각기일",
                         style = SlugTypographyStyle.BodySmallMedium,
-                        color = NeutralSubtler
+                        color = SlugTheme.colors.neutralSubtler
                     )
                 }
                 Spacer(Modifier.weight(1f))
                 Text(
                     text = lastSaleDate,
                     style = SlugTypographyStyle.BodySmallBold,
-                    color = Neutral
+                    color = SlugTheme.colors.neutral
                 )
             }
         }
@@ -267,12 +259,12 @@ private fun NameAndLike(
             Text(
                 text = nameOfProduct,
                 style = SlugTypographyStyle.TitleLargeBold,
-                color = Neutral
+                color = SlugTheme.colors.neutral
             )
             Text(
                 text = "${typeDisplayName()} | $size",
                 style = SlugTypographyStyle.BodyMiniMedium,
-                color = NeutralSubtler
+                color = SlugTheme.colors.neutralSubtler
             )
             Row(
                 modifier = Modifier.blockingClickable(onClick = {
@@ -288,12 +280,12 @@ private fun NameAndLike(
                 Text(
                     text = "매물번호 $numberOfProduct",//TODO : i18n
                     style = SlugTypographyStyle.BodyMiniMedium,
-                    color = NeutralSubtler
+                    color = SlugTheme.colors.neutralSubtler
                 )
                 Icon(
                     modifier = Modifier.size(18.dp),
                     painter = painterResource(R.drawable.ic_copy_18_18),
-                    tint = NeutralMuted,
+                    tint = SlugTheme.colors.iconUnselected,
                     contentDescription = "CopyProductNumber",
                 )
             }
@@ -306,13 +298,13 @@ private fun NameAndLike(
             Icon(
                 modifier = Modifier.size(28.dp),
                 painter = painterResource(R.drawable.ic_heart),
-                tint = if (isFavorite) Critical else NeutralMuted,
+                tint = if (isFavorite) SlugTheme.colors.criticalIcon else SlugTheme.colors.iconUnselected,
                 contentDescription = "FavoriteIcon",
             )
             Text(
                 text = numberOfFavorite.toString(),
                 style = SlugTypographyStyle.BodyMicroMedium,
-                color = NeutralSubtler
+                color = SlugTheme.colors.neutralSubtler
             )
         }
 

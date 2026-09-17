@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import com.estateslug.slug.R
 import com.estateslug.slug.ui.component.image.ImageProcessor
 import com.estateslug.slug.ui.component.image.ImageResource
-import com.estateslug.slug.ui.theme.Gray150
 import com.estateslug.slug.ui.theme.PrimaryBlack
 import com.estateslug.slug.ui.theme.PrimaryWhite
 import com.estateslug.slug.ui.theme.SlugTheme
@@ -46,7 +45,7 @@ fun DetailPageTopImagePager(imageList: List<ImageResource>) {
                 Box(
                     Modifier
                         .aspectRatio(1.7f)
-                        .background(color = Gray150)
+                        .background(color = SlugTheme.colors.imagePlaceholder)
                         .clickable {
                             selectedIndex = index
                             showFullScreen = true

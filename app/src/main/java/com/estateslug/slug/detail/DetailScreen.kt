@@ -29,8 +29,6 @@ import com.estateslug.slug.detail.subpage.TitleAnalysisPage
 import com.estateslug.slug.detail.subpage.auction.AuctionInfoPage
 import com.estateslug.slug.ui.component.ProductListError
 import com.estateslug.slug.ui.component.image.ImageResource
-import com.estateslug.slug.ui.theme.NeutralInverted
-import com.estateslug.slug.ui.theme.NeutralWeak
 import com.estateslug.slug.ui.theme.SlugTheme
 import kotlinx.serialization.Serializable
 
@@ -112,7 +110,7 @@ fun DetailScreen(
                     DetailContentState.Content -> Column {
                         LazyColumn(
                             modifier = Modifier
-                                .background(NeutralInverted),
+                                .background(SlugTheme.colors.neutralInverted),
                             userScrollEnabled = userScrollEnabled
                         ) {
                             item {
@@ -120,13 +118,13 @@ fun DetailScreen(
                                     uiModel = uiState.detailSimpleInformation,
                                     likeClicked = likeClicked
                                 )
-                                HorizontalDivider(color = NeutralWeak, thickness = 10.dp)
+                                HorizontalDivider(color = SlugTheme.colors.surfaceSunken, thickness = 10.dp)
                             }
                             stickyHeader {
                                 Box(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .background(color = NeutralInverted)
+                                        .background(color = SlugTheme.colors.neutralInverted)
                                 ) {
                                     DetailedTabRow(
                                         selectedRoute = selectedRoute,

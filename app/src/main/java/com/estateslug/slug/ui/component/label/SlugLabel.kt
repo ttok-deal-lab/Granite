@@ -26,10 +26,7 @@ import com.estateslug.slug.ui.component.SlugText
 import com.estateslug.slug.ui.component.image.ImageProcessor
 import com.estateslug.slug.ui.component.image.ImageResource
 import com.estateslug.slug.ui.theme.NeutralLight
-import com.estateslug.slug.ui.theme.NeutralSubtler
-import com.estateslug.slug.ui.theme.NeutralWeak
-import com.estateslug.slug.ui.theme.Primary
-import com.estateslug.slug.ui.theme.PrimaryLight
+import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 import com.estateslug.slug.ui.theme.VerifiedGradientLower
 import com.estateslug.slug.ui.theme.VerifiedGradientUpper
@@ -92,13 +89,13 @@ private fun SlugLabel(
     Row(
         modifier = Modifier
             .clip(RoundedCornerShape(4.dp))
-            .labelBackground(slugBackground = uiModel.labelStyle.background)
+            .labelBackground(slugBackground = uiModel.labelStyle.resolveBackground())
             .padding(vertical = 3.dp, horizontal = 6.dp),
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         frontSlot()
-        Text(text = uiModel.text(), color = uiModel.labelStyle.textColor, style = textStyle)
+        Text(text = uiModel.text(), color = uiModel.labelStyle.resolveTextColor(), style = textStyle)
         backSlot()
     }
 }
@@ -114,54 +111,82 @@ private fun Modifier.labelBackground(slugBackground: SlugLabelBackground): Modif
     }
 }
 
-sealed class SlugLabelStyle(
-) {
-    abstract val background: SlugLabelBackground
-    abstract val textColor: Color
+/**
+ * 라벨 색은 렌더 시점에 테마 토큰에서 해석한다. UI 모델(ViewModel)은 역할 객체만 들고 색을 들지 않는다.
+ * [Dynamic]은 호출부가 색을 직접 정하는 예외이며 테마를 따르지 않는다.
+ */
+sealed class SlugLabelStyle {
+    @Composable
+    abstract fun resolveBackground(): SlugLabelBackground
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is SlugLabelStyle) return false
-        return background == other.background && textColor == other.textColor
-    }
-
-    override fun hashCode(): Int {
-        var result = background.hashCode()
-        result = 31 * result + textColor.hashCode()
-        return result
-    }
+    @Composable
+    abstract fun resolveTextColor(): Color
 
     sealed class BuildingInfo : SlugLabelStyle() {
+        /** 건물 유형: 주요색 연한 배경 + 주요색 글자. */
         data object BuildingType : BuildingInfo() {
-            override val background = SlugLabelBackground.Solid(PrimaryLight)
-            override val textColor = Primary
+            @Composable
+            override fun resolveBackground() = SlugLabelBackground.Solid(SlugTheme.colors.primaryLight)
+
+            @Composable
+            override fun resolveTextColor() = SlugTheme.colors.primary
         }
 
+        /** 유찰·매각완료 등 상태: 약한 중립 배경 + 보조 글자. */
         data object State : BuildingInfo() {
-            override val background = SlugLabelBackground.Solid(NeutralWeak)
-            override val textColor = NeutralSubtler
+            @Composable
+            override fun resolveBackground() = SlugLabelBackground.Solid(SlugTheme.colors.neutralWeak)
+
+            @Composable
+            override fun resolveTextColor() = SlugTheme.colors.neutralSubtler
+        }
+
+        /** 매각 임박(D-2 이내): 위험 연한 배경 + 위험 글자. */
+        data object SaleImminent : BuildingInfo() {
+            @Composable
+            override fun resolveBackground() = SlugLabelBackground.Solid(SlugTheme.colors.criticalWeak)
+
+            @Composable
+            override fun resolveTextColor() = SlugTheme.colors.critical
         }
     }
 
+    /** 호출부가 색을 직접 정한다. 테마를 따르지 않으므로 테마 무관 색에만 쓴다. */
     data class Dynamic(
-        override val background: SlugLabelBackground,
-        override val textColor: Color
-    ) : SlugLabelStyle()
-
-    sealed class GradientBackground(
+        val background: SlugLabelBackground,
+        val textColor: Color
     ) : SlugLabelStyle() {
+        @Composable
+        override fun resolveBackground() = background
+
+        @Composable
+        override fun resolveTextColor() = textColor
+    }
+
+    sealed class GradientBackground : SlugLabelStyle() {
         data class Dynamic(
-            override val background: SlugLabelBackground.Gradient,
-            override val textColor: Color
-        ) : GradientBackground()
+            val background: SlugLabelBackground.Gradient,
+            val textColor: Color
+        ) : GradientBackground() {
+            @Composable
+            override fun resolveBackground() = background
 
+            @Composable
+            override fun resolveTextColor() = textColor
+        }
+
+        /** 인증 라벨은 브랜드 그라디언트라 테마와 무관하게 고정한다(글자도 라이트 상수 NeutralLight 고정). */
         data object Verified : GradientBackground() {
-
-            override val background = SlugLabelBackground.Gradient(
+            private val background = SlugLabelBackground.Gradient(
                 color1 = VerifiedGradientUpper,
                 color2 = VerifiedGradientLower
             )
-            override val textColor: Color = NeutralLight
+
+            @Composable
+            override fun resolveBackground() = background
+
+            @Composable
+            override fun resolveTextColor() = NeutralLight
         }
     }
 }

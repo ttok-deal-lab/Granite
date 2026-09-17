@@ -25,10 +25,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.estateslug.slug.R
 import com.estateslug.slug.home.HomeViewModel
 import com.estateslug.slug.home.bottomsheet.BottomSheetHead
-import com.estateslug.slug.ui.theme.Neutral
-import com.estateslug.slug.ui.theme.NeutralInverted
-import com.estateslug.slug.ui.theme.NeutralLight
-import com.estateslug.slug.ui.theme.Primary
+import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 import com.estateslug.slug.util.blockingClickable
 
@@ -78,8 +75,12 @@ fun SortingTypeItem(
     val isSelected = type == lastSelectedType
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
+    val pressedBackgroundColor = SlugTheme.colors.surfaceInset
+    val idleBackgroundColor = SlugTheme.colors.surfaceRaised
     val backGroundColor by
-    remember { derivedStateOf { if (isPressed) NeutralLight else NeutralInverted } }
+    remember(pressedBackgroundColor, idleBackgroundColor) {
+        derivedStateOf { if (isPressed) pressedBackgroundColor else idleBackgroundColor }
+    }
 
     Row(
         Modifier
@@ -93,13 +94,13 @@ fun SortingTypeItem(
         Text(
             text = stringResource(type.localizedText),
             style = SlugTypographyStyle.BodyLargeMedium,
-            color = Neutral
+            color = SlugTheme.colors.neutral
         )
         Spacer(Modifier.weight(1f))
         if (isSelected)
             Icon(
                 painterResource(R.drawable.ic_check_20_20),
-                tint = Primary,
+                tint = SlugTheme.colors.primary,
                 contentDescription = "선택됨"
             )
     }

@@ -11,9 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.estateslug.slug.detail.subpage.ItemTitle
-import com.estateslug.slug.ui.theme.Critical
-import com.estateslug.slug.ui.theme.NeutralInverted
-import com.estateslug.slug.ui.theme.NeutralSubtler
+import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 
 
@@ -22,7 +20,7 @@ fun CourtDetailInfo(courtDetailInfo: String) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = NeutralInverted)
+            .background(color = SlugTheme.colors.neutralInverted)
             .padding(
                 horizontal = 20.dp,
                 vertical = 24.dp
@@ -33,7 +31,7 @@ fun CourtDetailInfo(courtDetailInfo: String) {
         Text(
             text = courtDetailInfo,
             style = SlugTypographyStyle.BodySmallMedium,
-            color = NeutralSubtler
+            color = SlugTheme.colors.neutralSubtler
         )
     }
 }

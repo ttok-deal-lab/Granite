@@ -28,7 +28,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -37,9 +36,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.estateslug.slug.R
 import com.estateslug.slug.home.HomeViewModel
 import com.estateslug.slug.home.bottomsheet.BottomSheetHead
-import com.estateslug.slug.ui.theme.Neutral
-import com.estateslug.slug.ui.theme.NeutralInverted
-import com.estateslug.slug.ui.theme.NeutralLight
 import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 import com.estateslug.slug.util.noRippleClickable
@@ -112,7 +108,7 @@ fun LocationSelectorList(
         Spacer(
             modifier = Modifier
                 .height(1.dp)
-                .background(NeutralLight)
+                .background(SlugTheme.colors.surfaceInset)
                 .fillMaxWidth()
         )
         Row(modifier = Modifier.fillMaxWidth()) {
@@ -128,7 +124,7 @@ fun LocationSelectorList(
                         onClick = { onMainClicked(locationMain) })
                 }
             }
-            Spacer(Modifier.width(2.dp).background(Color.White))//TODO : 다크모드 처리필요함!
+            Spacer(Modifier.width(2.dp).background(SlugTheme.colors.surfaceRaised))
             LazyColumn(
                 modifier = Modifier.weight(1f), state = subListState
             ) {
@@ -154,15 +150,15 @@ fun LocationItem(
 
     val backgroundColor by animateColorAsState(
         targetValue = when {
-            isSelected -> Neutral
-            isPressed -> NeutralLight
-            else -> NeutralInverted
+            isSelected -> SlugTheme.colors.neutral
+            isPressed -> SlugTheme.colors.surfaceInset
+            else -> SlugTheme.colors.surfaceRaised
         },
         animationSpec = tween(200),
         label = "backgroundColor"
     )
     val textColor by animateColorAsState(
-        targetValue = if (isSelected) NeutralInverted else Neutral,
+        targetValue = if (isSelected) SlugTheme.colors.neutralInverted else SlugTheme.colors.neutral,
         animationSpec = tween(200),
         label = "textColor"
     )

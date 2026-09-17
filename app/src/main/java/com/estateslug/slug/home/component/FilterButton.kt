@@ -34,8 +34,7 @@ import com.estateslug.slug.home.Price
 import com.estateslug.slug.home.ToggleFilterType
 import com.estateslug.slug.ui.component.image.ImageProcessor
 import com.estateslug.slug.ui.component.image.ImageResource
-import com.estateslug.slug.ui.theme.Gray150
-import com.estateslug.slug.ui.theme.Neutral
+import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 import com.estateslug.slug.util.blockingClickable
 
@@ -102,12 +101,12 @@ fun FilterButton(
 ) {
 //    val backgroundColor: Color = if (state.isFilterSelected) Neutral else Gray150
     val backgroundColor by animateColorAsState(
-        if (state.isFilterSelected) Neutral else Gray150,
+        if (state.isFilterSelected) SlugTheme.colors.neutral else SlugTheme.colors.neutralPill,
         animationSpec = animationSpecForColor,
         label = "color"
     )
     val contentColor by animateColorAsState(
-        if (state.isFilterSelected) Gray150 else Neutral,
+        if (state.isFilterSelected) SlugTheme.colors.neutralPill else SlugTheme.colors.neutral,
         animationSpec = animationSpecForColor,
         label = "color"
     )

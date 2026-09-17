@@ -17,7 +17,7 @@ import com.estateslug.slug.detail.subpage.ItemInfo
 import com.estateslug.slug.detail.subpage.ItemTitle
 import com.estateslug.slug.ui.component.SlugText
 import com.estateslug.slug.ui.component.maps.SlugMap
-import com.estateslug.slug.ui.theme.NeutralInverted
+import com.estateslug.slug.ui.theme.SlugTheme
 
 
 @Composable
@@ -25,7 +25,7 @@ fun CourtInfo(uiModel: CourtInfoUiModel, onMapFocused: (Boolean) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = NeutralInverted)
+            .background(color = SlugTheme.colors.neutralInverted)
             .padding(
                 horizontal = 20.dp,
                 vertical = 24.dp

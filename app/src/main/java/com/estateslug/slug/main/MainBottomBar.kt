@@ -35,8 +35,7 @@ import com.estateslug.slug.R
 import com.estateslug.slug.favorite.RouteFavorite
 import com.estateslug.slug.home.navigation.RouteHome
 import com.estateslug.slug.mypage.RouteMyPageHome
-import com.estateslug.slug.ui.theme.NeutralMuted
-import com.estateslug.slug.ui.theme.Primary
+import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 
 @Composable
@@ -68,8 +67,8 @@ private fun RowScope.MainBottomBarItem(
 ) {
     //fixed
     val size = 28.dp
-    val selectedColor: Color = Primary
-    val unSelectedColor: Color = NeutralMuted
+    val selectedColor: Color = SlugTheme.colors.primary
+    val unSelectedColor: Color = SlugTheme.colors.iconUnselected
     val color by animateColorAsState(
         if (isSelected) selectedColor else unSelectedColor,
         label = "color"

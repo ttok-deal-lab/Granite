@@ -7,4 +7,6 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <!-- 다크 테마 창 배경 = Color.kt Black200. values-night/themes.xml에서 사용 -->
+    <color name="slug_background_night">#FF0C0D0D</color>
 </resources>

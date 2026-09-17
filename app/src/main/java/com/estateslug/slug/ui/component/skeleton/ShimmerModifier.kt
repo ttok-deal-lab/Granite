@@ -12,8 +12,7 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
-import com.estateslug.slug.ui.theme.NeutralMuted
-import com.estateslug.slug.ui.theme.NeutralWeak
+import com.estateslug.slug.ui.theme.SlugTheme
 
 fun Modifier.shimmerEffect(): Modifier = composed {
     val transition = rememberInfiniteTransition(label = "shimmer")
@@ -26,11 +25,13 @@ fun Modifier.shimmerEffect(): Modifier = composed {
         ),
         label = "shimmerOffset",
     )
+    val neutralWeak = SlugTheme.colors.neutralWeak
+    val neutralMuted = SlugTheme.colors.neutralMuted
 
     drawWithContent {
         drawContent()
         val brush = Brush.linearGradient(
-            colors = listOf(NeutralWeak, NeutralMuted, NeutralWeak),
+            colors = listOf(neutralWeak, neutralMuted, neutralWeak),
             start = Offset(offsetX, 0f),
             end = Offset(offsetX + size.width, size.height),
         )

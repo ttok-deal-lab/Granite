@@ -19,11 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.estateslug.slug.detail.subpage.ItemTitle
-import com.estateslug.slug.ui.theme.Gray150
-import com.estateslug.slug.ui.theme.Neutral
-import com.estateslug.slug.ui.theme.NeutralInverted
-import com.estateslug.slug.ui.theme.NeutralLight
-import com.estateslug.slug.ui.theme.NeutralSubtler
+import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 
 //TODO : 쪼갤것!
@@ -33,7 +29,7 @@ fun SalePropertyInfo(uiModel: SalePropertyInfoUiModel) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = NeutralInverted)
+            .background(color = SlugTheme.colors.neutralInverted)
             .padding(
                 horizontal = 20.dp,
                 vertical = 24.dp
@@ -45,19 +41,19 @@ fun SalePropertyInfo(uiModel: SalePropertyInfoUiModel) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text("감정가", style = SlugTypographyStyle.BodyMediumMedium, color = NeutralSubtler)
+            Text("감정가", style = SlugTypographyStyle.BodyMediumMedium, color = SlugTheme.colors.neutralSubtler)
             Text(
                 uiModel.appraisedTotal,
                 style = SlugTypographyStyle.BodyMediumBold,
-                color = Neutral
+                color = SlugTheme.colors.neutral
             )
         }
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(shape = shape)
-                .background(color = NeutralInverted)
-                .border(shape = shape, width = 1.dp, color = Gray150)
+                .background(color = SlugTheme.colors.surfaceRaised)
+                .border(shape = shape, width = 1.dp, color = SlugTheme.colors.outlineVariant)
         ) {
             val landSummary = uiModel.landSummary
             //윗부분
@@ -69,12 +65,12 @@ fun SalePropertyInfo(uiModel: SalePropertyInfoUiModel) {
                     Text(
                         "대지권",
                         style = SlugTypographyStyle.BodyMediumMedium,
-                        color = NeutralSubtler
+                        color = SlugTheme.colors.neutralSubtler
                     )
                     Text(
                         landSummary.amount,
                         style = SlugTypographyStyle.BodyMediumBold,
-                        color = Neutral
+                        color = SlugTheme.colors.neutral
                     )
                 }
                 Spacer(Modifier.height(2.dp))
@@ -82,7 +78,7 @@ fun SalePropertyInfo(uiModel: SalePropertyInfoUiModel) {
                     modifier = Modifier.align(Alignment.End),
                     text = landSummary.areaChip,
                     style = SlugTypographyStyle.BodyTinyMedium,
-                    color = NeutralSubtler
+                    color = SlugTheme.colors.neutralSubtler
                 )
             }
 
@@ -90,7 +86,7 @@ fun SalePropertyInfo(uiModel: SalePropertyInfoUiModel) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(color = NeutralLight)
+                    .background(color = SlugTheme.colors.surfaceInset)
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
@@ -102,8 +98,8 @@ fun SalePropertyInfo(uiModel: SalePropertyInfoUiModel) {
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(shape = shape)
-                .background(color = NeutralInverted)
-                .border(shape = shape, width = 1.dp, color = Gray150)
+                .background(color = SlugTheme.colors.surfaceRaised)
+                .border(shape = shape, width = 1.dp, color = SlugTheme.colors.outlineVariant)
         ) {
             val buildingSummary = uiModel.buildingSummary
             //윗부분
@@ -115,12 +111,12 @@ fun SalePropertyInfo(uiModel: SalePropertyInfoUiModel) {
                     Text(
                         "건물",
                         style = SlugTypographyStyle.BodyMediumMedium,
-                        color = NeutralSubtler
+                        color = SlugTheme.colors.neutralSubtler
                     )
                     Text(
                         buildingSummary.amount,
                         style = SlugTypographyStyle.BodyMediumBold,
-                        color = Neutral
+                        color = SlugTheme.colors.neutral
                     )
                 }
                 Spacer(Modifier.height(2.dp))
@@ -128,7 +124,7 @@ fun SalePropertyInfo(uiModel: SalePropertyInfoUiModel) {
                     modifier = Modifier.align(Alignment.End),
                     text = buildingSummary.areaChip,
                     style = SlugTypographyStyle.BodyTinyMedium,
-                    color = NeutralSubtler
+                    color = SlugTheme.colors.neutralSubtler
                 )
             }
             val buildings = uiModel.buildingUnits
@@ -137,7 +133,7 @@ fun SalePropertyInfo(uiModel: SalePropertyInfoUiModel) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(color = NeutralLight),
+                    .background(color = SlugTheme.colors.surfaceInset),
             ) {
                 buildings.forEachIndexed {
                         index, buildingUnit ->
@@ -150,7 +146,7 @@ fun SalePropertyInfo(uiModel: SalePropertyInfoUiModel) {
                         BuildingItemInfo("감정가", buildingUnit.appraised)
                     }
                     if (index < buildings.lastIndex) {
-                        HorizontalDivider(color = Gray150, thickness = 1.dp)
+                        HorizontalDivider(color = SlugTheme.colors.outlineVariant, thickness = 1.dp)
                     }
                 }
             }
@@ -166,8 +162,8 @@ internal fun BuildingItemInfo(name: String, value: String) {
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        Text(text = name, style = SlugTypographyStyle.BodySmallMedium, color = NeutralSubtler)
-        Text(text = value, style = SlugTypographyStyle.BodySmallMedium, color = NeutralSubtler)
+        Text(text = name, style = SlugTypographyStyle.BodySmallMedium, color = SlugTheme.colors.neutralSubtler)
+        Text(text = value, style = SlugTypographyStyle.BodySmallMedium, color = SlugTheme.colors.neutralSubtler)
     }
 }
 
@@ -223,8 +219,12 @@ data class BuildingUnit(
 
 
 @Composable
-@Preview
+@Preview()
 fun PreviewSalePropertyInfo() {
     val uiModel: SalePropertyInfoUiModel = SalePropertyInfoUiModel.preview
-    SalePropertyInfo(uiModel)
+    SlugTheme(
+        darkTheme = true
+    ) {
+        SalePropertyInfo(uiModel)
+    }
 }

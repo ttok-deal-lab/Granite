@@ -29,8 +29,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.estateslug.slug.permission.PermissionDataModel
 import com.estateslug.slug.setting.SettingTopBar
-import com.estateslug.slug.ui.theme.NeutralContrast
-import com.estateslug.slug.ui.theme.NeutralSubtler
 import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 import com.estateslug.slug.util.blockingClickable
@@ -73,20 +71,20 @@ private fun PermissionSettingRow(
             Text(
                 text = stringResource(id = permission.permissionNameId),
                 style = SlugTypographyStyle.BodyLargeMedium,
-                color = NeutralContrast
+                color = SlugTheme.colors.neutralContrast
             )
             Spacer(Modifier.height(4.dp))
             Text(
                 text = stringResource(id = permission.permissionDescriptionId),
                 style = SlugTypographyStyle.BodyMiniMedium,
-                color = NeutralSubtler
+                color = SlugTheme.colors.neutralSubtler
             )
         }
         Toggle(checked = granted)
     }
 }
 
-/** 48×28 트랙 토글. 트랙 primary(선택)/outline(비선택) · 썸 onPrimary(선택 시 white). */
+/** 48×28 트랙 토글. 트랙 primary(선택)/outline(비선택) · 썸 onPrimary(선택)/switchThumbOff(비선택). */
 @Composable
 private fun Toggle(checked: Boolean) {
     val trackColor =
@@ -105,8 +103,8 @@ private fun Toggle(checked: Boolean) {
                 .padding(start = thumbOffset)
                 .size(22.dp)
                 .clip(CircleShape)
-                // 트랙 위 콘텐츠 컬러 — 선택 시 white(onPrimary), 비선택도 동일 톤으로 대비 확보.
-                .background(MaterialTheme.colorScheme.onPrimary),
+                // 트랙 위 콘텐츠 컬러 — 선택 시 onPrimary, 비선택 시 테마의 switchThumbOff(라이트는 같은 white).
+                .background(if (checked) MaterialTheme.colorScheme.onPrimary else SlugTheme.colors.switchThumbOff),
         )
     }
 }

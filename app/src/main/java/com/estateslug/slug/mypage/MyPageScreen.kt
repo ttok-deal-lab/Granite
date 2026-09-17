@@ -30,9 +30,6 @@ import com.estateslug.slug.R
 import com.estateslug.slug.login.SocialLoginUIModel
 import com.estateslug.slug.ui.component.image.ImageProcessor
 import com.estateslug.slug.ui.component.image.ImageResource
-import com.estateslug.slug.ui.theme.Neutral
-import com.estateslug.slug.ui.theme.NeutralContrast
-import com.estateslug.slug.ui.theme.NeutralWeak
 import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 import com.estateslug.slug.util.blockingClickable
@@ -56,7 +53,7 @@ fun MyPageScreen(
             userEmail = userEmail,
             socialLoginUIModel = socialLoginUIModel
         )
-        HorizontalDivider(thickness = 1.dp, color = NeutralWeak)
+        HorizontalDivider(thickness = 1.dp, color = SlugTheme.colors.neutralWeak)
         MyPageButton(
             iconId = R.drawable.ic_home_recent_checked_20_20,
             text = "최근 본 매물",
@@ -84,13 +81,13 @@ private fun UserNameAndLoginType(
         Text(
             text = userName,
             style = SlugTypographyStyle.TitleLargeBold,
-            color = NeutralContrast
+            color = SlugTheme.colors.neutralContrast
         )
         if (userEmail.isNotBlank()) {
             Text(
                 text = userEmail,
                 style = SlugTypographyStyle.BodyLargeMedium,
-                color = NeutralContrast
+                color = SlugTheme.colors.neutralContrast
             )
         }
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -110,7 +107,7 @@ private fun UserNameAndLoginType(
             Text(
                 text = "${stringResource(id = socialLoginUIModel.loginSNSText)} 로그인",
                 style = SlugTypographyStyle.BodyMiniMedium,
-                color = NeutralContrast
+                color = SlugTheme.colors.neutralContrast
             )
         }
     }
@@ -127,11 +124,11 @@ private fun MyPageButton(@DrawableRes iconId: Int, text: String, onClick: () -> 
         Icon(
             modifier = Modifier.size(20.dp),
             painter = painterResource(iconId),
-            tint = Neutral,
+            tint = SlugTheme.colors.neutral,
             contentDescription = "FavoriteIcon",
         )
         Spacer(Modifier.width(8.dp))
-        Text(text = text, style = SlugTypographyStyle.BodyLargeMedium, color = Neutral)
+        Text(text = text, style = SlugTypographyStyle.BodyLargeMedium, color = SlugTheme.colors.neutral)
     }
 }
 

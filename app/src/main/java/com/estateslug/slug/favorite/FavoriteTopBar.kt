@@ -19,7 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.estateslug.slug.R
-import com.estateslug.slug.ui.theme.Neutral
+import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 import com.estateslug.slug.util.blockingClickable
 
@@ -43,7 +43,7 @@ fun FavoriteTopBar(
             Text(
                 stringResource(R.string.home_favorite_top_title),
                 style = SlugTypographyStyle.TitleLargeBold,
-                color = Neutral
+                color = SlugTheme.colors.neutral
             )
         }
         Spacer(Modifier.weight(1f))

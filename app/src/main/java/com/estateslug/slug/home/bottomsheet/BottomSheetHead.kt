@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -18,7 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.estateslug.slug.R
-import com.estateslug.slug.ui.theme.Neutral
+import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 import com.estateslug.slug.util.blockingClickable
 
@@ -32,7 +31,7 @@ fun BottomSheetHead(modifier: Modifier = Modifier, string: String) {
                 .padding(vertical = 16.dp),
             contentAlignment = Alignment.CenterStart
         ) {
-            Text(text = string, style = SlugTypographyStyle.TitleLargeBold, color = Neutral)
+            Text(text = string, style = SlugTypographyStyle.TitleLargeBold, color = SlugTheme.colors.neutral)
         }
     }
 }
@@ -46,7 +45,7 @@ fun BottomSheetHeadRedo(modifier: Modifier = Modifier, string: String, onRedoCli
                 .padding(vertical = 16.dp),
             contentAlignment = Alignment.CenterStart
         ) {
-            Text(text = string, style = SlugTypographyStyle.TitleLargeBold, color = Neutral)
+            Text(text = string, style = SlugTypographyStyle.TitleLargeBold, color = SlugTheme.colors.neutral)
         }
         Box(
             modifier = Modifier

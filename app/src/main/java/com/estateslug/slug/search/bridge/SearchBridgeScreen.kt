@@ -32,11 +32,7 @@ import com.estateslug.slug.search.SearchViewModel
 import com.estateslug.slug.ui.component.ProductListEmpty
 import com.estateslug.slug.ui.component.image.ImageProcessor
 import com.estateslug.slug.ui.component.image.ImageResource
-import com.estateslug.slug.ui.theme.Neutral
-import com.estateslug.slug.ui.theme.NeutralInverted
-import com.estateslug.slug.ui.theme.NeutralSubtler
-import com.estateslug.slug.ui.theme.NeutralWeak
-import com.estateslug.slug.ui.theme.Primary
+import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 import com.estateslug.slug.util.blockingClickable
 
@@ -85,7 +81,7 @@ fun SearchBridgeScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(NeutralInverted)
+            .background(SlugTheme.colors.neutralInverted)
     ) {
         when {
             isSearchLoading -> {
@@ -135,7 +131,7 @@ private fun RecentSearchEmpty() {
             Text(
                 text = "최근 검색 내역이 없어요.",
                 style = SlugTypographyStyle.BodySmallMedium,
-                color = NeutralSubtler
+                color = SlugTheme.colors.neutralSubtler
             )
         }
     }
@@ -151,26 +147,26 @@ private fun SearchNoResult() {
             Box(
                 modifier = Modifier
                     .size(48.dp)
-                    .background(NeutralWeak, CircleShape),
+                    .background(SlugTheme.colors.neutralWeak, CircleShape),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = "!",
                     style = SlugTypographyStyle.TitleLargeBold,
-                    color = NeutralSubtler
+                    color = SlugTheme.colors.neutralSubtler
                 )
             }
             Spacer(Modifier.height(12.dp))
             Text(
                 text = "검색 결과가 없어요.",
                 style = SlugTypographyStyle.BodySmallBold,
-                color = Neutral
+                color = SlugTheme.colors.neutral
             )
             Spacer(Modifier.height(4.dp))
             Text(
                 text = "검색어를 한 글자 이상 작성해주세요.",
                 style = SlugTypographyStyle.BodySmallMedium,
-                color = NeutralSubtler
+                color = SlugTheme.colors.neutralSubtler
             )
         }
     }
@@ -193,13 +189,13 @@ private fun RecentSearchList(
             Text(
                 text = "최근 검색어",
                 style = SlugTypographyStyle.BodyMediumBold,
-                color = Neutral
+                color = SlugTheme.colors.neutral
             )
             Spacer(Modifier.weight(1f))
             Text(
                 text = "전체삭제",
                 style = SlugTypographyStyle.BodyMicroMedium,
-                color = NeutralSubtler,
+                color = SlugTheme.colors.neutralSubtler,
                 modifier = Modifier.blockingClickable(onClick = onClearAll)
             )
         }
@@ -237,7 +233,7 @@ private fun RecentSearchItem(
         Text(
             text = keyword,
             style = SlugTypographyStyle.BodyMediumMedium,
-            color = Neutral,
+            color = SlugTheme.colors.neutral,
             modifier = Modifier.weight(1f)
         )
         Icon(
@@ -245,7 +241,7 @@ private fun RecentSearchItem(
                 .size(20.dp)
                 .blockingClickable(onClick = onRemoveClick),
             painter = painterResource(R.drawable.ic_close_18_18),
-            tint = NeutralSubtler,
+            tint = SlugTheme.colors.neutralSubtler,
             contentDescription = "삭제"
         )
     }
@@ -284,7 +280,7 @@ private fun AutoCompleteItem(
         Icon(
             modifier = Modifier.size(20.dp),
             painter = painterResource(R.drawable.search_line_28_28),
-            tint = NeutralSubtler,
+            tint = SlugTheme.colors.neutralSubtler,
             contentDescription = null
         )
         Spacer(Modifier.width(12.dp))
@@ -307,19 +303,19 @@ private fun HighlightedText(
                 Text(
                     text = text.substring(0, startIndex),
                     style = SlugTypographyStyle.BodyMediumMedium,
-                    color = Neutral
+                    color = SlugTheme.colors.neutral
                 )
             }
             Text(
                 text = text.substring(startIndex, startIndex + highlight.length),
                 style = SlugTypographyStyle.BodyMediumBold,
-                color = Primary
+                color = SlugTheme.colors.primary
             )
             if (startIndex + highlight.length < text.length) {
                 Text(
                     text = text.substring(startIndex + highlight.length),
                     style = SlugTypographyStyle.BodyMediumMedium,
-                    color = Neutral
+                    color = SlugTheme.colors.neutral
                 )
             }
         }
@@ -327,7 +323,7 @@ private fun HighlightedText(
         Text(
             text = text,
             style = SlugTypographyStyle.BodyMediumMedium,
-            color = Neutral
+            color = SlugTheme.colors.neutral
         )
     }
 }

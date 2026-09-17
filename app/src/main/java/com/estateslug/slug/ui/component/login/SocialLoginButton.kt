@@ -28,9 +28,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.estateslug.slug.login.SocialLoginUIModel
 import com.estateslug.slug.login.sns.SocialLoginType
-import com.estateslug.slug.ui.theme.Neutral
-import com.estateslug.slug.ui.theme.NeutralInverted
 import com.estateslug.slug.ui.theme.PrimaryWhite
+import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 
 
@@ -90,6 +89,7 @@ fun SocialLoginButton( //TODO : 해당 Feature로 옮기는 것 고민 할것!
 
 @Composable
 fun LastLoginTypeText() {
+    val neutral = SlugTheme.colors.neutral
     Row(
         modifier = Modifier,
         verticalAlignment = Alignment.CenterVertically
@@ -104,18 +104,18 @@ fun LastLoginTypeText() {
             }
             drawPath(
                 path = path,
-                color = Neutral
+                color = neutral
             )
         }
         Box(
             modifier = Modifier
-                .background(shape = RoundedCornerShape(6.dp), color = Neutral)
+                .background(shape = RoundedCornerShape(6.dp), color = neutral)
                 .padding(vertical = 4.dp, horizontal = 8.dp),
         ) {
             Text(
                 text = "최근 로그인",
                 style = SlugTypographyStyle.CaptionMediumMedium,
-                color = NeutralInverted
+                color = SlugTheme.colors.neutralInverted
             )//TODO : i18n
         }
     }

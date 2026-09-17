@@ -35,13 +35,6 @@ import androidx.compose.ui.unit.dp
 import com.estateslug.slug.R
 import com.estateslug.slug.ui.component.image.ImageProcessor
 import com.estateslug.slug.ui.component.image.ImageResource
-import com.estateslug.slug.ui.theme.Gray150
-import com.estateslug.slug.ui.theme.Neutral
-import com.estateslug.slug.ui.theme.NeutralInverted
-import com.estateslug.slug.ui.theme.NeutralLight
-import com.estateslug.slug.ui.theme.NeutralMuted
-import com.estateslug.slug.ui.theme.NeutralSubtler
-import com.estateslug.slug.ui.theme.Primary
 import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 import com.estateslug.slug.util.blockingClickable
@@ -67,7 +60,7 @@ fun TitleAnalysisPage(listOfLessee: List<LesseeInfo>) {
             Text(
                 numberOfLessee.toString(),
                 style = SlugTypographyStyle.TitleMediumBold,
-                color = Primary
+                color = SlugTheme.colors.primary
             )
         }
         val lazyListState = rememberLazyListState()
@@ -101,7 +94,7 @@ fun TitleAnalysisPage(listOfLessee: List<LesseeInfo>) {
 
 @Composable
 private fun LesseeNameCard(name: String, isSelected: Boolean, state: OccupancyStatus) {
-    val borderColor = if (isSelected) Primary else NeutralMuted
+    val borderColor = if (isSelected) SlugTheme.colors.primary else SlugTheme.colors.neutralMuted
     val cardShape = RoundedCornerShape(8.dp)
     Row(
         modifier = Modifier
@@ -118,7 +111,7 @@ private fun LesseeNameCard(name: String, isSelected: Boolean, state: OccupancySt
                 else it
             }
             .clip(shape = cardShape)
-            .background(NeutralInverted)
+            .background(SlugTheme.colors.surfaceRaised)
             .border(1.dp, color = borderColor, shape = cardShape)
             .padding(16.dp)
             .widthIn(min = 178.dp),
@@ -126,18 +119,23 @@ private fun LesseeNameCard(name: String, isSelected: Boolean, state: OccupancySt
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(text = name, style = SlugTypographyStyle.BodyMediumBold, color = Neutral)
+            Text(
+                text = name,
+                style = SlugTypographyStyle.BodyMediumBold,
+                color = SlugTheme.colors.neutral
+            )
             Spacer(Modifier.width(8.dp))
             if (isSelected)
                 ImageProcessor(
                     modifier = Modifier.size(18.dp),
-                    ImageResource.Id(R.drawable.ic_check_20_20)
+                    ImageResource.Id(R.drawable.ic_check_20_20),
+                    tint = SlugTheme.colors.primary // 자산 선 색 #1E9EFF = Primary
                 )
         }
         Text(
             text = state.displayName,
             style = SlugTypographyStyle.BodyMediumBold,
-            color = state.statusColor
+            color = state.tone.color()
         )
     }
 }
@@ -153,8 +151,8 @@ private fun LesseeDataCard(data: LesseeInfo) {
             .padding(horizontal = 20.dp)
             .fillMaxWidth()
             .clip(shape = shape)
-            .background(color = NeutralInverted)
-            .border(shape = shape, width = 1.dp, color = Gray150)
+            .background(color = SlugTheme.colors.surfaceRaised)
+            .border(shape = shape, width = 1.dp, color = SlugTheme.colors.outlineVariant)
     ) {
         //윗부분
         Row(
@@ -168,26 +166,26 @@ private fun LesseeDataCard(data: LesseeInfo) {
                 Text(
                     text = data.lesseeName,
                     style = SlugTypographyStyle.BodyMediumBold,
-                    color = Neutral
+                    color = SlugTheme.colors.neutral
                 )
                 Spacer(Modifier.height(2.dp))
                 Text(
                     text = data.nameOfPlace,
                     style = SlugTypographyStyle.BodyMicroMedium,
-                    color = NeutralSubtler
+                    color = SlugTheme.colors.neutralSubtler
                 )
             }
             Text(
                 text = data.occupancyStatus.displayName,
                 style = SlugTypographyStyle.BodyMediumBold,
-                color = data.occupancyStatus.statusColor
+                color = data.occupancyStatus.tone.color()
             )
         }
         //아랫부분
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(color = NeutralLight)
+                .background(color = SlugTheme.colors.surfaceInset)
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
@@ -217,8 +215,16 @@ private fun LesseeDataCardItemTitle(name: String, value: String) {
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = name, style = SlugTypographyStyle.BodySmallBold, color = NeutralSubtler)
-        Text(text = value, style = SlugTypographyStyle.BodySmallBold, color = NeutralSubtler)
+        Text(
+            text = name,
+            style = SlugTypographyStyle.BodySmallBold,
+            color = SlugTheme.colors.neutralSubtler
+        )
+        Text(
+            text = value,
+            style = SlugTypographyStyle.BodySmallBold,
+            color = SlugTheme.colors.neutralSubtler
+        )
     }
 }
 
@@ -228,16 +234,24 @@ private fun LesseeDataCardItemValue(name: String, value: String) {
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = "└ $name", style = SlugTypographyStyle.BodySmallMedium, color = NeutralSubtler)
-        Text(text = value, style = SlugTypographyStyle.BodySmallMedium, color = NeutralSubtler)
+        Text(
+            text = "└ $name",
+            style = SlugTypographyStyle.BodySmallMedium,
+            color = SlugTheme.colors.neutralSubtler
+        )
+        Text(
+            text = value,
+            style = SlugTypographyStyle.BodySmallMedium,
+            color = SlugTheme.colors.neutralSubtler
+        )
     }
 }
 
-enum class OccupancyStatus(val displayName: String, val statusColor: Color) {
-    OCCUPIED(displayName = "점유중", statusColor = Primary),
-    VACANT(displayName = "공실", statusColor = NeutralSubtler),
-    NONE(displayName = "없음", statusColor = NeutralSubtler),
-    UNKNOWN(displayName = "점유확인 필요", statusColor = NeutralSubtler)
+enum class OccupancyStatus(val displayName: String, val tone: StatusTone) {
+    OCCUPIED(displayName = "점유중", tone = StatusTone.POSITIVE),
+    VACANT(displayName = "공실", tone = StatusTone.NEUTRAL),
+    NONE(displayName = "없음", tone = StatusTone.NEUTRAL),
+    UNKNOWN(displayName = "점유확인 필요", tone = StatusTone.NEUTRAL)
 }
 
 data class LesseeInfo(
@@ -318,5 +332,11 @@ fun PreviewLesseeNameCard() {
 @Preview
 fun PreviewTitleAnalysisPage() {
     val listOfLessee: List<LesseeInfo> = LesseeInfo.lesseePreviewList
-    TitleAnalysisPage(listOfLessee)
+    SlugTheme(
+//        darkTheme = true
+    ) {
+        Surface {
+            TitleAnalysisPage(listOfLessee)
+        }
+    }
 }

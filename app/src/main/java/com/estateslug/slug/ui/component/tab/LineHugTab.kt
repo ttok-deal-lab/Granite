@@ -18,8 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.estateslug.slug.ui.theme.NeutralSubtler
-import com.estateslug.slug.ui.theme.Primary
+import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 import com.estateslug.slug.util.noRippleClickable
 
@@ -27,11 +26,11 @@ import com.estateslug.slug.util.noRippleClickable
 fun LineHugTab(tabName: String, isSelected: Boolean, onTabClick: () -> Unit) {
     //TODO : 하드코딩 값 상수로 변경 필요.
     val tabColor by animateColorAsState(
-        targetValue = if (isSelected) Primary else NeutralSubtler,
+        targetValue = if (isSelected) SlugTheme.colors.primary else SlugTheme.colors.neutralSubtler,
         label = "color"
     )
     val indicatorColor by animateColorAsState(
-        targetValue = if (isSelected) Primary else Primary.copy(alpha = 0f),
+        targetValue = if (isSelected) SlugTheme.colors.primary else SlugTheme.colors.primary.copy(alpha = 0f),
         label = "color"
     )
     Column(

@@ -33,7 +33,7 @@ import com.estateslug.slug.ui.component.button.basic.BasicButton
 import com.estateslug.slug.ui.component.button.basic.BasicTextButton
 import com.estateslug.slug.ui.component.button.basic.BasicButtonSizeType
 import com.estateslug.slug.ui.component.button.basic.BasicButtonStyle
-import com.estateslug.slug.ui.theme.NeutralLight
+import com.estateslug.slug.ui.theme.SlugTheme
 
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -73,7 +73,7 @@ internal fun <T : FilterOption> FilterContent(
         Spacer(
             modifier = Modifier
                 .height(1.dp)
-                .background(NeutralLight)
+                .background(SlugTheme.colors.surfaceInset)
                 .fillMaxWidth()
         )
         FlowRow(

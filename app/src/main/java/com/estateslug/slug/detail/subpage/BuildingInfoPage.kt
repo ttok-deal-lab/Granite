@@ -18,8 +18,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.estateslug.slug.ui.component.maps.SlugMap
-import com.estateslug.slug.ui.theme.Neutral
-import com.estateslug.slug.ui.theme.NeutralWeak
+import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 
 @Composable
@@ -38,14 +37,14 @@ fun BuildingInfoPage(data: BuildingInfoUiModel, onMapFocused: (Boolean) -> Unit)
             Box(
                 modifier = Modifier
                     .clip(shape = RoundedCornerShape(size = 8.dp))
-                    .background(color = NeutralWeak)
+                    .background(color = SlugTheme.colors.neutralWeak)
                     .padding(vertical = 7.dp, horizontal = 10.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = "토지정보 바로보기",
                     style = SlugTypographyStyle.BodyMicroMedium,
-                    color = Neutral
+                    color = SlugTheme.colors.neutral
                 )
             }
         }

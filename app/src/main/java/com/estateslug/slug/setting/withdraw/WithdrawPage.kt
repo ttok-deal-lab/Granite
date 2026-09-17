@@ -27,9 +27,7 @@ import com.estateslug.slug.setting.SettingTopBar
 import com.estateslug.slug.ui.component.button.basic.BasicTextButton
 import com.estateslug.slug.ui.component.image.ImageProcessor
 import com.estateslug.slug.ui.component.image.ImageResource
-import com.estateslug.slug.ui.theme.Neutral
-import com.estateslug.slug.ui.theme.NeutralInverted
-import com.estateslug.slug.ui.theme.NeutralSubtler
+import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 import com.estateslug.slug.util.blockingClickable
 
@@ -45,35 +43,35 @@ fun WithdrawPage(onBackClick: () -> Unit, onWithDrawClick: () -> Unit) {
         SettingTopBar(onBackClick = onBackClick)
         Column(
             modifier = Modifier
-                .background(NeutralInverted)
+                .background(SlugTheme.colors.neutralInverted)
                 .fillMaxWidth()
                 .padding(20.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-            Text(withDrawTitle, style = SlugTypographyStyle.TitleLargeBold, color = Neutral)
+            Text(withDrawTitle, style = SlugTypographyStyle.TitleLargeBold, color = SlugTheme.colors.neutral)
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Row {
                     Text(
                         text = " • ",
                         style = SlugTypographyStyle.BodySmallMedium,
-                        color = NeutralSubtler
+                        color = SlugTheme.colors.neutralSubtler
                     )
                     Text(
                         text = withDrawSubDataRemove,
                         style = SlugTypographyStyle.BodySmallMedium,
-                        color = NeutralSubtler
+                        color = SlugTheme.colors.neutralSubtler
                     )
                 }
                 Row {
                     Text(
                         text = " • ",
                         style = SlugTypographyStyle.BodySmallMedium,
-                        color = NeutralSubtler
+                        color = SlugTheme.colors.neutralSubtler
                     )
                     Text(
                         text = withDrawSubCanNotReUseId,
                         style = SlugTypographyStyle.BodySmallMedium,
-                        color = NeutralSubtler
+                        color = SlugTheme.colors.neutralSubtler
                     )
                 }
             }
@@ -83,7 +81,7 @@ fun WithdrawPage(onBackClick: () -> Unit, onWithDrawClick: () -> Unit) {
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth()
-                .background(NeutralInverted)
+                .background(SlugTheme.colors.neutralInverted)
         ) {
             Row(
                 modifier = Modifier
@@ -100,7 +98,7 @@ fun WithdrawPage(onBackClick: () -> Unit, onWithDrawClick: () -> Unit) {
                 Text(
                     withDrawCheckDescriptionAllChecked,
                     style = SlugTypographyStyle.BodyMediumMedium,
-                    color = Neutral
+                    color = SlugTheme.colors.neutral
                 )
             }
             Spacer(modifier = Modifier.weight(1f))

@@ -14,7 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import com.estateslug.slug.setting.ArrowSettingButton
 import com.estateslug.slug.setting.SettingTopBar
 import com.estateslug.slug.ui.component.WebView
-import com.estateslug.slug.ui.theme.NeutralInverted
+import com.estateslug.slug.ui.theme.SlugTheme
 
 @Composable
 fun TermsPage(onBackClick: () -> Unit) {//TODO : i18n
@@ -35,7 +35,7 @@ fun TermsPage(onBackClick: () -> Unit) {//TODO : i18n
             composable(TERMS_LIST) {
                 Column(
                     modifier = Modifier
-                        .background(NeutralInverted)
+                        .background(SlugTheme.colors.neutralInverted)
                         .fillMaxSize()
                 ) {
                     SettingTopBar(text = termsTitle, onBackClick = onBackClick)
@@ -46,7 +46,7 @@ fun TermsPage(onBackClick: () -> Unit) {//TODO : i18n
             composable(TERMS_SERVICE) {
                 Column(
                     modifier = Modifier
-                        .background(NeutralInverted)
+                        .background(SlugTheme.colors.neutralInverted)
                         .fillMaxSize()
                 ) {
                     SettingTopBar(text = "", onBackClick = { navController.navigateUp() })
@@ -57,7 +57,7 @@ fun TermsPage(onBackClick: () -> Unit) {//TODO : i18n
             composable(TERMS_USER_INFO) {
                 Column(
                     modifier = Modifier
-                        .background(NeutralInverted)
+                        .background(SlugTheme.colors.neutralInverted)
                         .fillMaxSize()
                 ) {
                     SettingTopBar(text = "", onBackClick = { navController.navigateUp() })

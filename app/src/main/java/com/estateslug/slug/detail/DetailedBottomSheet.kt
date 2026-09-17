@@ -40,15 +40,8 @@ import com.estateslug.slug.ui.component.button.basic.BasicButtonSizeType
 import com.estateslug.slug.ui.component.button.basic.BasicTextButton
 import com.estateslug.slug.ui.component.image.ImageProcessor
 import com.estateslug.slug.ui.component.image.ImageResource
-import com.estateslug.slug.ui.theme.Black200
-import com.estateslug.slug.ui.theme.Critical
-import com.estateslug.slug.ui.theme.CriticalLight
 import com.estateslug.slug.ui.theme.KakaoYellow
-import com.estateslug.slug.ui.theme.Neutral
-import com.estateslug.slug.ui.theme.NeutralContrast
-import com.estateslug.slug.ui.theme.NeutralInverted
-import com.estateslug.slug.ui.theme.NeutralLight
-import com.estateslug.slug.ui.theme.Primary
+import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 import com.estateslug.slug.util.blockingClickable
 import com.estateslug.slug.util.shareKakao
@@ -80,7 +73,7 @@ fun DetailedBottomSheet(detailBottomSheetType: DetailBottomSheetType, onDismiss:
                     modifier = Modifier
                         .height(32.dp)
                         .fillMaxWidth()
-                        .background(color = NeutralInverted)
+                        .background(color = SlugTheme.colors.surfaceRaised)
                         .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
                 )
             },
@@ -119,12 +112,12 @@ private fun InfoBottomSheetContent(
         Text(
             text = type.info.name,
             style = SlugTypographyStyle.HeadingSmallBold,
-            color = Neutral
+            color = SlugTheme.colors.neutral
         )
         Text(
             text = type.info.description,
             style = SlugTypographyStyle.BodyLargeRegular,
-            color = Neutral
+            color = SlugTheme.colors.neutral
         )
         Column(
             modifier = Modifier
@@ -137,20 +130,20 @@ private fun InfoBottomSheetContent(
                         .fillMaxWidth()
                         .background(
                             shape = RoundedCornerShape(6.dp),
-                            color = if (subInfo.isCritical) CriticalLight else NeutralLight
+                            color = if (subInfo.isCritical) SlugTheme.colors.criticalLight else SlugTheme.colors.surfaceInset
                         )
                         .padding(16.dp)
                 ) {
                     Text(
                         text = subInfo.name,
                         style = SlugTypographyStyle.BodyLargeBold,
-                        color = if (subInfo.isCritical) Critical else Neutral,
+                        color = if (subInfo.isCritical) SlugTheme.colors.critical else SlugTheme.colors.neutral,
                     )
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
                         text = subInfo.description,
                         style = SlugTypographyStyle.BodyMediumRegular,
-                        color = NeutralContrast
+                        color = SlugTheme.colors.neutralContrast
                     )
                 }
             }
@@ -212,7 +205,7 @@ internal fun ArrowShareButton(
 ) {
     Row(
         modifier = Modifier
-            .background(NeutralInverted)
+            .background(SlugTheme.colors.surfaceRaised)
             .blockingClickable(onClick = onClick)
             .padding(20.dp)
             .fillMaxWidth(),
@@ -221,11 +214,12 @@ internal fun ArrowShareButton(
         iconBox()
         Spacer(Modifier.width(8.dp))
         Row(modifier = Modifier.weight(1f), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(text = buttonText, style = SlugTypographyStyle.BodyLargeBold, color = Neutral)
+            Text(text = buttonText, style = SlugTypographyStyle.BodyLargeBold, color = SlugTheme.colors.neutral)
         }
         ImageProcessor(
             modifier = Modifier.size(16.dp),
-            imageResource = ImageResource.Id(R.drawable.arrow_right_16_16)
+            imageResource = ImageResource.Id(R.drawable.arrow_right_16_16),
+            tint = SlugTheme.colors.neutralSubtler // 자산 선 색 #6E777C = NeutralSubtler
         )
         Spacer(Modifier.width(4.dp))
     }
@@ -270,13 +264,13 @@ fun PreviewDetailedBottomSheet() {
         Column(modifier = Modifier.systemBarsPadding()) {
             Box(
                 Modifier
-                    .background(color = Primary)
+                    .background(color = SlugTheme.colors.primary)
                     .clickable(onClick = {
                         index = (index + 1) % typeList.size
                     })
                     .padding(20.dp)
             ) {
-                Text("TO NEXT", color = Black200)
+                Text("TO NEXT", color = SlugTheme.colors.neutralBlack)
             }
             DetailedBottomSheet(
                 detailBottomSheetType = selectedBottomSheetType,

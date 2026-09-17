@@ -26,7 +26,7 @@ import com.estateslug.slug.search.SearchViewModel
 import com.estateslug.slug.search.bottomsheet.SearchBottomSheetType
 import com.estateslug.slug.ui.component.ProductListEmpty
 import com.estateslug.slug.ui.component.ProductListError
-import com.estateslug.slug.ui.theme.NeutralInverted
+import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.util.CursorPaginationState
 
 @Composable
@@ -79,7 +79,7 @@ fun SearchResultScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(NeutralInverted)
+            .background(SlugTheme.colors.neutralInverted)
     ) {
         HomeFilterBar(
             verifiedProductExist = numberOfProduct > 0,

@@ -18,7 +18,7 @@ import com.estateslug.slug.ui.component.button.basic.BasicButtonSizeType
 import com.estateslug.slug.ui.component.button.basic.BasicTextButton
 import com.estateslug.slug.ui.component.image.ImageProcessor
 import com.estateslug.slug.ui.component.image.ImageResource
-import com.estateslug.slug.ui.theme.NeutralSubtler
+import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 
 @Composable
@@ -36,7 +36,7 @@ fun ProductListError(title: String, onRetry: () -> Unit) {
             Text(
                 title,
                 style = SlugTypographyStyle.BodySmallMedium,
-                color = NeutralSubtler
+                color = SlugTheme.colors.neutralSubtler
             )
             Spacer(Modifier.height(12.dp))
             BasicTextButton(

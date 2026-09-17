@@ -35,13 +35,7 @@ import com.estateslug.slug.R
 import com.estateslug.slug.home.component.DDayChip
 import com.estateslug.slug.ui.component.image.ImageProcessor
 import com.estateslug.slug.ui.component.label.SlugLabelLarge
-import com.estateslug.slug.ui.theme.Critical
-import com.estateslug.slug.ui.theme.Neutral
-import com.estateslug.slug.ui.theme.NeutralMuted
-import com.estateslug.slug.ui.theme.NeutralSubtle
-import com.estateslug.slug.ui.theme.NeutralSubtler
-import com.estateslug.slug.ui.theme.NeutralWeak
-import com.estateslug.slug.ui.theme.Primary
+import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 import com.estateslug.slug.util.OnReachEnd
 import com.estateslug.slug.util.blockingClickable
@@ -70,7 +64,7 @@ fun ProductList(
                 Modifier
                     .fillMaxWidth()
                     .height(1.dp)
-                    .background(color = NeutralWeak)
+                    .background(color = SlugTheme.colors.neutralWeak)
             )
         }
         if (isLoadingMore) {
@@ -83,7 +77,7 @@ fun ProductList(
                 ) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(24.dp),
-                        color = Primary,
+                        color = SlugTheme.colors.primary,
                         strokeWidth = 2.dp
                     )
                 }
@@ -121,17 +115,17 @@ private fun ProductItem(
                 Text(
                     text = priceOfProductByCurrency,
                     style = SlugTypographyStyle.BodyLargeBold,
-                    color = Neutral
+                    color = SlugTheme.colors.neutral
                 )
                 Text(
                     text = uiModel.nameOfProduct,
                     style = SlugTypographyStyle.BodyMicroMedium,
-                    color = Neutral
+                    color = SlugTheme.colors.neutral
                 )
                 Text(
                     text = uiModel.location,
                     style = SlugTypographyStyle.BodyMicroRegular,
-                    color = NeutralSubtler
+                    color = SlugTheme.colors.neutralSubtler
                 )
             }
             Spacer(Modifier.height(8.dp))
@@ -151,14 +145,14 @@ private fun ProductItem(
             Icon(
                 modifier = Modifier.size(18.dp),
                 painter = painterResource(R.drawable.ic_heart),
-                tint = if (uiModel.isFavorite) Critical else NeutralMuted,
+                tint = if (uiModel.isFavorite) SlugTheme.colors.criticalIcon else SlugTheme.colors.iconUnselected,
                 contentDescription = "FavoriteIcon",
             )
             if (uiModel.favoritePersons > 0) {
                 Text(
                     text = "${uiModel.favoritePersons}",
                     style = SlugTypographyStyle.BodyMicroMedium,
-                    color = NeutralSubtle
+                    color = SlugTheme.colors.neutralSubtle
                 )
             }
         }

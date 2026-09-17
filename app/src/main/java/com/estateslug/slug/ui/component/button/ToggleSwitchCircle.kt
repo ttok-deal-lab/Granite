@@ -21,8 +21,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.estateslug.slug.ui.theme.NeutralSubtle
-import com.estateslug.slug.ui.theme.Primary
+import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.util.blockingClickable
 
 @Composable
@@ -32,8 +31,8 @@ fun ToggleSwitchCircle(
     width: Dp = 50.dp,
     height: Dp = 30.dp,
     strokeWidth: Dp = 0.5.dp,
-    checkedTrackColor: Color = Primary,
-    uncheckedTrackColor: Color = NeutralSubtle,
+    checkedTrackColor: Color = SlugTheme.colors.primary,
+    uncheckedTrackColor: Color = SlugTheme.colors.outline,
     checkedThumbColor: Color = Color(0xFFFFFFFF),
     uncheckedThumbColor: Color = Color(0xFFFFFFFF),
     gapBetweenThumbAndTrackEdge: Dp = 2.dp,

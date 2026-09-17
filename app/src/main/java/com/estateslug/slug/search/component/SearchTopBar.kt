@@ -31,12 +31,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.estateslug.slug.R
-import com.estateslug.slug.ui.theme.Gray300
-import com.estateslug.slug.ui.theme.Neutral
-import com.estateslug.slug.ui.theme.NeutralInverted
-import com.estateslug.slug.ui.theme.NeutralSubtler
-import com.estateslug.slug.ui.theme.NeutralWeak
-import com.estateslug.slug.ui.theme.Primary
+import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 import com.estateslug.slug.util.blockingClickable
 
@@ -62,7 +57,7 @@ fun SearchTopBar(
         modifier = Modifier
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
-            .background(NeutralInverted)
+            .background(SlugTheme.colors.neutralInverted)
             .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -76,7 +71,7 @@ fun SearchTopBar(
             Icon(
                 modifier = Modifier.size(28.dp),
                 painter = painterResource(R.drawable.ic_top_back_24_24),
-                tint = Neutral,
+                tint = SlugTheme.colors.neutral,
                 contentDescription = "뒤로가기"
             )
         }
@@ -85,7 +80,7 @@ fun SearchTopBar(
             modifier = Modifier
                 .weight(1f)
                 .heightIn(min = 40.dp)
-                .background(NeutralWeak, RoundedCornerShape(8.dp))
+                .background(SlugTheme.colors.neutralWeak, RoundedCornerShape(8.dp))
                 .padding(horizontal = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -95,8 +90,8 @@ fun SearchTopBar(
                 modifier = Modifier
                     .weight(1f)
                     .focusRequester(focusRequester),
-                textStyle = SlugTypographyStyle.BodyMediumMedium.copy(color = Neutral),
-                cursorBrush = SolidColor(Primary),
+                textStyle = SlugTypographyStyle.BodyMediumMedium.copy(color = SlugTheme.colors.neutral),
+                cursorBrush = SolidColor(SlugTheme.colors.primary),
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                 keyboardActions = KeyboardActions(
@@ -108,7 +103,7 @@ fun SearchTopBar(
                             Text(
                                 text = "경매 번호, 주소 검색",
                                 style = SlugTypographyStyle.BodyMediumMedium,
-                                color = NeutralSubtler
+                                color = SlugTheme.colors.neutralSubtler
                             )
                         }
                         innerTextField()
@@ -127,7 +122,7 @@ fun SearchTopBar(
                     Icon(
                         modifier = Modifier.size(22.dp),
                         painter = painterResource(R.drawable.ic_delete_22_22),
-                        tint = Gray300,
+                        tint = SlugTheme.colors.neutralSubtle,
                         contentDescription = "지우기"
                     )
                 }
@@ -146,7 +141,7 @@ fun SearchTopBar(
             Text(
                 text = "닫기",
                 style = SlugTypographyStyle.BodyMediumMedium,
-                color = Neutral
+                color = SlugTheme.colors.neutral
             )
         }
     }

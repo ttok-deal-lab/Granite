@@ -37,8 +37,6 @@ import com.estateslug.slug.home.component.SlugRangeSlider
 import com.estateslug.slug.ui.component.button.basic.BasicButton
 import com.estateslug.slug.ui.component.button.basic.BasicButtonSizeType
 import com.estateslug.slug.ui.component.button.basic.BasicButtonStyle
-import com.estateslug.slug.ui.theme.NeutralLight
-import com.estateslug.slug.ui.theme.NeutralSubtler
 import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 import com.estateslug.slug.util.formatProductCount
@@ -147,7 +145,7 @@ fun <T : Price> PriceRangeFilter(
             modifier = elementDefaultModifier,
             string = stringResource(R.string.filter_price)
         )
-        Spacer(modifier = Modifier.height(1.dp).background(NeutralLight).fillMaxWidth())
+        Spacer(modifier = Modifier.height(1.dp).background(SlugTheme.colors.surfaceInset).fillMaxWidth())
         Spacer(modifier = elementDefaultModifier.height(16.dp))
         Text(
             modifier = elementDefaultModifier,
@@ -172,12 +170,12 @@ fun <T : Price> PriceRangeFilter(
             Text(
                 text = startString,
                 style = SlugTypographyStyle.BodyTinyMedium,
-                color = NeutralSubtler
+                color = SlugTheme.colors.neutralSubtler
             )
             Text(
                 text = endString,
                 style = SlugTypographyStyle.BodyTinyMedium,
-                color = NeutralSubtler
+                color = SlugTheme.colors.neutralSubtler
             )
         }
         Box(Modifier.padding(vertical = 16.dp)) {

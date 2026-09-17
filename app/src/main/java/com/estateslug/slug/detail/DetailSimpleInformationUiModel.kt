@@ -4,11 +4,8 @@ import com.estateslug.slug.R
 import com.estateslug.slug.ui.component.SlugText
 import com.estateslug.slug.domain.sales.RecentTransaction
 import com.estateslug.slug.ui.component.image.ImageResource
-import com.estateslug.slug.ui.component.label.SlugLabelBackground
 import com.estateslug.slug.ui.component.label.SlugLabelStyle
 import com.estateslug.slug.ui.component.label.SlugLabelUiModel
-import com.estateslug.slug.ui.theme.Critical
-import com.estateslug.slug.ui.theme.CriticalWeak
 import kotlin.collections.List
 
 data class DetailSimpleInformationUiModel(
@@ -41,10 +38,7 @@ data class DetailSimpleInformationUiModel(
                 labelModels = listOf(
                     SlugLabelUiModel(SlugLabelStyle.GradientBackground.Verified , SlugText.Text("인증매물")),
                     SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State , SlugText.Text("유찰 2회")),
-                    SlugLabelUiModel(SlugLabelStyle.Dynamic(
-                        background = SlugLabelBackground.Solid(CriticalWeak),
-                        textColor = Critical
-                    ) , SlugText.Text("매각 D-2")),
+                    SlugLabelUiModel(SlugLabelStyle.BuildingInfo.SaleImminent , SlugText.Text("매각 D-2")),
                     SlugLabelUiModel(SlugLabelStyle.BuildingInfo.State , SlugText.Text("매각 D-4")),
                 ),
                 lowestPrice = 183_200_000L,

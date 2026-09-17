@@ -40,8 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.estateslug.slug.R
-import com.estateslug.slug.ui.theme.Gray600
-import com.estateslug.slug.ui.theme.NeutralInverted
+import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 import kotlinx.coroutines.delay
 
@@ -108,7 +107,7 @@ private fun NotificationAllowSnackBar(
     ) {
         Row(
             modifier = Modifier
-                .background(color = Gray600, RoundedCornerShape(size = 100.dp))
+                .background(color = SlugTheme.colors.inverseSurface, RoundedCornerShape(size = 100.dp))
                 .fillMaxWidth()
                 .padding(
                     vertical = 12.dp,
@@ -126,7 +125,7 @@ private fun NotificationAllowSnackBar(
             Text(
                 text = model.text,
                 style = SlugTypographyStyle.BodyMediumMedium,
-                color = NeutralInverted
+                color = SlugTheme.colors.inverseOnSurface
             )
         }
     }
@@ -144,10 +143,15 @@ enum class NotificationAllowUiModel(@DrawableRes val id: Int, val text: String) 
 @Composable
 @Preview
 fun PreviewNotificationAllowSnackBar() {
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        NotificationAllowSnackBar(NotificationAllowUiModel.CONFIRM)
-        NotificationAllowSnackBar(NotificationAllowUiModel.DENY)
+    SlugTheme(
+        darkTheme = true
+    ) {
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            NotificationAllowSnackBar(NotificationAllowUiModel.CONFIRM)
+            NotificationAllowSnackBar(NotificationAllowUiModel.DENY)
+        }
     }
+
 }
 
 

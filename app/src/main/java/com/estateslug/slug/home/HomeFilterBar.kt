@@ -30,10 +30,7 @@ import com.estateslug.slug.home.component.FilterButtonState
 import com.estateslug.slug.ui.component.image.ImageProcessor
 import com.estateslug.slug.ui.component.image.ImageResource
 import com.estateslug.slug.ui.component.skeleton.shimmerEffect
-import com.estateslug.slug.ui.theme.Neutral
-import com.estateslug.slug.ui.theme.NeutralLight
-import com.estateslug.slug.ui.theme.NeutralSubtler
-import com.estateslug.slug.ui.theme.Primary
+import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 import com.estateslug.slug.util.blockingClickable
 import com.estateslug.slug.util.formatProductCount
@@ -107,7 +104,7 @@ fun CountAndSort(
             Text(
                 "상품",
                 style = SlugTypographyStyle.BodyMicroMedium,
-                color = Neutral
+                color = SlugTheme.colors.neutral
             )
             Spacer(modifier = Modifier.width(4.dp))
             if (isLoading)
@@ -122,7 +119,7 @@ fun CountAndSort(
                 Text(
                     formattedNumber,
                     style = SlugTypographyStyle.BodyMicroBold,
-                    color = Neutral
+                    color = SlugTheme.colors.neutral
                 )
         }
         Spacer(Modifier.weight(1f))
@@ -135,11 +132,12 @@ fun CountAndSort(
             Text(
                 sortTypeName,
                 style = SlugTypographyStyle.BodyMicroMedium,
-                color = Neutral
+                color = SlugTheme.colors.neutral
             )
             ImageProcessor(
                 modifier = Modifier.size(22.dp),
-                imageResource = ImageResource.Id(R.drawable.arrow_updown_16_16)
+                imageResource = ImageResource.Id(R.drawable.arrow_updown_16_16),
+                tint = SlugTheme.colors.neutral // 자산 색 #353C3F = Neutral
             )
         }
     }
@@ -149,7 +147,7 @@ fun CountAndSort(
 fun VerifiedProductAnnounce() {
     Column(
         modifier = Modifier
-            .background(color = NeutralLight)
+            .background(color = SlugTheme.colors.neutralLight)
             .fillMaxWidth()
             .padding(horizontal = 20.dp, vertical = 12.dp)
     ) {
@@ -162,12 +160,12 @@ fun VerifiedProductAnnounce() {
             Text(
                 text = "인증매물",
                 style = SlugTypographyStyle.BodyMediumBold,
-                color = Primary
+                color = SlugTheme.colors.primary
             )
             Text(
                 text = "이란?",
                 style = SlugTypographyStyle.BodyMediumBold,
-                color = Neutral
+                color = SlugTheme.colors.neutral
             )
         }
         Spacer(Modifier.height(4.dp))
@@ -175,7 +173,7 @@ fun VerifiedProductAnnounce() {
             Text(
                 text = "감정평가서가 존재해 정확한 정보를 확인할 수 있어요.",
                 style = SlugTypographyStyle.BodyMiniMedium,
-                color = NeutralSubtler
+                color = SlugTheme.colors.neutralSubtler
             )
         }
     }

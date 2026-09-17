@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import com.estateslug.slug.ui.component.button.ButtonState
 import com.estateslug.slug.util.RemoveOverScroll
 import com.estateslug.slug.util.blockingClickable
+import com.estateslug.slug.ui.theme.SlugTheme
 
 @Composable
 internal fun BasicButton(
@@ -52,7 +53,7 @@ internal fun BasicButton(
         else -> ButtonState.Default
     }
 
-    val currentColor = buttonStyle.getColors().byState(buttonState)
+    val currentColor = buttonStyle.getColors().byState(SlugTheme.colors, buttonState)
     val currentSize = sizeType.getSizes()
     val backgroundShape = RoundedCornerShape(currentSize.radius)
     Box(

@@ -25,11 +25,8 @@ import com.estateslug.slug.home.ProductItemUiModel
 import com.estateslug.slug.home.component.DDayState
 import com.estateslug.slug.ui.component.SlugText
 import com.estateslug.slug.ui.component.image.ImageResource
-import com.estateslug.slug.ui.component.label.SlugLabelBackground
 import com.estateslug.slug.ui.component.label.SlugLabelStyle
 import com.estateslug.slug.ui.component.label.SlugLabelUiModel
-import com.estateslug.slug.ui.theme.Critical
-import com.estateslug.slug.ui.theme.CriticalWeak
 import com.estateslug.slug.util.calculateDaysLeft
 import com.estateslug.slug.util.extractDateFromDateAndTime
 import com.estateslug.slug.util.extractTimeHHmm
@@ -318,10 +315,7 @@ private fun CourtSaleDetail.labelModels(): List<SlugLabelUiModel> {
     //어디선가 정해져야함!
     chips += if (leftDay in 0..2) {
         SlugLabelUiModel(
-            SlugLabelStyle.Dynamic(
-                background = SlugLabelBackground.Solid(CriticalWeak),
-                textColor = Critical
-            ), SlugText.Text("매각 D-$leftDay")
+            SlugLabelStyle.BuildingInfo.SaleImminent, SlugText.Text("매각 D-$leftDay")
         )
     } else if (leftDay > 2) {
         SlugLabelUiModel(

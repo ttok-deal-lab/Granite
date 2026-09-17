@@ -19,8 +19,6 @@ import androidx.compose.ui.unit.dp
 import com.estateslug.slug.R
 import com.estateslug.slug.ui.component.image.ImageProcessor
 import com.estateslug.slug.ui.component.image.ImageResource
-import com.estateslug.slug.ui.theme.Neutral
-import com.estateslug.slug.ui.theme.NeutralInverted
 import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 import com.estateslug.slug.util.blockingClickable
@@ -33,14 +31,14 @@ internal fun SettingButton(
 ) {
     Row(
         modifier = Modifier
-            .background(NeutralInverted)
+            .background(SlugTheme.colors.neutralInverted)
             .blockingClickable(onClick = onClick)
             .padding(20.dp)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Row(modifier = Modifier.weight(1f), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(text = buttonText, style = SlugTypographyStyle.BodyLargeMedium, color = Neutral)
+            Text(text = buttonText, style = SlugTypographyStyle.BodyLargeMedium, color = SlugTheme.colors.neutral)
             rightSlot()
         }
         Spacer(Modifier.width(4.dp))
@@ -55,19 +53,20 @@ internal fun ArrowSettingButton(
 ) {
     Row(
         modifier = Modifier
-            .background(NeutralInverted)
+            .background(SlugTheme.colors.neutralInverted)
             .blockingClickable(onClick = onClick)
             .padding(20.dp)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Row(modifier = Modifier.weight(1f), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(text = buttonText, style = SlugTypographyStyle.BodyLargeMedium, color = Neutral)
+            Text(text = buttonText, style = SlugTypographyStyle.BodyLargeMedium, color = SlugTheme.colors.neutral)
             rightSlot()
         }
         ImageProcessor(
             modifier = Modifier.size(16.dp),
-            imageResource = ImageResource.Id(R.drawable.arrow_right_16_16)
+            imageResource = ImageResource.Id(R.drawable.arrow_right_16_16),
+            tint = SlugTheme.colors.neutralSubtler // 자산 선 색 #6E777C = NeutralSubtler
         )
         Spacer(Modifier.width(4.dp))
     }

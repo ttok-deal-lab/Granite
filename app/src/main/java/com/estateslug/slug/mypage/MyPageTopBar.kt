@@ -16,7 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.estateslug.slug.R
-import com.estateslug.slug.ui.theme.Neutral
+import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.util.blockingClickable
 
 @Composable
@@ -43,7 +43,7 @@ fun MyPageTopBar(
                 Icon(
                     modifier = Modifier.sizeIn(28.dp, minHeight = 28.dp),
                     painter = painterResource(R.drawable.ic_setting_cog_28_28),
-                    tint = Neutral,
+                    tint = SlugTheme.colors.neutral,
                     contentDescription = "notificationIcon"
                 )
             }

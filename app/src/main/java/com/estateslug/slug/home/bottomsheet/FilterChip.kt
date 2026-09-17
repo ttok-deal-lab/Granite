@@ -19,9 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.estateslug.slug.ui.theme.Gray150
-import com.estateslug.slug.ui.theme.Neutral
-import com.estateslug.slug.ui.theme.NeutralInverted
+import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 import com.estateslug.slug.util.blockingClickable
 
@@ -31,14 +29,14 @@ fun FilterChip(
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
-    val borderColor = if (isSelected) Color.Transparent else Gray150
+    val borderColor = if (isSelected) Color.Transparent else SlugTheme.colors.outlineVariant
     val shape = RoundedCornerShape(100.dp)
     val backgroundColor by animateColorAsState(
-        if (isSelected) Neutral else NeutralInverted,
+        if (isSelected) SlugTheme.colors.neutral else SlugTheme.colors.surfaceRaised,
         label = "color"
     )
     val textColor by animateColorAsState(
-        if (isSelected) NeutralInverted else Neutral,
+        if (isSelected) SlugTheme.colors.neutralInverted else SlugTheme.colors.neutral,
         label = "color"
     )
 
@@ -62,7 +60,7 @@ fun FilterChip(
 fun PreviewFilterChip() {
     var isSelected by remember { mutableStateOf(false) }
     var isSelected2 by remember { mutableStateOf(true) }
-    Surface(color = NeutralInverted) {
+    Surface(color = SlugTheme.colors.surfaceRaised) {
         Column(Modifier.padding(4.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
             FilterChip("아파트", isSelected, { isSelected = !isSelected })
             FilterChip("아파트", isSelected2, { isSelected2 = !isSelected2 })

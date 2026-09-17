@@ -22,8 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.estateslug.slug.ui.component.button.basic.BasicTextButton
 import com.estateslug.slug.ui.component.button.basic.BasicButtonStyle
-import com.estateslug.slug.ui.theme.NeutralInverted
-import com.estateslug.slug.ui.theme.NeutralSubtler
+import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle.BodyMediumMedium
 import com.estateslug.slug.ui.theme.SlugTypographyStyle.TitleLargeBold
 
@@ -36,7 +35,7 @@ private fun BasicAlertDialog(
 ) {
     Column(
         modifier = Modifier
-            .background(color = NeutralInverted, shape = RoundedCornerShape(16.dp))
+            .background(color = SlugTheme.colors.surfaceRaised, shape = RoundedCornerShape(16.dp))
             .padding(all = 24.dp)
             .width(335.dp),
         horizontalAlignment = Alignment.Start
@@ -44,7 +43,7 @@ private fun BasicAlertDialog(
         Text(style = TitleLargeBold, text = title)
         if (description.isNotEmpty()) {
             Spacer(Modifier.height(8.dp))
-            Text(style = BodyMediumMedium, color = NeutralSubtler, text = description)
+            Text(style = BodyMediumMedium, color = SlugTheme.colors.neutralSubtler, text = description)
         }
         Spacer(Modifier.height(24.dp))
         buttonSpace()

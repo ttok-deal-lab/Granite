@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        시스템 다크 모드의 앱 테마. Compose가 첫 프레임을 그리기 전 창 배경을 다크 바탕(Black200)과 맞춰
+        흰 번쩍임을 막는다. TranslucentActivity / OssLicenses 스타일은 values/themes.xml에서 이 이름을 상속한다.
+    -->
+    <style name="Theme.Slug" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/slug_background_night</item>
+    </style>
+</resources>

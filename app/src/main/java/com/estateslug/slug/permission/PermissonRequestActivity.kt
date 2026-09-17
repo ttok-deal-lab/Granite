@@ -41,9 +41,6 @@ import com.estateslug.slug.data.local.device.LocalDeviceSettingDataRepository
 import com.estateslug.slug.main.MainActivity
 import com.estateslug.slug.permission.PermissionDataModel.Companion.REQUEST_MAX_LIMIT
 import com.estateslug.slug.ui.component.button.basic.BasicTextButton
-import com.estateslug.slug.ui.theme.NeutralSubtler
-import com.estateslug.slug.ui.theme.Neutral
-import com.estateslug.slug.ui.theme.NeutralLight
 import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 import dagger.hilt.android.AndroidEntryPoint
@@ -122,7 +119,7 @@ class PermissionRequestActivity : ComponentActivity() {
                         Text(
                             "앱 사용을 위해\n접근 권한을 허용해주세요.",
                             style = SlugTypographyStyle.HeadingSmallBold,
-                            color = Neutral
+                            color = SlugTheme.colors.neutral
                         )
                         Spacer(Modifier.height(40.dp))
                         PermissionList("필수 권한", essential)
@@ -134,7 +131,7 @@ class PermissionRequestActivity : ComponentActivity() {
                     }
                     Column(
                         modifier = Modifier
-                            .background(color = NeutralLight)
+                            .background(color = SlugTheme.colors.neutralLight)
                             .padding(all = 20.dp),
                     )
                     {
@@ -175,13 +172,13 @@ class PermissionRequestActivity : ComponentActivity() {
             Text(
                 text = name,
                 style = SlugTypographyStyle.BodyMiniMedium,
-                color = Neutral
+                color = SlugTheme.colors.neutral
             )
             Spacer(Modifier.height(8.dp))
             Text(
                 text = description,
                 style = SlugTypographyStyle.BodyMiniRegular,
-                color = NeutralSubtler
+                color = SlugTheme.colors.neutralSubtler
             )
         }
     }
@@ -257,14 +254,14 @@ class PermissionRequestActivity : ComponentActivity() {
                 Text(
                     text = stringResource(id = permissionData.permissionNameId),
                     style = SlugTypographyStyle.TitleMediumMedium,
-                    color = Neutral
+                    color = SlugTheme.colors.neutral
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     modifier = Modifier.weight(1f),
                     text = stringResource(id = permissionData.permissionDescriptionId),
                     style = SlugTypographyStyle.BodySmallRegular,
-                    color = NeutralSubtler
+                    color = SlugTheme.colors.neutralSubtler
                 )
             }
         }

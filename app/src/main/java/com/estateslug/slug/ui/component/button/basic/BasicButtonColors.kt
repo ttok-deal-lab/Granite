@@ -2,18 +2,7 @@ package com.estateslug.slug.ui.component.button.basic
 
 import androidx.compose.ui.graphics.Color
 import com.estateslug.slug.ui.component.button.ButtonState
-import com.estateslug.slug.ui.theme.NeutralSubtler
-import com.estateslug.slug.ui.theme.Neutral
-import com.estateslug.slug.ui.theme.NeutralContrast
-import com.estateslug.slug.ui.theme.NeutralInverted
-import com.estateslug.slug.ui.theme.NeutralLight
-import com.estateslug.slug.ui.theme.NeutralMuted
-import com.estateslug.slug.ui.theme.NeutralSubtle
-import com.estateslug.slug.ui.theme.NeutralWeak
-import com.estateslug.slug.ui.theme.NeutralWhite
-import com.estateslug.slug.ui.theme.PrimaryMuted
-import com.estateslug.slug.ui.theme.Primary
-import com.estateslug.slug.ui.theme.PrimaryContrast
+import com.estateslug.slug.ui.theme.SlugColors
 
 
 sealed class ButtonColor {
@@ -36,64 +25,85 @@ sealed class ButtonColor {
     }
 }
 
+/**
+ * 버튼 상태별 색은 테마 토큰([SlugColors])에서 읽는다. 라이트는 눌리면 어두워지고 비활성은 밝아지지만
+ * 다크는 눌리면 밝아지고 비활성은 컨테이너 단계로 가라앉으므로, 상태 순서를 상수가 아니라 테마가 소유한다.
+ * 매핑 근거: docs/design-system/dark-color-scheme.md 4절.
+ */
 sealed class BasicButtonColors {
-    abstract val default: ButtonColor
-    abstract val pressed: ButtonColor
-    abstract val disabled: ButtonColor
+    abstract fun default(colors: SlugColors): ButtonColor
+    abstract fun pressed(colors: SlugColors): ButtonColor
+    abstract fun disabled(colors: SlugColors): ButtonColor
 
-    fun byState(state: ButtonState) =
+    fun byState(colors: SlugColors, state: ButtonState): ButtonColor =
         when (state) {
-            ButtonState.Default -> default
-            ButtonState.Pressed -> pressed
-            ButtonState.Disabled -> disabled
+            ButtonState.Default -> default(colors)
+            ButtonState.Pressed -> pressed(colors)
+            ButtonState.Disabled -> disabled(colors)
         }
 
     sealed class Fill : BasicButtonColors() {
         data object PrimaryColor : Fill() {
-            override val default =
-                ButtonColor.FillButtonColor(text = NeutralWhite, backGround = Primary)
-            override val pressed =
-                ButtonColor.FillButtonColor(text = NeutralWhite, backGround = PrimaryContrast)
-            override val disabled =
-                ButtonColor.FillButtonColor(text = NeutralWhite, backGround = PrimaryMuted)
+            override fun default(colors: SlugColors) =
+                ButtonColor.FillButtonColor(text = colors.onPrimary, backGround = colors.primary)
+
+            override fun pressed(colors: SlugColors) =
+                ButtonColor.FillButtonColor(text = colors.onPrimary, backGround = colors.primaryContrast)
+
+            override fun disabled(colors: SlugColors) =
+                ButtonColor.FillButtonColor(text = colors.buttonPrimaryDisabledText, backGround = colors.primaryMuted)
         }
 
         data object SecondaryColor : Fill() {
-            override val default =
-                ButtonColor.FillButtonColor(text = Neutral, backGround = NeutralWeak)
-            override val pressed =
-                ButtonColor.FillButtonColor(text = Neutral, backGround = NeutralMuted)
-            override val disabled =
-                ButtonColor.FillButtonColor(text = NeutralSubtle, backGround = NeutralWeak)
+            override fun default(colors: SlugColors) =
+                ButtonColor.FillButtonColor(text = colors.neutral, backGround = colors.neutralWeak)
+
+            override fun pressed(colors: SlugColors) =
+                ButtonColor.FillButtonColor(text = colors.neutral, backGround = colors.neutralMuted)
+
+            override fun disabled(colors: SlugColors) =
+                ButtonColor.FillButtonColor(text = colors.neutralDisabled, backGround = colors.neutralWeak)
         }
 
         data object TertiaryColor : Fill() {
-            override val default =
-                ButtonColor.FillButtonColor(text = NeutralLight, backGround = Neutral)
-            override val pressed =
-                ButtonColor.FillButtonColor(text = NeutralLight, backGround = NeutralContrast)
-            override val disabled =
-                ButtonColor.FillButtonColor(text = NeutralInverted, backGround = NeutralMuted)
+            override fun default(colors: SlugColors) =
+                ButtonColor.FillButtonColor(text = colors.onTertiary, backGround = colors.neutral)
+
+            override fun pressed(colors: SlugColors) =
+                ButtonColor.FillButtonColor(text = colors.onTertiary, backGround = colors.buttonTertiaryPressed)
+
+            override fun disabled(colors: SlugColors) =
+                ButtonColor.FillButtonColor(text = colors.buttonTertiaryDisabledText, backGround = colors.neutralMuted)
         }
     }
 
     sealed class Ghost : BasicButtonColors() {
         data object PrimaryColor : Ghost() {
-            override val default =
-                ButtonColor.GhostButtonColor(text = Primary, border = Primary)
-            override val pressed =
-                ButtonColor.GhostButtonColor(text = PrimaryContrast, border = PrimaryContrast)
-            override val disabled =
-                ButtonColor.GhostButtonColor(text = PrimaryMuted, border = PrimaryMuted)
+            override fun default(colors: SlugColors) =
+                ButtonColor.GhostButtonColor(text = colors.primary, border = colors.primary)
+
+            override fun pressed(colors: SlugColors) =
+                ButtonColor.GhostButtonColor(text = colors.primaryContrast, border = colors.primaryContrast)
+
+            override fun disabled(colors: SlugColors) =
+                ButtonColor.GhostButtonColor(
+                    text = colors.buttonGhostPrimaryDisabled,
+                    border = colors.buttonGhostPrimaryDisabled
+                )
         }
 
         data object SecondaryColor : Ghost() {
-            override val default =
-                ButtonColor.GhostButtonColor(text = Neutral, border = NeutralMuted)
-            override val pressed =
-                ButtonColor.GhostButtonColor(text = Neutral, border = NeutralSubtler)
-            override val disabled =
-                ButtonColor.GhostButtonColor(text = NeutralSubtle, border = NeutralSubtler)
+            override fun default(colors: SlugColors) =
+                ButtonColor.GhostButtonColor(text = colors.neutral, border = colors.buttonGhostSecondaryBorder)
+
+            override fun pressed(colors: SlugColors) =
+                ButtonColor.GhostButtonColor(text = colors.neutral, border = colors.buttonGhostSecondaryBorderPressed)
+
+            override fun disabled(colors: SlugColors) =
+                ButtonColor.GhostButtonColor(
+                    text = colors.neutralDisabled,
+                    border = colors.buttonGhostSecondaryBorderDisabled
+                )
         }
     }
 }

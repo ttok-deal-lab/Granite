@@ -14,6 +14,10 @@ import com.estateslug.slug.ui.theme.NeutralContrast
 import com.estateslug.slug.ui.theme.NeutralWeak
 import com.estateslug.slug.ui.theme.NeutralWhite
 
+/**
+ * SNS 로그인 버튼의 배경·테두리·글자색은 브랜드 자산이라 테마를 따르지 않는다.
+ * 의도적으로 고정 상수를 참조하며 SlugTheme.colors로 옮기지 않는다(docs/design-system/dark-color-scheme.md 3-1절).
+ */
 enum class SocialLoginUIModel(
     @StringRes val loginSNSText: Int,
     @DrawableRes val iconId: Int,

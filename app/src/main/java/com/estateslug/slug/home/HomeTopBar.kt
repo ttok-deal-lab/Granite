@@ -18,7 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.estateslug.slug.R
-import com.estateslug.slug.ui.theme.Neutral
+import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 import com.estateslug.slug.util.blockingClickable
 
@@ -41,12 +41,12 @@ fun HomeTopBar(//TODO : 각 리소스 별 Description 처리 할것.
                 .padding(horizontal = 20.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(sectionName, style = SlugTypographyStyle.TitleLargeBold, color = Neutral)
+            Text(sectionName, style = SlugTypographyStyle.TitleLargeBold, color = SlugTheme.colors.neutral)
             Spacer(Modifier.width(4.dp))
             Icon(
                 modifier = Modifier.sizeIn(minWidth = 16.dp, minHeight = 16.dp),
                 painter = painterResource(R.drawable.arrow_down_16_16),
-                tint = Neutral,
+                tint = SlugTheme.colors.neutral,
                 contentDescription = "arrow down for Select Section"
             )
         }
@@ -65,7 +65,7 @@ fun HomeTopBar(//TODO : 각 리소스 별 Description 처리 할것.
                 Icon(
                     modifier = Modifier.sizeIn(28.dp, minHeight = 28.dp),
                     painter = painterResource(R.drawable.search_line_28_28),
-                    tint = Neutral,
+                    tint = SlugTheme.colors.neutral,
                     contentDescription = "searchIcon"
                 )
             }
