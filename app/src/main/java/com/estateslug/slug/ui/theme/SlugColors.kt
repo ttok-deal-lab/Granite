@@ -76,6 +76,10 @@ data class SlugColors(
     val imagePlaceholder: Color,
     /** 조작 가능한 미선택 아이콘(관심 하트 off, 내비 미선택). */
     val iconUnselected: Color,
+    /** 시트 헤더의 보조 조작 아이콘(필터 되돌리기). 라이트는 팔레트 밖 기존 값 #5E656E를 보존한다. */
+    val iconSubtle: Color,
+    /** 로그인 로고 워드마크. 라이트는 순수 검정(#000000)이라 [neutralBlack](Black200)과 다르다. */
+    val logoInk: Color,
     /** 스위치 꺼진 상태 thumb. 켜진 상태는 onPrimary. */
     val switchThumbOff: Color,
     /** 스낵바 배경·글자·액션. */
@@ -108,6 +112,12 @@ data class SlugColors(
     val buttonGhostSecondaryBorderDisabled: Color,
 )
 
+/**
+ * 필터 되돌리기 아이콘의 기존 라이트 색. 팔레트 단계가 아니며(Gray500 #5E696E와 다름) 자산·Figma에 있던 값이다.
+ * 라이트 렌더를 보존하려고 그대로 둔다. 새 색을 추가한 것이 아니라 호출부 리터럴을 토큰 뒤로 옮긴 것이다.
+ */
+private val RedoIconLight = Color(0xFF5E656E)
+
 /** 라이트: 기존 별칭 상수를 그대로 참조한다. 값이 아니라 참조로 연결해 라이트 렌더가 바뀌지 않게 한다. */
 val SlugLightColors: SlugColors = SlugColors(
     primary = Primary,
@@ -138,6 +148,8 @@ val SlugLightColors: SlugColors = SlugColors(
     outlineVariant = Gray150,
     imagePlaceholder = Gray150,
     iconUnselected = NeutralMuted,
+    iconSubtle = RedoIconLight,
+    logoInk = PrimaryBlack,
     switchThumbOff = NeutralWhite,
     inverseSurface = Gray600,
     inverseOnSurface = NeutralInverted,
@@ -193,6 +205,8 @@ val SlugDarkColors: SlugColors = SlugColors(
     outlineVariant = Gray600,
     imagePlaceholder = Gray700,
     iconUnselected = Gray400,
+    iconSubtle = Gray300,
+    logoInk = Gray150,
     switchThumbOff = Gray150,
     inverseSurface = Gray150,
     inverseOnSurface = Gray800,

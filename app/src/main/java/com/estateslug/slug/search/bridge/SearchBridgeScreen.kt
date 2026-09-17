@@ -30,8 +30,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.estateslug.slug.R
 import com.estateslug.slug.search.SearchViewModel
 import com.estateslug.slug.ui.component.ProductListEmpty
-import com.estateslug.slug.ui.component.image.ImageProcessor
-import com.estateslug.slug.ui.component.image.ImageResource
+import com.estateslug.slug.ui.component.icon.ClockIcon
+import com.estateslug.slug.ui.component.icon.ListEmptyIcon
 import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 import com.estateslug.slug.util.blockingClickable
@@ -125,7 +125,7 @@ private fun RecentSearchEmpty() {
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Box(modifier = Modifier.size(50.dp)){
-                ImageProcessor(imageResource = ImageResource.Id(R.drawable.list_empty_50_50))
+                ListEmptyIcon()
             }
             Spacer(Modifier.height(12.dp))
             Text(
@@ -225,10 +225,7 @@ private fun RecentSearchItem(
             .padding(horizontal = 20.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        ImageProcessor(
-            modifier = Modifier.size(20.dp),
-            imageResource = ImageResource.Id(R.drawable.ic_clock_18_18),
-        )
+        ClockIcon(modifier = Modifier.size(20.dp))
         Spacer(Modifier.width(12.dp))
         Text(
             text = keyword,

@@ -102,6 +102,8 @@ private fun ProductItem(
             Modifier
                 .size(100.dp)
                 .clip(RoundedCornerShape(8.dp))
+                // 사진이 없을 때 쓰는 흰 대체 로고가 바탕에 묻히지 않게 상세 페이저와 같은 placeholder를 깐다
+                .background(SlugTheme.colors.imagePlaceholder)
         ) {
             ImageProcessor(
                 imageResource = uiModel.buildingImage,

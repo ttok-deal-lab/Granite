@@ -23,8 +23,7 @@ import com.estateslug.slug.home.ProductList
 import com.estateslug.slug.home.ProductListSkeleton
 import com.estateslug.slug.home.ProductItemUiModel
 import com.estateslug.slug.ui.component.ProductListError
-import com.estateslug.slug.ui.component.image.ImageProcessor
-import com.estateslug.slug.ui.component.image.ImageResource
+import com.estateslug.slug.ui.component.icon.ListEmptyIcon
 import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 import com.estateslug.slug.util.CursorPaginationState
@@ -74,10 +73,7 @@ fun FavoriteScreen(
 fun EmptyFavoriteScreen() {
     Box(Modifier.fillMaxSize(1f), contentAlignment = Alignment.Center) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            ImageProcessor(
-                modifier = Modifier.requiredWidthIn(max = 50.dp),
-                imageResource = ImageResource.Id(R.drawable.list_empty_50_50)
-            )
+            ListEmptyIcon(modifier = Modifier.requiredWidthIn(max = 50.dp))
             Spacer(Modifier.height(12.dp))
             Text(
                 stringResource(R.string.home_favorite_empty_title),

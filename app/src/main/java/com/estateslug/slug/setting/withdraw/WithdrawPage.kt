@@ -22,11 +22,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.estateslug.slug.R
 import com.estateslug.slug.setting.SettingTopBar
 import com.estateslug.slug.ui.component.button.basic.BasicTextButton
-import com.estateslug.slug.ui.component.image.ImageProcessor
-import com.estateslug.slug.ui.component.image.ImageResource
+import com.estateslug.slug.ui.component.icon.CheckCircleIcon
 import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 import com.estateslug.slug.util.blockingClickable
@@ -90,10 +88,7 @@ fun WithdrawPage(onBackClick: () -> Unit, onWithDrawClick: () -> Unit) {
                     .padding(20.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if (isAllChecked)
-                    ImageProcessor(imageResource = ImageResource.Id(R.drawable.ic_check_selected_24_24))
-                else
-                    ImageProcessor(imageResource = ImageResource.Id(R.drawable.ic_check_unselected_24_24))
+                CheckCircleIcon(checked = isAllChecked)
                 Spacer(Modifier.width(16.dp))
                 Text(
                     withDrawCheckDescriptionAllChecked,

@@ -13,10 +13,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.estateslug.slug.R
 import com.estateslug.slug.login.sns.SocialLoginType
-import com.estateslug.slug.ui.component.image.ImageProcessor
-import com.estateslug.slug.ui.component.image.ImageResource
+import com.estateslug.slug.ui.component.icon.MetaTypoLogo
 import com.estateslug.slug.ui.component.login.SocialLoginButton
 
 
@@ -35,12 +33,11 @@ fun LoginPage(
                 verticalArrangement = Arrangement.Center
             ) {
                 Spacer(Modifier.weight(2f))
-                ImageProcessor(
+                MetaTypoLogo(
                     modifier = Modifier
                         .fillMaxWidth(0.3f)
                         .aspectRatio(0.6f)
-                        .requiredWidthIn(max = 150.dp),
-                    imageResource = ImageResource.Id(R.drawable.logo_color_meta_typo_sub)
+                        .requiredWidthIn(max = 150.dp)
                 )
                 Spacer(Modifier.weight(1f))
             }

@@ -12,7 +12,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -56,7 +55,7 @@ fun BottomSheetHeadRedo(modifier: Modifier = Modifier, string: String, onRedoCli
             Icon(
                 painter = painterResource(R.drawable.arrow_redo_18_18),
                 contentDescription = "resetFilter",
-                tint = Color(0xFF5E656E)
+                tint = SlugTheme.colors.iconSubtle
             )
         }
     }

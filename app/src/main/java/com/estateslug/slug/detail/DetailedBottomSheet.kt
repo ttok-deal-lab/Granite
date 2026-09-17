@@ -177,7 +177,8 @@ private fun ShareBottomSheetContent(item: ShareItem) {
             ) {
                 ImageProcessor(
                     modifier = Modifier.size(24.dp),
-                    imageResource = ImageResource.Id(id = R.drawable.ic_share_24_24)
+                    imageResource = ImageResource.Id(id = R.drawable.ic_share_24_24),
+                    tint = SlugTheme.colors.neutral // 자산 선 색 #353C3F = Neutral
                 )
             }
         }, directLinkShareText, directLinkShare)

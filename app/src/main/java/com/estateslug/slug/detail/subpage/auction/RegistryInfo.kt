@@ -52,7 +52,8 @@ fun RegistryInfo(uiModel: RegistryInfoUiModel) {
                 )
                 ImageProcessor(
                     modifier = Modifier.size(16.dp),
-                    imageResource = ImageResource.Id(id = R.drawable.arrow_right_16_16)
+                    imageResource = ImageResource.Id(id = R.drawable.arrow_right_16_16),
+                    tint = SlugTheme.colors.neutralSubtler // 자산 선 색 #6E777C = NeutralSubtler
                 )
 
             }

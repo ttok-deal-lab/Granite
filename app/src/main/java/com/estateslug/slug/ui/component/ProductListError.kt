@@ -16,8 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.estateslug.slug.R
 import com.estateslug.slug.ui.component.button.basic.BasicButtonSizeType
 import com.estateslug.slug.ui.component.button.basic.BasicTextButton
-import com.estateslug.slug.ui.component.image.ImageProcessor
-import com.estateslug.slug.ui.component.image.ImageResource
+import com.estateslug.slug.ui.component.icon.ListEmptyIcon
 import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 
@@ -28,10 +27,7 @@ fun ProductListError(title: String, onRetry: () -> Unit) {
             .fillMaxSize(1f), contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            ImageProcessor(
-                modifier = Modifier.requiredWidthIn(max = 50.dp),
-                imageResource = ImageResource.Id(R.drawable.list_empty_50_50)
-            )
+            ListEmptyIcon(modifier = Modifier.requiredWidthIn(max = 50.dp))
             Spacer(Modifier.height(12.dp))
             Text(
                 title,
