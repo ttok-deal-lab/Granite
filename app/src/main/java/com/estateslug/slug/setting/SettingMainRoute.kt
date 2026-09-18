@@ -2,13 +2,16 @@ package com.estateslug.slug.setting
 
 import android.content.Intent
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.estateslug.slug.main.Route
 import com.estateslug.slug.setting.permission.RoutePermissionSetting
 import com.estateslug.slug.setting.terms.RouteTerms
+import com.estateslug.slug.setting.theme.RouteThemeSetting
 import com.estateslug.slug.setting.withdraw.RouteWithdraw
 import com.estateslug.slug.util.moveToStore
 
@@ -20,6 +23,7 @@ internal fun SettingMainRoute(
 ) {
     val context = LocalContext.current
     val appVersion: String = viewModel.currentVersion
+    val themeMode by viewModel.themeMode.collectAsStateWithLifecycle()
 
     val isRecentVersion: Boolean = true //TODO remote Config보고 할것!
 
@@ -32,6 +36,7 @@ internal fun SettingMainRoute(
         onNavigate(RouteWithdraw)
     }
     val onPermissionSettingClick: () -> Unit = { onNavigate(RoutePermissionSetting) }
+    val onThemeSettingClick: () -> Unit = { onNavigate(RouteThemeSetting) }
 
     val onMoveToStoreClick: () -> Unit = { moveToStore(context) }
 
@@ -52,6 +57,8 @@ internal fun SettingMainRoute(
         onLogoutClick = onLogoutClick,
         onWithDrawClick = onWithDrawClick,
         onPermissionSettingClick = onPermissionSettingClick,
+        themeModeName = themeMode.displayName,
+        onThemeSettingClick = onThemeSettingClick,
     )
 
 }

@@ -3,12 +3,18 @@ package com.estateslug.slug.data.local.device
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.estateslug.slug.data.local.DataStoreModule
 import com.estateslug.slug.data.local.getStoredData
 import com.estateslug.slug.data.local.removeAllData
 import com.estateslug.slug.data.local.storeData
 import com.estateslug.slug.login.sns.SocialLoginType
+import com.estateslug.slug.ui.theme.ThemeMode
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
+import java.io.IOException
 import javax.inject.Inject
 
 //TODO : 레이어 모듈 분리시 interface 로
@@ -46,11 +52,20 @@ class LocalDeviceSettingDataRepository @Inject constructor(
             false
         }
 
+    /** 화면 테마. 저장값이 없거나 읽기에 실패하면 [ThemeMode.DEFAULT](시스템 따름). 값이 바뀌면 다시 방출한다. */
+    val themeMode: Flow<ThemeMode> = deviceDataStore.data
+        .catch { if (it is IOException) emit(emptyPreferences()) else throw it }
+        .map { preferences -> ThemeMode.fromStoredName(preferences[THEME_MODE]) }
+
+    suspend fun setThemeMode(mode: ThemeMode): Result<Unit> =
+        deviceDataStore.storeData(key = THEME_MODE, value = mode.storedName)
+
 
     companion object {
         private val LOGIN_LAST_TYPE = stringPreferencesKey("login_last_type")
         private val NOTIFICATION_PERMISSION_INTRO_SHOWN =
             booleanPreferencesKey("notification_permission_intro_shown")
+        private val THEME_MODE = stringPreferencesKey("theme_mode")
 
     }
 }

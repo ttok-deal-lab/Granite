@@ -32,6 +32,8 @@ fun SettingMainPage(
     onLogoutClick: () -> Unit,
     onWithDrawClick: () -> Unit,
     onPermissionSettingClick: () -> Unit,
+    themeModeName: String,
+    onThemeSettingClick: () -> Unit,
 ) {
 //    val onAlarmSettingClick: () -> Unit = {}
 
@@ -39,6 +41,20 @@ fun SettingMainPage(
         SettingTopBar(text = "설정", onBackClick = onBackClick)
 //        ArrowSettingButton(buttonText = "알림 설정 관리", onClick = onAlarmSettingClick)
         ArrowSettingButton(buttonText = "권한 설정", onClick = onPermissionSettingClick)
+        ArrowSettingButton(
+            buttonText = "화면 테마",
+            rightSlot = {
+                Row {
+                    Text(
+                        text = themeModeName,
+                        style = SlugTypographyStyle.BodyLargeMedium,
+                        color = SlugTheme.colors.neutralSubtler
+                    )
+                    Spacer(Modifier.width(12.dp))
+                }
+            },
+            onClick = onThemeSettingClick,
+        )
         ArrowSettingButton(buttonText = "서비스 약관", onClick = onTOSClick)
 
         HorizontalDivider(color = SlugTheme.colors.surfaceSunken, thickness = 10.dp)
@@ -107,6 +123,8 @@ fun PreviewSettingScreen() {
             onLogoutClick = onLogoutClick,
             onWithDrawClick = onWithDrawClick,
             onPermissionSettingClick = onPermissionSettingClick,
+            themeModeName = "시스템",
+            onThemeSettingClick = {},
         )
     }
 }

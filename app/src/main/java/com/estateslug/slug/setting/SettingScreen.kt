@@ -19,6 +19,7 @@ import androidx.navigation.compose.rememberNavController
 import com.estateslug.slug.main.Route
 import com.estateslug.slug.setting.permission.permissionSettingNavGraph
 import com.estateslug.slug.setting.terms.termsNavGraph
+import com.estateslug.slug.setting.theme.themeSettingNavGraph
 import com.estateslug.slug.setting.withdraw.withdrawNavGraph
 import com.estateslug.slug.ui.component.ProgressCover
 import com.estateslug.slug.util.moveToLoginWithBackStackClear
@@ -117,6 +118,8 @@ fun SettingNavHost(
             withdrawNavGraph(onBackClick)
 
             permissionSettingNavGraph(onBackClick)
+
+            themeSettingNavGraph(onBackClick)
         }
     }
 }

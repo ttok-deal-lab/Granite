@@ -2,6 +2,7 @@ package com.estateslug.slug.setting
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.estateslug.slug.BuildConfig
 import com.estateslug.slug.data.favorite.FavoriteStateStore
 import com.estateslug.slug.data.local.device.LocalDeviceSettingDataRepository
@@ -10,11 +11,14 @@ import com.estateslug.slug.data.network.user.RemoteUserDataRepository
 import com.estateslug.slug.domain.user.UnregisterFcmTokenUseCase
 import com.estateslug.slug.firebase.SlugFirebaseMessagingService
 import com.estateslug.slug.login.sns.sns.SocialLoginModule
+import com.estateslug.slug.ui.theme.ThemeMode
+import com.estateslug.slug.ui.theme.ThemeModeManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -30,6 +34,7 @@ class SettingViewModel @Inject constructor(
     private val remoteUserDataRepository: RemoteUserDataRepository,
     private val unregisterFcmTokenUseCase: UnregisterFcmTokenUseCase,
     private val favoriteStateStore: FavoriteStateStore,
+    private val themeModeManager: ThemeModeManager,
 ) : ViewModel() {
     private val _isNeedToShowLogOutDialog: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val isNeedToShowLogOutDialog get() = _isNeedToShowLogOutDialog.asStateFlow()
@@ -42,6 +47,13 @@ class SettingViewModel @Inject constructor(
 
 
     val currentVersion = BuildConfig.VERSION_NAME
+
+    /** 화면 테마 설정값. 저장소를 따르므로 바꾸면 바로 반영된다. */
+    val themeMode: StateFlow<ThemeMode> = themeModeManager.mode
+
+    fun setThemeMode(mode: ThemeMode) {
+        viewModelScope.launch { themeModeManager.setMode(mode) }
+    }
 
     fun changeLogoutDialogVisibility(needToShow: Boolean) {
         _isNeedToShowLogOutDialog.update { needToShow }

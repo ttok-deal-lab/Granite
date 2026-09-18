@@ -12,6 +12,7 @@ import com.estateslug.slug.data.local.user.LocalUserDataRepository
 import com.estateslug.slug.data.network.AuthEventBus
 import com.estateslug.slug.login.LogInActivity
 import com.estateslug.slug.permission.PermissionRequestActivity
+import com.estateslug.slug.ui.theme.ThemeModeManager
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -34,6 +35,9 @@ class SlugApplication : Application() {
     @Inject
     lateinit var favoriteStateStore: FavoriteStateStore
 
+    @Inject
+    lateinit var themeModeManager: ThemeModeManager
+
     private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private var currentActivityRef: WeakReference<Activity> = WeakReference(null)
     private var isHandlingExpiry = false
@@ -47,6 +51,8 @@ class SlugApplication : Application() {
 
         registerActivityLifecycleCallbacks(activityCallbacks)
         observeSessionExpired()
+        // 설정의 화면 테마를 시스템의 앱 단위 야간 모드와 맞춘다(보통은 이미 같아 아무 일도 하지 않음)
+        themeModeManager.syncSystemOnStart()
     }
 
     private val activityCallbacks = object : ActivityLifecycleCallbacks {
