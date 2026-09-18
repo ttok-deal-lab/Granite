@@ -2,6 +2,8 @@
 
 > 한국 부동산 법원경매 정보 플랫폼 Android 앱
 
+**Google Play:** https://play.google.com/store/apps/details?id=com.estateslug.slug
+
 법원경매 매물 검색부터 상세 정보 확인, 관심 매물 관리까지 — 경매 투자에 필요한 정보를 한 곳에서 제공합니다.
 
 ## 기술 스택
