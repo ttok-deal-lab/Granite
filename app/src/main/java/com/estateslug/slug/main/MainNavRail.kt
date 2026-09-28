@@ -17,11 +17,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.estateslug.slug.ui.theme.NeutralMuted
-import com.estateslug.slug.ui.theme.Primary
+import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 
 /**
@@ -63,8 +63,11 @@ private fun MainNavRailItem(
     onClick: () -> Unit,
 ) {
     val size = 28.dp
+    // MainBottomBar와 같은 매핑 — 미선택은 neutralMuted가 아니라 iconUnselected(다크에서 대비 확보)
+    val selectedColor: Color = SlugTheme.colors.primary
+    val unSelectedColor: Color = SlugTheme.colors.iconUnselected
     val color by animateColorAsState(
-        if (isSelected) Primary else NeutralMuted,
+        if (isSelected) selectedColor else unSelectedColor,
         label = "color"
     )
 
