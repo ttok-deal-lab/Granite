@@ -20,7 +20,8 @@ internal fun DetailPaneHost(
     onClose: () -> Unit,
     viewModel: DetailedViewModel = hiltViewModel(key = "detail-pane"),
 ) {
-    // back 처리는 호스트(NavigableListDetailPaneScaffold)의 predictive back이 담당 — 여기선 등록하지 않는다
+    // back 처리는 호스트(ProductListDetailPaneScaffold)가 담당 — scaffold 내장 핸들러와 상세가 열렸을 때
+    // 추가하는 핸들러(predictive back). 여기서 따로 등록하지 않는다
     LaunchedEffect(productId) {
         viewModel.requestData(productId)
     }

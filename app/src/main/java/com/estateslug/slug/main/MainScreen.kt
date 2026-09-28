@@ -18,14 +18,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
-import androidx.compose.material3.adaptive.layout.AnimatedPane
-import androidx.compose.material3.adaptive.navigation.BackNavigationBehavior
-import androidx.compose.material3.adaptive.navigation.NavigableListDetailPaneScaffold
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -35,11 +29,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
@@ -47,8 +39,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.estateslug.slug.R
-import com.estateslug.slug.detail.navigation.DetailPaneHost
+import com.estateslug.slug.detail.navigation.ProductListDetailPaneScaffold
 import com.estateslug.slug.detail.navigation.detailNavGraph
 import com.estateslug.slug.favorite.favoriteNavGraph
 import com.estateslug.slug.home.bottomsheet.HomeBottomSheetContent
@@ -57,7 +48,7 @@ import com.estateslug.slug.mypage.myPageNavGraph
 import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
@@ -75,10 +66,6 @@ fun MainScreen(
             isStartProductConsumed = true
             appState.openProduct(startProductId)
         }
-    }
-
-    LaunchedEffect(appState.isTwoPane) {
-        appState.transferOpenDetail()
     }
 
     val navBackStackEntry by appState.navController.currentBackStackEntryAsState()
@@ -107,35 +94,17 @@ fun MainScreen(
                         selectedItem = lastTab,
                         onClick = appState::navigateToTab,
                     )
-                    // 공식 가이드 패턴: Navigable*이 pane 백스택과 predictive back을 내장 처리
-                    NavigableListDetailPaneScaffold(
+                    ProductListDetailPaneScaffold(
+                        state = appState.productPane,
                         modifier = Modifier.weight(1f),
-                        navigator = appState.paneNavigator,
-                        // 양쪽 pane이 항상 떠 있는 구성에선 scaffoldValue가 변하지 않으므로
-                        // back이 "상세 내용 닫기"로 동작하려면 content 기준 pop이 필요하다
-                        defaultBackBehavior = BackNavigationBehavior.PopUntilContentChange,
-                        listPane = {
-                            AnimatedPane {
-                                MainNavHost(
-                                    padding = paddingValues,
-                                    navController = appState.navController,
-                                    startDestination = startItem.route,
-                                    onProductClick = appState::openProduct,
-                                )
-                            }
-                        },
-                        detailPane = {
-                            AnimatedPane {
-                                when (val productId = appState.paneProductId) {
-                                    null -> DetailPaneEmpty()
-                                    else -> DetailPaneHost(
-                                        productId = productId,
-                                        onClose = appState::closeDetailPane,
-                                    )
-                                }
-                            }
-                        },
-                    )
+                    ) {
+                        MainNavHost(
+                            padding = paddingValues,
+                            navController = appState.navController,
+                            startDestination = startItem.route,
+                            onProductClick = appState::openProduct,
+                        )
+                    }
                 }
             } else {
                 MainNavHost(
@@ -249,19 +218,5 @@ fun MainNavHost(
 
             detailNavGraph(onBack = { navController.popBackStack() })
         }
-    }
-}
-
-@Composable
-private fun DetailPaneEmpty(modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center,
-    ) {
-        Text(
-            text = stringResource(R.string.detail_pane_empty_title),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
     }
 }

@@ -12,7 +12,8 @@ data class RouteDetail(val productId: String) : Route
 
 /**
  * 상세 destination. NavController를 내리지 않고 람다만 받으므로
- * Main NavHost 외의 호스트(검색·최근 본, 추후 2-pane)에도 그대로 등록할 수 있다.
+ * Main NavHost 외의 호스트(검색·최근 본)에도 그대로 등록할 수 있다. 2-pane의 상세 페인은
+ * 이 destination 대신 [DetailPaneHost]를 쓴다(창이 좁아지면 이 destination으로 이관).
  */
 fun NavGraphBuilder.detailNavGraph(
     onBack: () -> Unit,
