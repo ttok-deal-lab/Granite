@@ -109,18 +109,26 @@ enum class BottomBarItemUiModel(
     @DrawableRes val backgroundResource: Int = tintAbleResource,
     @StringRes val iconDescription: Int,
     val route: Route,
+    /**
+     * 펼친 화면에서 오른쪽에 매물 상세 페인을 붙이는 탭인가 — 매물 목록 탭만 true.
+     * false면 넓은 화면에서도 레일 옆을 한 페인으로 쓴다. 새 탭이 빠뜨리지 않게 기본값을 두지 않는다.
+     * false인 탭은 매물 상세를 열지 않는다는 전제다 — 열면 넓은 화면에서도 상세가 NavHost 위 전체 폭으로 쌓인다
+     */
+    val showsProductDetail: Boolean,
 ) {
     HOME(
         title = R.string.home_bottom_nav_home_title,
         tintAbleResource = R.drawable.ic_home,
         iconDescription = R.string.home_bottom_nav_home_description,
         route = RouteHome,
+        showsProductDetail = true,
     ),
     FAVORITES(
         title = R.string.home_bottom_nav_favorites_title,
         tintAbleResource = R.drawable.ic_heart,
         iconDescription = R.string.home_bottom_nav_favorites_description,
         route = RouteFavorite,
+        showsProductDetail = true,
     ),
 
     //    CREW(
@@ -134,6 +142,7 @@ enum class BottomBarItemUiModel(
         tintAbleResource = R.drawable.ic_person,
         iconDescription = R.string.home_bottom_nav_my_page_description,
         route = RouteMyPageHome,
+        showsProductDetail = false,
     ),
     ;
 }

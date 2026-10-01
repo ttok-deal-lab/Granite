@@ -25,7 +25,7 @@ import com.estateslug.slug.R
  * 매물 목록 | 상세 2-pane 레이아웃. 창이 2-pane을 허용하지 않으면(너비 600dp 미만 — 접힌 폴드·세로 폰)
  * 목록만 그린다.
  *
- * 창이 허용하는 동안은 화면이 한 페인을 원할 때도(검색어 입력 화면) 이 scaffold를 유지하고
+ * 창이 허용하는 동안은 화면이 한 페인을 원할 때도(검색어 입력 화면·메인의 마이페이지 탭) 이 scaffold를 유지하고
  * [ProductPaneState]의 directive로만 줄인다 — 분기를 바꾸면 목록 쪽 NavHost가 다른 자리에서 다시 만들어진다.
  */
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
@@ -48,12 +48,17 @@ fun ProductListDetailPaneScaffold(
             },
             detailPane = {
                 AnimatedPane {
-                    when (val productId = state.paneProductId) {
-                        null -> DetailPaneEmpty()
-                        else -> DetailPaneHost(
+                    // 화면이 한 페인을 원하면(검색어 입력 화면·마이페이지 탭) 안내 문구를 그리지 않고 바탕만 둔다 —
+                    // 상세가 닫히며 페인이 줄어들기 전 몇 프레임, 빈 페인이 빠져나가는 애니메이션 동안
+                    // "매물을 선택하면…"이 번쩍이지 않게
+                    val productId = state.paneProductId
+                    if (productId != null) {
+                        DetailPaneHost(
                             productId = productId,
                             onClose = state::closeDetailPane,
                         )
+                    } else if (state.twoPaneAllowed) {
+                        DetailPaneEmpty()
                     }
                 }
             },

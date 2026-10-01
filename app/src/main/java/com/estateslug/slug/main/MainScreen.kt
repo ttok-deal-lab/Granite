@@ -56,8 +56,8 @@ fun MainScreen(
     startProductId: String? = null,
     mainViewModel: MainViewModel = hiltViewModel(viewModelStoreOwner = LocalContext.current as ViewModelStoreOwner)
 ) {
-    // 네비게이션 UI 로직(상세 두 진입 경로 분기, 접힘↔펼침 이관, 탭 이동)은 MainAppState가 담당
-    val appState = rememberMainAppState()
+    // 네비게이션 UI 로직(상세 두 진입 경로 분기, 접힘↔펼침 이관, 탭 이동, 탭별 상세 페인 사용)은 MainAppState가 담당
+    val appState = rememberMainAppState(startItem)
 
     // 딥링크/FCM으로 전달된 상세 id를 1회만 소비 (rememberSaveable 가드로 재컴포지션·복원 시 이중 push 방지)
     var isStartProductConsumed by rememberSaveable { mutableStateOf(false) }
@@ -69,11 +69,7 @@ fun MainScreen(
     }
 
     val navBackStackEntry by appState.navController.currentBackStackEntryAsState()
-    val matchedTab = appState.matchTab(navBackStackEntry?.destination)
-    // 상세 위에서도(매치 없음) 마지막 탭 하이라이트를 유지 — 바 퇴장 애니메이션 중 HOME으로 튀지 않게
-    var lastTab by rememberSaveable { mutableStateOf(startItem) }
-    if (matchedTab != null && matchedTab != lastTab) lastTab = matchedTab
-    val isTabDestination = matchedTab != null
+    val isTabDestination = matchTab(navBackStackEntry?.destination) != null
 
     Scaffold(
         modifier = modifier
@@ -87,11 +83,12 @@ fun MainScreen(
             // 같은 모양의 여백을 직접 준다 (UDC가 아닌 실제 구멍 모델만, InnerCameraSafePadding.kt)
             .padding(rememberInnerCameraSafePadding()),
         content = { paddingValues ->
-            if (appState.isTwoPane) {
-                // 확장 너비에선 하단 바 대신 좌측 레일 — 세로 공간을 목록/상세에 온전히 양보
+            if (appState.isWideLayout) {
+                // 넓은 창(600dp 이상)에선 하단 바 대신 좌측 레일 — 세로 공간을 목록/상세에 온전히 양보.
+                // 마이페이지처럼 한 페인을 쓰는 탭에서도 이 구조를 유지하고 scaffold가 페인 수만 줄인다
                 Row(modifier = Modifier.fillMaxSize()) {
                     MainNavRail(
-                        selectedItem = lastTab,
+                        selectedItem = appState.lastTab,
                         onClick = appState::navigateToTab,
                     )
                     ProductListDetailPaneScaffold(
@@ -117,18 +114,18 @@ fun MainScreen(
             MainBottomSheetHost(mainViewModel = mainViewModel)
         },
         bottomBar = {
-            // 2-pane(확장 너비)에서는 좌측 레일이 대신하므로 하단 바를 렌더하지 않는다.
+            // 넓은 창(600dp 이상)에서는 좌측 레일이 대신하므로 하단 바를 렌더하지 않는다.
             // 상세 등 탭 외 destination에서는 바텀바 숨김.
             // entry가 null인 첫 프레임(회전·process death 복원 직후)은 렌더하지 않아
             // 상세 위에서 바가 헛돌며 퇴장 애니메이션되는 현상을 막는다
-            if (!appState.isTwoPane && navBackStackEntry != null) {
+            if (!appState.isWideLayout && navBackStackEntry != null) {
                 AnimatedVisibility(
                     visible = isTabDestination,
                     enter = slideInVertically(initialOffsetY = { it }),
                     exit = slideOutVertically(targetOffsetY = { it }),
                 ) {
                     MainBottomBar(
-                        selectedItem = lastTab,
+                        selectedItem = appState.lastTab,
                         onClick = appState::navigateToTab
                     )
                 }

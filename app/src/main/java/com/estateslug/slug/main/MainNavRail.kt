@@ -25,7 +25,8 @@ import com.estateslug.slug.ui.theme.SlugTheme
 import com.estateslug.slug.ui.theme.SlugTypographyStyle
 
 /**
- * 2-pane(확장 너비)에서 하단 바 대신 좌측에 놓는 네비게이션 레일.
+ * 넓은 창(600dp 이상 — 펼친 폴더블·태블릿, 가로로 든 폰 포함)에서 하단 바 대신 좌측에 놓는 네비게이션 레일.
+ * 탭이 한 페인을 써도 그대로다.
  * MainBottomBar와 같은 아이템·색·선택 로직을 세로 배치로만 바꾼 것 — 스타일 변경 시 양쪽을 함께 수정할 것.
  */
 @Composable

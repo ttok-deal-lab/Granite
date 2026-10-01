@@ -41,7 +41,12 @@ class ProductPaneState(
     internal val paneNavigator: ThreePaneScaffoldNavigator<String>,
     /** 창 너비가 2-pane을 허용하는가(600dp 이상 — 펼친 폴더블·태블릿, 가로로 든 폰도 포함). 이관의 기준 */
     val windowSupportsTwoPane: Boolean,
-    /** 지금 목록 | 상세로 나눠 보여 주는가. 창이 허용해도 화면이 한 페인을 원할 수 있다(검색어 입력 화면) */
+    /** 화면이 지금 목록 | 상세를 원하는가. 검색어 입력 화면·마이페이지 탭은 false — [rememberProductPaneState] 참고 */
+    val twoPaneAllowed: Boolean,
+    /**
+     * 지금 목록 | 상세로 나눠 보여 주는가. 창이 허용해도 화면이 한 페인을 원할 수 있다(검색어 입력 화면).
+     * 화면이 한 페인을 원해도 페인에 상세가 들어 있는 동안은 true로 남고, 닫기로 내용이 빠지면 false가 된다
+     */
     val isTwoPane: Boolean,
     private val coroutineScope: CoroutineScope,
 ) {
@@ -112,7 +117,7 @@ class ProductPaneState(
 
 /**
  * @param twoPaneAllowed 이 화면이 지금 목록 | 상세로 나뉘어도 되는가. 창 너비와 별개로
- * 화면 쪽 사정(매물 목록이 아닌 검색어 입력 화면 등)으로 한 페인만 쓰고 싶을 때 false
+ * 화면 쪽 사정(매물 목록이 아닌 검색어 입력 화면·메인의 마이페이지 탭 등)으로 한 페인만 쓰고 싶을 때 false
  * @param autoFocusPane 페인 배치가 바뀔 때 scaffold가 현재 페인으로 포커스를 옮길지.
  * 목록 페인 맨 위에 입력칸이 있는 화면(검색)은 false — 포커스가 입력칸으로 가서 키보드가 올라온다.
  * 화면마다 고정 값으로 넘길 것: directive의 equals가 이 값을 비교하지 않아 도중에 바꾸면 반영되지 않는다
@@ -178,11 +183,14 @@ fun rememberProductPaneState(
             }
     }
 
-    val state = remember(navController, paneNavigator, windowSupportsTwoPane, isTwoPane, coroutineScope) {
+    val state = remember(
+        navController, paneNavigator, windowSupportsTwoPane, twoPaneAllowed, isTwoPane, coroutineScope,
+    ) {
         ProductPaneState(
             navController = navController,
             paneNavigator = paneNavigator,
             windowSupportsTwoPane = windowSupportsTwoPane,
+            twoPaneAllowed = twoPaneAllowed,
             isTwoPane = isTwoPane,
             coroutineScope = coroutineScope,
         )
