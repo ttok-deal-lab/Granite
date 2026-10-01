@@ -25,6 +25,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 
 /**
@@ -71,7 +72,8 @@ class ProductPaneState(
      * - 상세를 쌓지 않고 바꿔 끼운다 — 쌓으면 닫기·back·이관이 한 단계만 빼서 이전 상세가 남는다
      *   (새 검색·탭 전환 뒤에도). 2-pane에서는 앞뒤 배치가 같아 빈 페인이 끼지 않는다
      * - 연속 back으로 navigator가 히스토리를 통째로 비우면([List]에서 한 번 더 navigateBack) 바닥(목록)을
-     *   다시 깐다 — 없으면 이후 연 상세는 되돌아갈 곳이 없어 닫히지 않는다
+     *   다시 깐다 — 없으면 이후 연 상세는 되돌아갈 곳이 없어 닫히지 않는다. 평소에는 [rememberProductPaneState]의
+     *   효과가 곧바로 다시 깔지만, 비워진 같은 프레임에 열면 아직일 수 있다
      */
     private suspend fun showInPane(productId: String) {
         if (paneNavigator.currentDestination?.contentKey != null) {
@@ -87,7 +89,11 @@ class ProductPaneState(
     fun closeDetailPane() {
         if (!paneNavigator.canNavigateBack(BackNavigationBehavior.PopUntilContentChange)) return
         coroutineScope.launch {
-            paneNavigator.navigateBack(BackNavigationBehavior.PopUntilContentChange)
+            // 같은 프레임에 두 번 불리면(닫기 버튼 연타, 탭 이동과 겹침) 둘 다 위 확인을 통과한다. 앞의 호출이
+            // 이미 닫았는데 한 번 더 navigateBack하면 [List]에서 히스토리가 통째로 비워지므로 실행 직전에 다시 본다
+            if (paneNavigator.canNavigateBack(BackNavigationBehavior.PopUntilContentChange)) {
+                paneNavigator.navigateBack(BackNavigationBehavior.PopUntilContentChange)
+            }
         }
     }
 
@@ -158,6 +164,22 @@ fun rememberProductPaneState(
     LaunchedEffect(paneNavigator) {
         snapshotFlow { paneNavigator.currentDestination?.contentKey != null }
             .collect { paneHasContent = it }
+    }
+    // 히스토리가 비면 바닥(목록)을 다시 깐다. navigator는 이전 목적지가 없는데 navigateBack하면 히스토리를
+    // 통째로 비운다(adaptive 1.3.0 소스 확인 — 뒤로 연타가 핸들러 해제보다 빠를 때 등). 두 페인에서는 티가 나지
+    // 않지만, 한 페인 배치는 목적지가 없으면 우선순위가 가장 높은 상세 페인을 펼쳐 목록 페인
+    // (마이페이지·검색어 입력 화면)이 통째로 가려진다
+    LaunchedEffect(paneNavigator) {
+        snapshotFlow { paneNavigator.currentDestination == null }
+            .filter { it }
+            .collect {
+                try {
+                    paneNavigator.navigateTo(ListDetailPaneScaffoldRole.List)
+                } catch (e: CancellationException) {
+                    // 배치 애니메이션만 다른 애니메이션에 밀려 끊긴 것이면(히스토리는 이미 깔렸다) 수집을 이어 간다
+                    currentCoroutineContext().ensureActive()
+                }
+            }
     }
     // navigator는 directive를 받아도 화면에 보이는 scaffold 상태를 다음 이동(navigateTo/Back) 때까지
     // 옛 배치로 둔다(adaptive 1.3.0 소스 확인) — 창 크기가 바뀌면 Activity가 다시 만들어져 문제가 없지만,
