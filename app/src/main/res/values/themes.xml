@@ -19,5 +19,7 @@
         <item name="colorPrimary">@color/black</item>
         <item name="colorPrimaryDark">@color/black</item>
         <item name="colorAccent">@color/white</item>
+        <!-- 라이선스 본문의 링크는 기본으로 colorAccent(흰색)를 따라 밝은 화면에서 보이지 않는다 — 본문 글자색을 쓴다 -->
+        <item name="android:textColorLink">?android:attr/textColorPrimary</item>
     </style>
 </resources>
