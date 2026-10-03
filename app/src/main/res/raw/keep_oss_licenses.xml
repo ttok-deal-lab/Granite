@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    오픈소스 라이선스 화면(play-services-oss-licenses 17.3.0)이 getIdentifier로 이름을 찾는 리소스.
+    리소스 축소(release·난독화 빌드)는 이름으로만 찾는 리소스를 지울 수 있다 — license_menu_fragment가 지워져
+    화면을 여는 순간 Resources$NotFoundException(Resource ID #0x0)으로 앱이 종료됐다(2026-10-03 실기기).
+    라이브러리를 올리면 이 목록이 맞는지 다시 확인할 것. 라이선스 본문(raw)은 oss-licenses 플러그인이 만드는
+    keep_third_party_licenses.xml이 지킨다
+-->
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@layout/license_menu_fragment,@layout/libraries_social_licenses_license,@id/license,@id/license_list,@id/license_fragment_container,@id/license_activity_textview,@id/license_activity_scrollview" />
