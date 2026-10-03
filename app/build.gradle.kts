@@ -28,7 +28,7 @@ android {
         applicationId = "com.estateslug.slug"
         minSdk = 28
         targetSdk = 37
-        versionCode = 14
+        versionCode = 16
         versionName = "1.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
