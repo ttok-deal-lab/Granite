@@ -7,10 +7,8 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -66,8 +64,8 @@ class RecentItemsActivity : ComponentActivity() {
                         // 시스템 바 인셋을 여기서 먼저 소비한다 — 목록·상세 화면의 systemBarsPadding은
                         // 0이 되어 결과는 같고, 아래 바탕색이 시스템 바 뒤(창 배경)까지 번지지 않는다
                         .systemBarsPadding()
-                        // 펼친 폴더블을 가로로 들면 펀치홀이 측면으로 온다 — MainScreen과 같은 처리
-                        .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
+                        // 펀치홀: MainScreen과 같은 처리(네 변 컷아웃 인셋 + 삼성 펼침 화면 카메라 여백)
+                        .windowInsetsPadding(WindowInsets.displayCutout)
                         .padding(rememberInnerCameraSafePadding())
                         // 두 페인 사이 여백도 화면 바탕으로 칠한다
                         .background(SlugTheme.colors.neutralInverted),

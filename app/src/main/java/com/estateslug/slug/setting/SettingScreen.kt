@@ -5,6 +5,9 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -61,7 +64,8 @@ fun SettingScreen(
 
     Box(modifier = Modifier.fillMaxSize()){
         Scaffold(
-            modifier = modifier.navigationBarsPadding(),
+            // 펀치홀: 기기에 따라 앱이 구멍 자리까지 그려진다 — MainScreen과 같이 컷아웃만큼 비운다
+            modifier = modifier.navigationBarsPadding().windowInsetsPadding(WindowInsets.displayCutout),
             content = { paddingValues ->
                 //MainNavHost
                 SettingNavHost(

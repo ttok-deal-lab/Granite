@@ -18,6 +18,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
@@ -105,7 +108,8 @@ class PermissionRequestActivity : ComponentActivity() {
         val permissionAllowed by permissionAllowedToExit.collectAsStateWithLifecycle()
         val hasUngranted by hasUngrantedPermissions.collectAsStateWithLifecycle()
         var permissionRequestCount by remember { mutableIntStateOf(0) }
-        Scaffold { innerPadding ->
+        // 펀치홀: 기기에 따라 앱이 구멍 자리까지 그려진다 — MainScreen과 같이 컷아웃만큼 비운다
+        Scaffold(modifier = Modifier.windowInsetsPadding(WindowInsets.displayCutout)) { innerPadding ->
             Column(
                 modifier = Modifier
                     .padding(innerPadding)

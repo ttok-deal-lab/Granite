@@ -12,13 +12,11 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -141,9 +139,8 @@ class SearchActivity : ComponentActivity() {
                     modifier = Modifier
                         .fillMaxSize()
                         .systemBarsPadding()
-                        // 펼친 폴더블을 가로로 들면 펀치홀이 측면으로 와 목록·상세 가장자리를 가린다 —
-                        // MainScreen과 같은 처리(좌우 컷아웃 인셋 + 삼성 펼침 화면 카메라 여백)
-                        .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
+                        // 펀치홀: MainScreen과 같은 처리(네 변 컷아웃 인셋 + 삼성 펼침 화면 카메라 여백)
+                        .windowInsetsPadding(WindowInsets.displayCutout)
                         .padding(rememberInnerCameraSafePadding()),
                 ) { innerPadding ->
                     ProductListDetailPaneScaffold(

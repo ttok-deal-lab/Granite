@@ -13,6 +13,9 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -56,7 +59,8 @@ class LogInActivity : ComponentActivity() {
             val lastLoginType by loginViewModel.lastLoginType.collectAsStateWithLifecycle()
             val forceUpdateInfo by loginViewModel.forceUpdateInfo.collectAsStateWithLifecycle()
             SlugTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                // 펀치홀: 기기에 따라 앱이 구멍 자리까지 그려진다 — MainScreen과 같이 컷아웃만큼 비운다
+                Scaffold(modifier = Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.displayCutout)) { innerPadding ->
                     Box(modifier = Modifier.padding(innerPadding)) {
                         LoginPage(
                             onSocialLoginSelected = ::onSocialLoginSelected,
